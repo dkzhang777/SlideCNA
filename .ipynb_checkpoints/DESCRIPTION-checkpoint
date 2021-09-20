@@ -1,0 +1,32 @@
+Package: package
+Title: What the Package Does (One Line, Title Case)
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Diane",
+           family = "Zhang",
+           role = c("aut", "cre"),
+           email = "dkzhang@mit.edu",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: This takes spatial single-cell-type RNA-seq data (specifically designed for Slide-seq v2) and calls CNVs, clustering based on CNV profile and visualizing spatial CNV patterns.
+Imports: 
+    data.table,
+    reshape2,
+    dplyr,
+    ggplot2,
+    scales,
+    pheatmap,
+    cluster,
+    factoextra,
+    dendextend,
+    Seurat,
+    tidyselect,
+    stringr,
+    magrittr,
+    enrichR (>= 2.1)
+Remotes: wjawaid/enrichR
+License: `use_mit_license()`, `use_gpl3_license()` or friends to
+    pick a license
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
