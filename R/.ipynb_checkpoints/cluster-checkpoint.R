@@ -12,6 +12,7 @@
 #' @param plotDir output plot directory path
 #' @return An integer representing the number of clusters that optimizes the silhouette score
 
+#' @export
 get_num_clust <- function(data, 
                           hc_func='ward.D2', 
                           max_k=10, 
@@ -100,6 +101,7 @@ get_num_clust <- function(data,
 #' @export
 #' @import ggplot2
 
+#' @export
 plot_clones = function(cnv_data, 
                        md, 
                        k, 
@@ -247,6 +249,7 @@ plot_clones = function(cnv_data,
 #' @param mal TRUE if only using malignant beads
 #' @return A seurat object updated with clone information
 
+#' @export
 clone_so <- function(so, 
                      hcl_sub, 
                      md, 
@@ -295,9 +298,9 @@ clone_so <- function(so,
 #'         markers_clone = data.table of all cluster markers
 #'         top_markers_clone = data.table of just top cluster markers
 #'         top_clone_vis = data.frame formatted for plot visualization of top cluster markers
-#' @export
 #' @import ggplot2
 
+#' @export
 find_cluster_markers <- function(so_clone, 
                                  type, 
                                  logfc.threshold=0.2, 
@@ -401,9 +404,9 @@ find_cluster_markers <- function(so_clone,
 #' @return A list object with cluster GO term information
 #'         en_clone = data.table of cluster GO terms
 #'         top_en_clone = data.table of just top cluster GO terms
-#' @export
 #' @import ggplot2
                              
+#' @export
 find_go_terms <- function(cluster_markers_obj, 
                           type, 
                           n_terms=5, 
@@ -460,6 +463,7 @@ find_go_terms <- function(cluster_markers_obj,
 }                             
 
 ### Subfunction to get significantly enriched GO terms given a set of signfiicant beads and genes
+#' @export
 run_enrichr=function(genes,
                      ngenes) {
     res=data.table::as.data.table(enrichR::enrichr(genes[1:ngenes]

@@ -16,6 +16,7 @@
 #'         hcl = hclust object that describes the hierarchical clustering for malignant bins 
 #'         hcl_all = hclust object that describes the hierarchical clustering for all bins 
 
+#' @export
 prep_cnv_dat <- function(dat_bin, 
                          lower=0.6, 
                          upper=1.4, 
@@ -106,6 +107,7 @@ prep_cnv_dat <- function(dat_bin,
 #' @param hc_function character for which hierarchical clustering function to use
 #' @param plotDir output plot directory path
 
+#' @export
 cnv_heatmap <- function(cnv_data, 
                         md, 
                         chrom_colors, 
@@ -161,6 +163,7 @@ cnv_heatmap <- function(cnv_data,
 #' @param plotDir output plot directory path
 #’ @Import ggplot2
 
+#' @export
 quantile_plot <- function(cnv_data, 
                           cluster_label="seurat_clusters", 
                           text_size, title_size, 
@@ -219,6 +222,7 @@ quantile_plot <- function(cnv_data,
 #' @param plotDir output plot directory path
 #’ @Import ggplot2
 
+#' @export
 mean_cnv_plot <- function(cnv_data, 
                           text_size, 
                           title_size, 

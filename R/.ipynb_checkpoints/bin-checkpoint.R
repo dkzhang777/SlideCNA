@@ -12,6 +12,7 @@
 #' @param plotDir output plot directory path
 #' @return A data.table of bead metadata combined with binned expression intensities for all genes for all beads
 
+#' @export
 bin_metadata <- function(md, 
                          dat, 
                          avg_bead_per_bin=12, 
@@ -46,6 +47,7 @@ bin_metadata <- function(md,
 
 ### Subfunction of bin_metadata() for Expression/Positional Binning 
                               
+#' @export
 bin <- function(dat, 
                 md, 
                 k, 
@@ -109,6 +111,7 @@ bin <- function(dat,
 #' @param md data.table of metadata per bead 
 #' @return A data.table of bead expression intensities per gene with metadata in long format 
 
+#' @export
 dat_to_long <- function(dat, 
                         md) {
     # change to long format
@@ -126,6 +129,7 @@ dat_to_long <- function(dat,
 #' @param vars character vector of features to plot/columns of metadata
 #' @param plotDir output plot directory path
 
+#' @export
 SpatialPlot <- function(dat_long, 
                         vars=NULL, 
                         text_size, 
@@ -244,6 +248,7 @@ SpatialPlot <- function(dat_long,
 #' @export
 #' @import ggplot2
 
+#' @export
 long_to_bin <- function(dat_long, 
                         plotDir, 
                         spatial=TRUE) {
@@ -290,6 +295,7 @@ long_to_bin <- function(dat_long,
 
 ### Subfunction for long_to_bin() that finds mode of vector/column
 
+#' @export
 mode <- function(x) {
   ux <- unique(x)
   ux[which.max(tabulate(match(x, ux)))]
@@ -305,6 +311,7 @@ mode <- function(x) {
 #' thresholds based on 1 + or - the mean of absolute min and max vlaues
 #' @return data.table of CNV scores per bin
 
+#' @export
 scale_nUMI <- function(dat_bin, 
                        thresh_hard=FALSE) {
     
@@ -340,6 +347,7 @@ scale_nUMI <- function(dat_bin,
 
 ### Subfunction for scale_nUMI that normalizes a given bin for UMI count and centers the  mean CNV score at 1
 
+#' @export
 scalefit <- function(obj, 
                      nbin, 
                      start, 

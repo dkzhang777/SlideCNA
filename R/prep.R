@@ -8,7 +8,7 @@
 #' @param gene_pos data.table with columns for GENE, chr, start, end, rel_gene_pos (1 : # of genes on chromosome)
 #' @return A data.table of normalized, capped, and ref-adjusted counts with genomic psoition info 
 
-
+#' @export
 prep <- function(dat, 
                  normal_beads, 
                  gene_pos, 
@@ -67,7 +67,8 @@ prep <- function(dat,
 #' @param dat data.table of normalized/adjusted counts
 #' @param k size of window for weighting 
 #' @return A data.table of expression intensities
- 
+                              
+#' @export
 weight_rollmean <- function(dat, 
                             k=101) {
     
@@ -100,6 +101,7 @@ weight_rollmean <- function(dat,
 }
       
 # Subfunction of weight_rollmean
+#' @export                              
 weight_rollmean_sub <- function(mat, 
                                 k) {
     new_mat <- mat
@@ -158,7 +160,8 @@ weight_rollmean_sub <- function(mat,
 #'
 #' @param rm data.table of smoothed expression intensities counts
 #' @return centered_rm data.table of smoothed, centered expression intensities
-
+                            
+#' @export
 center_rm <- function(rm) {
     meta <- rm[,c(1:6)]
     rm <- rm[,c(-1,-3,-4,-5,-6)]
@@ -181,6 +184,7 @@ center_rm <- function(rm) {
 #' @param normal_beads vector of names of normal beads                               
 #' @return rm_adj data.table of smoothed relative expression intensities
                               
+#' @export
 ref_adj <- function(centered_rm, 
                     normal_beads) {
     rm_adj <- as.data.frame(centered_rm[,-c(1:6)])
