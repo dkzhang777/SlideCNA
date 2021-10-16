@@ -145,7 +145,7 @@ plot_clones = function(cnv_data,
     # Only malignant binned beads
     if (type=='malig') {
         normal_bins <- setdiff(cnv_data$all$variable, cnv_data$malig$variable)
-        sub_normal <- cnv_data$all[variable %in% normal_bins, ]
+        sub_normal <- cnv_data$all[cnv_data$all$variable %in% normal_bins, ]
         sub_normal$clone <- k+1 # Make normal binned beads another clone
         sub_all <- rbind(sub_clone, sub_normal)
         sub_all_unique <- unique(sub_all[,c('variable', 'pos_x', 'pos_y', 'clone')])
