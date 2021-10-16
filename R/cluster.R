@@ -221,7 +221,7 @@ plot_clones = function(cnv_data,
     chr = chrom_colors)
 
     # Plot CNV heatmap with clone labelling    
-    png(file = paste0(plotDir,"/", type, "_", k, "_clones_cnv_heatmap.png"), width = 1300, height = 1000) #png version
+    png(file = paste0(plotDir,"/", type, "_", k, "_clones_cnv_heatmap.png"), width = 800, height = 700) #png version
     print(pheatmap::pheatmap(sub_wide, 
                              color = colorRampPalette(c("navy", "white","firebrick3"))(50), 
                              cluster_rows = TRUE, 

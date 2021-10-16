@@ -205,18 +205,18 @@ run_slide_cnv <- function(so,
         so_clone_all <- package::clone_so(so, 
                                           hcl_sub_all,
                                           md)
-        cluster_markers_all_obj <- try(package::find_cluster_markers(so_clone_all, 
-                                                                     "all",
-                                                                     text_size,
-                                                                     title_size,
-                                                                     legend_size_pt,
+        cluster_markers_all_obj <- try(package::find_cluster_markers(so_clone=so_clone_all, 
+                                                                     type="all",
+                                                                     text_size=text_size,
+                                                                     title_size=title_size,
+                                                                     legend_size_pt=legend_size_pt,
                                                                      plotDir=plotDir))
-        go_terms_all_obj <- try(package::find_go_terms(cluster_markers_all_obj,
+        go_terms_all_obj <- try(package::find_go_terms(cluster_markers_obj=cluster_markers_all_obj,
                                                        type='all',
-                                                       text_size,
-                                                       title_size,
+                                                       text_size=text_size,
+                                                       title_size=title_size,
                                                        plotDir=plotDir))
-    
+        
         # Get clones over malignant beads from their CNVs
         hcl_sub_malig <- package::plot_clones(cnv_data, 
                                               md, 
@@ -241,17 +241,19 @@ run_slide_cnv <- function(so,
                                             hcl_sub_malig, 
                                             md, 
                                             mal=TRUE)
-        cluster_markers_malig_obj <- try(package::find_cluster_markers(so_clone_malig, 
-                                                                       "malig", 
-                                                                       text_size,
-                                                                       title_size,
-                                                                       legend_size_pt,
+        cluster_markers_malig_obj <- try(package::find_cluster_markers(so_clone=so_clone_malig, 
+                                                                       type="malig", 
+                                                                       text_size=text_size,
+                                                                       title_size=title_size,
+                                                                       legend_size_pt=legend_size_pt,
                                                                        plotDir=plotDir))
-        go_terms_malig_obj <- try(package::find_go_terms(cluster_markers_malig_obj, 
+        go_terms_malig_obj <- try(package::find_go_terms(cluster_markers_obj=cluster_markers_malig_obj, 
                                                          type="malig", 
-                                                         text_size,
-                                                         title_size,
+                                                         text_size=text_size,
+                                                         title_size=title_size,
                                                          plotDir=plotDir))
+
+    
         cnv_data$hc_sub_all <- hcl_sub_all
         try(cnv_data$go_terms_all <- go_terms_all_obj)
         cnv_data$hc_sub_malig <- hcl_sub_malig
@@ -337,16 +339,16 @@ run_slide_cnv <- function(so,
         so_clone_all <- package::clone_so(so, 
                                           hcl_sub_all, 
                                           md)
-        cluster_markers_all_obj <- try(package::find_cluster_markers(so_clone_all, 
-                                                                     "all", 
-                                                                     text_size,
-                                                                     title_size,
-                                                                     legend_size_pt,
+        cluster_markers_all_obj <- try(package::find_cluster_markers(so_clone_all=so_clone, 
+                                                                     type="all", 
+                                                                     text_size=text_size,
+                                                                     title_size=title_size,
+                                                                     legend_size_pt=legend_size_pt,
                                                                      plotDir=plotDir))
-        go_terms_all_obj <- try(package::find_go_terms(cluster_markers_all_obj, 
+        go_terms_all_obj <- try(package::find_go_terms(cluster_markers_obj=cluster_markers_all_obj, 
                                                        type='all', 
-                                                       text_size,
-                                                       title_size,
+                                                       text_size=text_size,
+                                                       title_size=title_size,
                                                        plotDir=plotDir))
     
         # Get clones over malignant beads from their CNVs
@@ -373,16 +375,16 @@ run_slide_cnv <- function(so,
                                                hcl_sub_malig, 
                                                md, 
                                                mal=TRUE)
-        cluster_markers_malig_obj <- try(package::find_cluster_markers(so_clone_malig, 
-                                                                       "malig", 
-                                                                       text_size,
-                                                                       title_size,
-                                                                       legend_size_pt,
+        cluster_markers_malig_obj <- try(package::find_cluster_markers(so_clone=so_clone_malig, 
+                                                                       type="malig", 
+                                                                       text_size=text_size,
+                                                                       title_size=title_size,
+                                                                       legend_size_pt=legend_size_pt,
                                                                        plotDir=plotDir))
-        go_terms_malig_obj <- try(package::find_go_terms(cluster_markers_malig_obj, 
+        go_terms_malig_obj <- try(package::find_go_terms(cluster_markers_obj=cluster_markers_malig_obj, 
                                                          type="malig", 
-                                                         text_size,
-                                                         title_size,
+                                                         text_size=text_size,
+                                                         title_size=title_size,
                                                          plotDir=plotDir))
         
         cnv_data$hc_sub_all <- hcl_sub_all
