@@ -159,6 +159,8 @@ run_slide_cnv <- function(so,
                              hc_function_cnv_heatmap, 
                              plotDir)
 
+        save(cnv_data, file=paste0(plotDir, "/cnv_data00.Robj"))
+
         # Display CNV Score Plots
         package::quantile_plot(cnv_data, 
                                quantile_plot_cluster_label,
@@ -166,12 +168,17 @@ run_slide_cnv <- function(so,
                                title_size,
                                legend_height_bar,
                                plotDir)
+        
+        save(cnv_data, file=paste0(plotDir, "/cnv_data01.Robj"))
+
         package::mean_cnv_plot(cnv_data, 
                                text_size,
                                title_size,
                                legend_height_bar,
                                plotDir)
         
+        save(cnv_data, file=paste0(plotDir, "/cnv_data02.Robj"))
+
         # With just malignant beads
         best_k_malig <- package::get_num_clust(cnv_data, 
                                                hc_function_silhouette, 
@@ -184,6 +191,8 @@ run_slide_cnv <- function(so,
 
         cnv_data2 <- cnv_data
         
+        save(cnv_data, file=paste0(plotDir, "/cnv_data03.Robj"))
+
         # Get clones over all beads from their CNVs
         hcl_sub_all <- package::plot_clones(cnv_data, 
                                             md, 
@@ -197,14 +206,18 @@ run_slide_cnv <- function(so,
                                             hc_function_plot_clones, 
                                             plotDir,
                                             spatial=spatial)
+
+        save(cnv_data, file=paste0(plotDir, "/cnv_data04.Robj"))
+        
         cnv_data2$all <- merge(cnv_data$all, 
                                data.table::as.data.table(hcl_sub_all), 
                                by='variable')
-        
+
         # Find DEGs and GO markers per clone over all beads
         so_clone_all <- package::clone_so(so, 
                                           hcl_sub_all,
                                           md)
+
         cluster_markers_all_obj <- try(package::find_cluster_markers(so_clone=so_clone_all, 
                                                                      type="all",
                                                                      text_size=text_size,
@@ -216,7 +229,7 @@ run_slide_cnv <- function(so,
                                                        text_size=text_size,
                                                        title_size=title_size,
                                                        plotDir=plotDir))
-        
+
         # Get clones over malignant beads from their CNVs
         hcl_sub_malig <- package::plot_clones(cnv_data, 
                                               md, 
@@ -316,6 +329,9 @@ run_slide_cnv <- function(so,
 
         save(best_k_malig, file="best_k_malig.Robj")
 
+        print(cnv_data$all)
+        save(cnv_data$all, file=paste0(plotDir, "/cnv_data01.Robj"))
+        
         cnv_data2 <- cnv_data
 
         # Get clones over all beads from their CNVs
@@ -331,14 +347,21 @@ run_slide_cnv <- function(so,
                                             hc_function_plot_clones, 
                                             plotDir,
                                             spatial=spatial)
+        print(cnv_data$all)
+        save(cnv_data$all, file=paste0(plotDir, "/cnv_data02.Robj"))
+        
         cnv_data2$all <- merge(cnv_data$all, 
                                data.table::as.data.table(hcl_sub_all), 
                                by='variable')
+        print(cnv_data$all)
+        save(cnv_data$all, file=paste0(plotDir, "/cnv_data03.Robj"))
         
         # Find DEGs and GO markers per clone over all beads
         so_clone_all <- package::clone_so(so, 
                                           hcl_sub_all, 
                                           md)
+        print(cnv_data$all)
+        save(cnv_data$all, file=paste0(plotDir, "/cnv_data04.Robj"))
         cluster_markers_all_obj <- try(package::find_cluster_markers(so_clone_all=so_clone, 
                                                                      type="all", 
                                                                      text_size=text_size,

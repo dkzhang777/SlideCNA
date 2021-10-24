@@ -229,7 +229,13 @@ mean_cnv_plot <- function(cnv_data,
                           legend_height_bar, 
                           plotDir) {
     
-    plot_data <- cnv_data$all
+    plot_data <- data.table()
+    for (col in colnames(cnv_data$all)) {
+        plot_data <- cbind(plot_data, cnv_data$all[[col]])
+    }
+    colnames(plot_data) <- colnames(cnv_data$all)
+    
+#     plot_data <- data.table::copy(cnv_data$all)
     # add new column that takes the mean cnv score across all genes
     mean_plot <- plot_data[,cnv_score:=mean(value),by=c("variable","chr")]
     
