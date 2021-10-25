@@ -114,9 +114,7 @@ plot_clones = function(cnv_data,
                        hc_function = 'ward.D2', 
                        plotDir, 
                        spatial=TRUE) {
-    
-    save(cnv_data, file=paste0(plotDir, "/cnv_data_init.Robj"))
-    
+        
     # Initialize data based on CNV object
     if (type == 'all') {
         sub = cnv_data$all
@@ -148,7 +146,6 @@ plot_clones = function(cnv_data,
     if (type=='malig') {
         normal_bins <- setdiff(cnv_data$all$variable, cnv_data$malig$variable)
         
-        save(cnv_data, file=paste0(plotDir, "/cnv_data_int.Robj"))
         sub_normal <- cnv_data$all[cnv_data$all$variable %in% normal_bins, ]
         sub_normal[, clone:=(k+1)]
         # sub_normal$clone <- k+1 # Make normal binned beads another clone
@@ -226,7 +223,7 @@ plot_clones = function(cnv_data,
     chr = chrom_colors)
 
     # Plot CNV heatmap with clone labelling    
-    png(file = paste0(plotDir,"/", type, "_", k, "_clones_cnv_heatmap.png"), width = 800, height = 700) #png version
+    png(file = paste0(plotDir,"/", type, "_", k, "_clones_cnv_heatmap.png"), width = 1000, height = 900) #png version
     print(pheatmap::pheatmap(sub_wide, 
                              color = colorRampPalette(c("navy", "white","firebrick3"))(50), 
                              cluster_rows = TRUE, 
