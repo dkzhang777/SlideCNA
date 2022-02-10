@@ -6,16 +6,15 @@ library(devtools)
 devtools::install_github("dkzhang777/SlideCNV@main", force=TRUE)
 library(SlideCNV)
 ```
-
 ### Preparation
 Prepare a Seurat Data object of the Slide-seq data that contains counts matrix and metadata with cell type annotations. Metadata should contain the following columns in the provided format:
 
-bc (chr) representing bead labels
-seurat_clusters (fct) representing Seurat-defined clusters
-pos_x (dbl) x-coordinate bead position
-pos_y (dbl) y-coordinate bead position
-pos_y (dbl) y-coordinate bead position
-pos_y (chr) annotation of the bead as 'Normal' or 'Malignant'    
+bc (chr): bead labels \
+seurat_clusters (fct): Seurat-defined clusters\
+pos_x (dbl): x-coordinate bead position\
+pos_y (dbl): y-coordinate bead position\
+pos_y (dbl): y-coordinate bead position\
+pos_y (chr): annotation of the bead as 'Normal' or 'Malignant'
     
 ### Running SlideCNV
 ```
@@ -62,34 +61,34 @@ run_slide_cnv(so,
               legend_height_bar = 1.5)
 ```
               
-so: Seurat object that contains a counts matrix and metadata with cell type annotations 
-md: data.table of metadata of each bead (beads x annotations)
-gene_pos: data.table with columns for GENE, chr, start, end, rel_gene_pos (1 : # of genes on chromosome)
-plotDir: output plot directory path
-OUPUT_DIRECTORY: output directory path
-spatial: TRUE if using spatial information FALSE if not
-roll_mean_window: integer number of adjacent genes for which to average over in pyramidal weighting scheme
-avg_bead_per_bin: integer of average number of beads there should be per bin 
-pos: TRUE if doing spatial and expressional binning, FALSE if just expressional binning
-pos_k: positional weight
-ex_k: expressional weight
-hc_function_bin: hierarchical clustering function for binning
-spatial_vars_to_plot: character vector of features to plot/columns of metadata
-scale_bin_thresh_hard: TRUE if using strict, absolute thresholds for expression thresholds and FALSE if adjusting depending on the sample
-lower_bound_cnv: numeric float to represent the lower cap for CNV scores
-upper_bound_cnv: numeric float to represent the upper cap for CNV scores 
-hc_function_cnv: character for which hierarchical clustering function to use for CNV-calling
-hc_function character: for which hierarchical clustering function to use for visualzing CNV heat map
-quantile_plot_cluster_label: character string of which column name to keep in quantile plot
-hc_function_silhouette: character string for which hierarchical clustering function to use for the Silhouette method
-max_k_silhouette: integer of number max number of clusters to evaluate (2:max_k_silhouette) in Silhouette method
-hc_function_plot_clones: character string for which hierarchical clustering function to use in plotting clones
-chrom_ord: character vector of order and names of chromosomes
-chrom_colors: character vector of which colors each chromosome should be in heat map
-text_size: integer of size of text in some ggplots
-title_size: integer of size of title in some ggplots
-legend_size_pt: integer of size of legend text size in some ggplots
+so: Seurat object that contains a counts matrix and metadata with cell type annotations \
+md: data.table of metadata of each bead (beads x annotations)\
+gene_pos: data.table with columns for GENE, chr, start, end, rel_gene_pos (1 : # of genes on chromosome)\
+plotDir: output plot directory path\
+OUPUT_DIRECTORY: output directory path\
+spatial: TRUE if using spatial information FALSE if not\
+roll_mean_window: integer number of adjacent genes for which to average over in pyramidal weighting scheme\
+avg_bead_per_bin: integer of average number of beads there should be per bin \
+pos: TRUE if doing spatial and expressional binning, FALSE if just expressional binning\
+pos_k: positional weight\
+ex_k: expressional weight\
+hc_function_bin: hierarchical clustering function for binning\
+spatial_vars_to_plot: character vector of features to plot/columns of metadata\
+scale_bin_thresh_hard: TRUE if using strict, absolute thresholds for expression thresholds and FALSE if adjusting depending on the sample\
+lower_bound_cnv: numeric float to represent the lower cap for CNV scores\
+upper_bound_cnv: numeric float to represent the upper cap for CNV scores \
+hc_function_cnv: character for which hierarchical clustering function to use for CNV-calling\
+hc_function character: for which hierarchical clustering function to use for visualzing CNV heat map\
+quantile_plot_cluster_label: character string of which column name to keep in quantile plot\
+hc_function_silhouette: character string for which hierarchical clustering function to use for the Silhouette method\
+max_k_silhouette: integer of number max number of clusters to evaluate (2:max_k_silhouette) in Silhouette method\
+hc_function_plot_clones: character string for which hierarchical clustering function to use in plotting clones\
+chrom_ord: character vector of order and names of chromosomes\
+chrom_colors: character vector of which colors each chromosome should be in heat map\
+text_size: integer of size of text in some ggplots\
+title_size: integer of size of title in some ggplots\
+legend_size_pt: integer of size of legend text size in some ggplots\
 legend_height_bar: integer of height of legend bar in some ggplots
 
 ### Results
-##### Results will appear in plotDir
+Results will appear in OUPUT_DIRECTORY and plotDir
