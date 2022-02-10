@@ -2,7 +2,7 @@
 % Please edit documentation in R/run.R
 \name{run_slide_cnv}
 \alias{run_slide_cnv}
-\title{Run spatial CNV-calling workflow}
+\title{Run SlideCNV workflow}
 \usage{
 run_slide_cnv(
   so,

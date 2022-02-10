@@ -1,1 +1,1 @@
-# SpatialCNV
+# SlideCNV

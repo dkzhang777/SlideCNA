@@ -7,7 +7,7 @@
 cnv_heatmap(cnv_data, md, chrom_colors, hc_function = "ward.D2", plotDir)
 }
 \arguments{
-\item{cnv_data}{list object of cnv data from package::prep_cnv_dat()}
+\item{cnv_data}{list object of cnv data from SlideCNV::prep_cnv_dat()}
 
 \item{md}{data.table of metadata of each bead}
 

@@ -14,7 +14,7 @@ quantile_plot(
 )
 }
 \arguments{
-\item{cnv_data}{list object of cnv data from package::prep_cnv_dat()}
+\item{cnv_data}{list object of cnv data from SlideCNV::prep_cnv_dat()}
 
 \item{cluster_label}{character string of which column name to keep}
 

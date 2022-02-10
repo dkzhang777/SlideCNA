@@ -32,7 +32,7 @@ plot_clones(
 
 \item{spatial}{TRUE if using spatial information}
 
-\item{data}{cnv_data list object of cnv data from package::prep_cnv_dat()}
+\item{data}{cnv_data list object of cnv data from SlideCNV::prep_cnv_dat()}
 }
 \value{
 A hierarchical clustering object of the clusters

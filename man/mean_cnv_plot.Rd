@@ -7,7 +7,7 @@
 mean_cnv_plot(cnv_data, text_size, title_size, legend_height_bar, plotDir)
 }
 \arguments{
-\item{cnv_data}{list object of cnv data from package::prep_cnv_dat()}
+\item{cnv_data}{list object of cnv data from SlideCNV::prep_cnv_dat()}
 
 \item{plotDir}{output plot directory path}
 }

@@ -15,7 +15,7 @@ get_num_clust(
 )
 }
 \arguments{
-\item{data}{cnv_data list object of cnv data from package::prep_cnv_dat()}
+\item{data}{cnv_data list object of cnv data from SlideCNV::prep_cnv_dat()}
 
 \item{hc_func}{character string for which hierarchical clustering function to use}
 

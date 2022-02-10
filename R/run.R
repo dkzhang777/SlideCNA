@@ -1,4 +1,4 @@
-#' Run spatial CNV-calling workflow 
+#' Run SlideCNV workflow 
 #'
 #' Take a raw expression counts, cell type annotations, and positional cooridnates to identify CNVs patterns across space and CNV-based clustering patterns
 #'
@@ -86,22 +86,22 @@ run_slide_cnv <- function(so,
                           keep.rownames = "GENE")
     
     normal_beads <- md[md$cluster_type == 'Normal',]$bc
-    prep_dat <- package::prep(raw_dat, 
+    prep_dat <- SlideCNV::prep(raw_dat, 
                               normal_beads, 
                               gene_pos=gene_pos, 
                               chrom_ord=chrom_ord,
                               logTPM=FALSE)
     
     # Roll mean
-    rm <- package::weight_rollmean(prep_dat, 
+    rm <- SlideCNV::weight_rollmean(prep_dat, 
                                    roll_mean_window)
     save(rm, file="rm.Robj")
     
     # Center Data
-    centered_rm <- package::center_rm(rm)
+    centered_rm <- SlideCNV::center_rm(rm)
 
     # Adjust for reference beads
-    rm_adj <- package::ref_adj(centered_rm, 
+    rm_adj <- SlideCNV::ref_adj(centered_rm, 
                                normal_beads)
 
     # Reverse log transformation
@@ -112,7 +112,7 @@ run_slide_cnv <- function(so,
     # With spatial information
     if (isTRUE(spatial)) {
         # Expressional/positional binning
-        md <- package::bin_metadata(md, 
+        md <- SlideCNV::bin_metadata(md, 
                                     dat, 
                                     avg_bead_per_bin, 
                                     pos, 
@@ -123,10 +123,10 @@ run_slide_cnv <- function(so,
         save(md, file="md_bin.Robj")
 
         # Convert data to long format and combine with metadata
-        dat_long <- package::dat_to_long(dat, md)
+        dat_long <- SlideCNV::dat_to_long(dat, md)
 
         # Plot spatial information
-        package::SpatialPlot(dat_long, 
+        SlideCNV::SpatialPlot(dat_long, 
                              spatial_vars_to_plot, 
                              text_size,
                              title_size,
@@ -135,17 +135,17 @@ run_slide_cnv <- function(so,
                              plotDir)
 
         # Convert data to be by bins
-        dat_bin <- package::long_to_bin(dat_long, 
+        dat_bin <- SlideCNV::long_to_bin(dat_long, 
                                         plotDir)
         save(dat_bin, file="dat_bin.Robj")
 
         # Scale data by nUMIs
-        dat_bin <- package::scale_nUMI(dat_bin, 
+        dat_bin <- SlideCNV::scale_nUMI(dat_bin, 
                                        scale_bin_thresh_hard)
         save(dat_bin, file="dat_bin_scaled.Robj")
 
         # Identify CNVs
-        cnv_data <- package::prep_cnv_dat(dat_bin, 
+        cnv_data <- SlideCNV::prep_cnv_dat(dat_bin, 
                                           lower_bound_cnv, 
                                           upper_bound_cnv, 
                                           hc_function_cnv, 
@@ -153,28 +153,28 @@ run_slide_cnv <- function(so,
         save(cnv_data, file="cnv_data.Robj")
 
         # Display CNVs across heatmap of beads x genes
-        package::cnv_heatmap(cnv_data, 
+        SlideCNV::cnv_heatmap(cnv_data, 
                              md, 
                              chrom_colors=chrom_colors,
                              hc_function_cnv_heatmap, 
                              plotDir)
 
         # Display CNV Score Plots
-        package::quantile_plot(cnv_data, 
+        SlideCNV::quantile_plot(cnv_data, 
                                quantile_plot_cluster_label,
                                text_size,
                                title_size,
                                legend_height_bar,
                                plotDir)
         
-        package::mean_cnv_plot(cnv_data, 
+        SlideCNV::mean_cnv_plot(cnv_data, 
                                text_size,
                                title_size,
                                legend_height_bar,
                                plotDir)
         
         # With just malignant beads
-        best_k_malig <- package::get_num_clust(cnv_data, 
+        best_k_malig <- SlideCNV::get_num_clust(cnv_data, 
                                                hc_function_silhouette, 
                                                max_k_silhouette, 
                                                plot_silhouette, 
@@ -186,7 +186,7 @@ run_slide_cnv <- function(so,
         cnv_data2 <- cnv_data
         
         # Get clones over all beads from their CNVs
-        hcl_sub_all <- package::plot_clones(cnv_data, 
+        hcl_sub_all <- SlideCNV::plot_clones(cnv_data, 
                                             md, 
                                             k=best_k_malig+1, 
                                             type='all', 
@@ -204,24 +204,24 @@ run_slide_cnv <- function(so,
                                by='variable')
 
         # Find DEGs and GO markers per clone over all beads
-        so_clone_all <- package::clone_so(so, 
+        so_clone_all <- SlideCNV::clone_so(so, 
                                           hcl_sub_all,
                                           md)
 
-        cluster_markers_all_obj <- try(package::find_cluster_markers(so_clone=so_clone_all, 
+        cluster_markers_all_obj <- try(SlideCNV::find_cluster_markers(so_clone=so_clone_all, 
                                                                      type="all",
                                                                      text_size=text_size,
                                                                      title_size=title_size,
                                                                      legend_size_pt=legend_size_pt,
                                                                      plotDir=plotDir))
-        go_terms_all_obj <- try(package::find_go_terms(cluster_markers_obj=cluster_markers_all_obj,
+        go_terms_all_obj <- try(SlideCNV::find_go_terms(cluster_markers_obj=cluster_markers_all_obj,
                                                        type='all',
                                                        text_size=text_size,
                                                        title_size=title_size,
                                                        plotDir=plotDir))
 
         # Get clones over malignant beads from their CNVs
-        hcl_sub_malig <- package::plot_clones(cnv_data, 
+        hcl_sub_malig <- SlideCNV::plot_clones(cnv_data, 
                                               md, 
                                               k=best_k_malig, 
                                               type='malig', 
@@ -240,17 +240,17 @@ run_slide_cnv <- function(so,
         cnv_data <- cnv_data2 
         
         # Find DEGs and GO markers per clone over malignant beads
-        so_clone_malig <- package::clone_so(so, 
+        so_clone_malig <- SlideCNV::clone_so(so, 
                                             hcl_sub_malig, 
                                             md, 
                                             mal=TRUE)
-        cluster_markers_malig_obj <- try(package::find_cluster_markers(so_clone=so_clone_malig, 
+        cluster_markers_malig_obj <- try(SlideCNV::find_cluster_markers(so_clone=so_clone_malig, 
                                                                        type="malig", 
                                                                        text_size=text_size,
                                                                        title_size=title_size,
                                                                        legend_size_pt=legend_size_pt,
                                                                        plotDir=plotDir))
-        go_terms_malig_obj <- try(package::find_go_terms(cluster_markers_obj=cluster_markers_malig_obj, 
+        go_terms_malig_obj <- try(SlideCNV::find_go_terms(cluster_markers_obj=cluster_markers_malig_obj, 
                                                          type="malig", 
                                                          text_size=text_size,
                                                          title_size=title_size,
@@ -268,7 +268,7 @@ run_slide_cnv <- function(so,
     # Without spatial information
     else {
         # Expressional/positional binning
-        md <- package::bin_metadata(md, 
+        md <- SlideCNV::bin_metadata(md, 
                                     dat, 
                                     avg_bead_per_bin, 
                                     pos=FALSE, 
@@ -279,21 +279,21 @@ run_slide_cnv <- function(so,
         save(md, file="md_bin.Robj")
 
         # Convert data to long format and combine with metadata
-        dat_long <- package::dat_to_long(dat, md)
+        dat_long <- SlideCNV::dat_to_long(dat, md)
 
         # Convert data to be by bins
-        dat_bin <- package::long_to_bin(dat_long, 
+        dat_bin <- SlideCNV::long_to_bin(dat_long, 
                                         plotDir, 
                                         spatial=spatial)
         save(dat_bin, file="dat_bin.Robj")
 
         # Scale data by nUMIs
-        dat_bin <- package::scale_nUMI(dat_bin, 
+        dat_bin <- SlideCNV::scale_nUMI(dat_bin, 
                                        scale_bin_thresh_hard)
         save(dat_bin, file="dat_bin_scaled.Robj")
 
         # Identify CNVs
-        cnv_data <- package::prep_cnv_dat(dat_bin, 
+        cnv_data <- SlideCNV::prep_cnv_dat(dat_bin, 
                                           lower_bound_cnv, 
                                           upper_bound_cnv, 
                                           hc_function_cnv, 
@@ -301,7 +301,7 @@ run_slide_cnv <- function(so,
         save(cnv_data, file="cnv_data.Robj")
 
         # Display CNVs across heatmap of beads x genes
-        package::cnv_heatmap(cnv_data, 
+        SlideCNV::cnv_heatmap(cnv_data, 
                              md, 
                              chrom_colors,
                              hc_function_cnv_heatmap, 
@@ -309,7 +309,7 @@ run_slide_cnv <- function(so,
 
         # Get heatmap of silhouette scores across all k for all methods
         # Silhouette method to get ideal number of clusters
-        best_k_malig <- package::get_num_clust(cnv_data, 
+        best_k_malig <- SlideCNV::get_num_clust(cnv_data, 
                                                hc_function_silhouette, 
                                                max_k_silhouette, 
                                                plot_silhouette,
@@ -325,7 +325,7 @@ run_slide_cnv <- function(so,
         cnv_data2 <- cnv_data
 
         # Get clones over all beads from their CNVs
-        hcl_sub_all <- package::plot_clones(cnv_data, 
+        hcl_sub_all <- SlideCNV::plot_clones(cnv_data, 
                                             md, 
                                             k=best_k_malig+1, 
                                             type='all', 
@@ -347,25 +347,25 @@ run_slide_cnv <- function(so,
         save(cnv_data$all, file=paste0(plotDir, "/cnv_data03.Robj"))
         
         # Find DEGs and GO markers per clone over all beads
-        so_clone_all <- package::clone_so(so, 
+        so_clone_all <- SlideCNV::clone_so(so, 
                                           hcl_sub_all, 
                                           md)
         print(cnv_data$all)
         save(cnv_data$all, file=paste0(plotDir, "/cnv_data04.Robj"))
-        cluster_markers_all_obj <- try(package::find_cluster_markers(so_clone_all=so_clone, 
+        cluster_markers_all_obj <- try(SlideCNV::find_cluster_markers(so_clone_all=so_clone, 
                                                                      type="all", 
                                                                      text_size=text_size,
                                                                      title_size=title_size,
                                                                      legend_size_pt=legend_size_pt,
                                                                      plotDir=plotDir))
-        go_terms_all_obj <- try(package::find_go_terms(cluster_markers_obj=cluster_markers_all_obj, 
+        go_terms_all_obj <- try(SlideCNV::find_go_terms(cluster_markers_obj=cluster_markers_all_obj, 
                                                        type='all', 
                                                        text_size=text_size,
                                                        title_size=title_size,
                                                        plotDir=plotDir))
     
         # Get clones over malignant beads from their CNVs
-        hcl_sub_malig <- package::plot_clones(cnv_data, 
+        hcl_sub_malig <- SlideCNV::plot_clones(cnv_data, 
                                               md, 
                                               k=best_k_malig, 
                                               type='malig', 
@@ -384,17 +384,17 @@ run_slide_cnv <- function(so,
         cnv_data <- cnv_data2
         
         # Find DEGs and GO markers per clone over malignant beads
-        so_clone_malig <- package::clone_so(so, 
+        so_clone_malig <- SlideCNV::clone_so(so, 
                                                hcl_sub_malig, 
                                                md, 
                                                mal=TRUE)
-        cluster_markers_malig_obj <- try(package::find_cluster_markers(so_clone=so_clone_malig, 
+        cluster_markers_malig_obj <- try(SlideCNV::find_cluster_markers(so_clone=so_clone_malig, 
                                                                        type="malig", 
                                                                        text_size=text_size,
                                                                        title_size=title_size,
                                                                        legend_size_pt=legend_size_pt,
                                                                        plotDir=plotDir))
-        go_terms_malig_obj <- try(package::find_go_terms(cluster_markers_obj=cluster_markers_malig_obj, 
+        go_terms_malig_obj <- try(SlideCNV::find_go_terms(cluster_markers_obj=cluster_markers_malig_obj, 
                                                          type="malig", 
                                                          text_size=text_size,
                                                          title_size=title_size,

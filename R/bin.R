@@ -28,7 +28,7 @@ bin_metadata <- function(md,
                      dat[,which(dat[,c(colnames(dat)%in%md_mal$bc)]), with=FALSE])
     
     n_bin_mal <- round(nrow(md_mal)/avg_bead_per_bin)
-    md_mal <- package::bin(dat_mal, md_mal, n_bin_mal, pos, pos_k, ex_k, hc_function, plotDir)
+    md_mal <- SlideCNV::bin(dat_mal, md_mal, n_bin_mal, pos, pos_k, ex_k, hc_function, plotDir)
     
     # bin reference beads
     md_ref <- md[cluster_type=='Normal']
@@ -36,7 +36,7 @@ bin_metadata <- function(md,
                      dat[,which(dat[,c(colnames(dat)%in%md_ref$bc)]), with=FALSE])
     
     n_bin_ref <- round(nrow(md_ref)/avg_bead_per_bin)
-    md_ref <- package::bin(dat_ref, md_ref, n_bin_ref, pos, pos_k, ex_k, hc_function, plotDir)
+    md_ref <- SlideCNV::bin(dat_ref, md_ref, n_bin_ref, pos, pos_k, ex_k, hc_function, plotDir)
     md_ref$bin_all <- md_ref$bin_all + max(md_mal$bin_all) 
     
     md <- rbind(md_mal, md_ref)
@@ -335,7 +335,7 @@ scale_nUMI <- function(dat_bin,
             end = top_thresh
         
             # Capping extreme values and normalizing for nUMIs for each bin
-            dat_bin[dat_bin$umi_bin==nbin,]$value <- package::scalefit(dat_bin, nbin, start, end)
+            dat_bin[dat_bin$umi_bin==nbin,]$value <- SlideCNV::scalefit(dat_bin, nbin, start, end)
         
             # Adjust for reference beads
             normal_mean <- mean(dat_bin[dat_bin$cluster_type=='Normal',]$value) # mean of reference beads
