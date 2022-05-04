@@ -7,7 +7,7 @@
 clone_so(so, hcl_sub, md, mal = FALSE)
 }
 \arguments{
-\item{hcl_sub}{hierarchical clustering object of cluster assignemnt as outputted from SlideCNV::plot_clones()}
+\item{hcl_sub}{hierarchical clustering object of cluster assignemnt as outputted from SlideCNA::plot_clones()}
 
 \item{md}{data.table of metadata of each bead}
 
