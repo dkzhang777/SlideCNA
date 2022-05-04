@@ -37,7 +37,7 @@
 #' 
 #' @export
 
-run_slide_cnv <- function(so, 
+run_slide_cna <- function(so, 
                           md, 
                           gene_pos, 
                           plotDir,
