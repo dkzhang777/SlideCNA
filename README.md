@@ -17,7 +17,7 @@ cluster_type (chr): annotation of the bead as 'Normal' or 'Malignant'
     
 ### Running SlideCNA
 ```
-run_slide_cnv(so, 
+run_slide_cna(so, 
               md, 
               gene_pos,
               plotDir,
