@@ -1,10 +1,10 @@
-# SlideCNV 
+# SlideCNA 
 
 ### Installation
 ```
 library(devtools)
-devtools::install_github("dkzhang777/SlideCNV@main", force=TRUE)
-library(SlideCNV)
+devtools::install_github("dkzhang777/SlideCNA@main", force=TRUE)
+library(SlideCNA)
 ```
 ### Preparation
 Prepare a Seurat Data object of the Slide-seq data that contains counts matrix and metadata with cell type annotations. Metadata should contain the following columns in the provided format:
@@ -15,7 +15,7 @@ pos_x (dbl): x-coordinate bead position\
 pos_y (dbl): y-coordinate bead position\
 cluster_type (chr): annotation of the bead as 'Normal' or 'Malignant'
     
-### Running SlideCNV
+### Running SlideCNA
 ```
 run_slide_cnv(so, 
               md, 
