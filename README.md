@@ -13,8 +13,7 @@ bc (chr): bead labels \
 seurat_clusters (fct): Seurat-defined clusters\
 pos_x (dbl): x-coordinate bead position\
 pos_y (dbl): y-coordinate bead position\
-pos_y (dbl): y-coordinate bead position\
-pos_y (chr): annotation of the bead as 'Normal' or 'Malignant'
+cluster_type (chr): annotation of the bead as 'Normal' or 'Malignant'
     
 ### Running SlideCNV
 ```
