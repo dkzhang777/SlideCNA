@@ -34,5 +34,5 @@ An integer representing the number of clusters that optimizes the silhouette sco
 }
 \description{
 This function uses the Silhouette Method applied to CNV scores to determine the
-best number of clusters to divide the binned beads into
+best number of clusters to divide binned beads into
 }
