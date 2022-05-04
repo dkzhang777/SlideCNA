@@ -3,7 +3,7 @@
 #' This function uses the Silhouette Method applied to CNV scores to determine the 
 #' best number of clusters to divide the binned beads into
 #'
-#' @param data cnv_data list object of cnv data from SlideCNV::prep_cnv_dat()
+#' @param data cnv_data list object of cnv data from SlideCNA::prep_cnv_dat()
 #' @param hc_func character string for which hierarchical clustering function to use
 #' @param max_k integer of number max number of clusters to evaluate (2:max_k)
 #' @param plot TRUE if plotting silhoutte scores per cluster
@@ -90,7 +90,7 @@ get_num_clust <- function(data,
 #'
 #' This function plots cluster dendrograms, spatial assignment, and the CNV heat map
 #'
-#' @param data cnv_data list object of cnv data from SlideCNV::prep_cnv_dat()
+#' @param data cnv_data list object of cnv data from SlideCNA::prep_cnv_dat()
 #' @param md data.table of metadata of each bead
 #' @param k integwer of number of clusters/clones
 #' @param type character string, being "all" if using all binned beads, or "malig" if just malignant binned beads
@@ -246,7 +246,7 @@ plot_clones = function(cnv_data,
 #' This function adds another column for cluster designation to a seurat object's meta data
 #'
 #' @param data so seurat object of beads and their meta data
-#' @param hcl_sub hierarchical clustering object of cluster assignemnt as outputted from SlideCNV::plot_clones()
+#' @param hcl_sub hierarchical clustering object of cluster assignemnt as outputted from SlideCNA::plot_clones()
 #' @param md data.table of metadata of each bead
 #' @param mal TRUE if only using malignant beads
 #' @return A seurat object updated with clone information
@@ -419,7 +419,7 @@ find_go_terms <- function(cluster_markers_obj,
     # Get enriched GO terms from marker genes for each cluster
     en_clone=cluster_markers_obj$markers_clone[order(avg_log2FC, 
                                                      decreasing=TRUE), 
-                                               SlideCNV::run_enrichr(gene,50),
+                                               SlideCNA::run_enrichr(gene,50),
                                                by="cluster"]   
     
     # Select top n_terms GO terms
