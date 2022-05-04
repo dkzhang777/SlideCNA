@@ -1,5 +1,5 @@
-Package: SlideCNV
-Title: Calls Copy Number Variations (CNVs) from Slide-seq data
+Package: SlideCNA
+Title: Calls Copy Number Alterations (CNAs) from Slide-seq data
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Diane",
@@ -7,7 +7,7 @@ Authors@R:
            role = c("aut", "cre"),
            email = "dkzhang@mit.edu",
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: This takes spatial single-cell-type RNA-seq data (specifically designed for Slide-seq v2) and calls CNVs, clustering based on CNV profile and visualizing spatial CNV patterns.
+Description: This takes spatial single-cell-type RNA-seq data (specifically designed for Slide-seq v2) and calls CNAs, clustering based on CNA profile and visualizing spatial CNA patterns.
 Imports: 
     data.table,
     reshape2,
