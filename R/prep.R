@@ -79,7 +79,7 @@ weight_rollmean <- function(dat,
         # no. of genes on chromosome larger than window size
         if (nrow(dat[dat$chr==chrom,]) > k) {
             rm_mat <- rbind(rm_mat, 
-                            SlideCNV::weight_rollmean_sub(as.matrix(dat[dat$chr==chrom,7:ncol(dat)]), k=k))
+                            SlideCNA::weight_rollmean_sub(as.matrix(dat[dat$chr==chrom,7:ncol(dat)]), k=k))
         }
         # no. of genes on chromosome is just 1
         else if (nrow(dat[dat$chr==chrom,]) == 1) {
@@ -87,7 +87,7 @@ weight_rollmean <- function(dat,
         }
         # no. of genes on chromosome is more than one but less than window size -> set window size that length
         else {
-            rm_mat <- rbind(rm_mat, SlideCNV::weight_rollmean_sub(as.matrix(dat[dat$chr==chrom,7:ncol(dat)]), k= 
+            rm_mat <- rbind(rm_mat, SlideCNA::weight_rollmean_sub(as.matrix(dat[dat$chr==chrom,7:ncol(dat)]), k= 
                                                         (nrow(dat[dat$chr==chrom,]))))
         }
     }
