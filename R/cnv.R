@@ -102,7 +102,7 @@ prep_cnv_dat <- function(dat_bin,
 #'
 #' This function prepares data for plotting and makes a heat map of CNV scores per bead across all genes
 #'
-#' @param cnv_data list object of cnv data from SlideCNV::prep_cnv_dat()
+#' @param cnv_data list object of cnv data from SlideCNA::prep_cnv_dat()
 #' @param md data.table of metadata of each bead
 #' @param hc_function character for which hierarchical clustering function to use
 #' @param plotDir output plot directory path
@@ -158,7 +158,7 @@ cnv_heatmap <- function(cnv_data,
 #' This function colors and plots each bin by its CNV score quantiles (min, 1st quartile, median, 3rd quartile, max)
 #' on spatial coordinates for each chromosome
 #'
-#' @param cnv_data list object of cnv data from SlideCNV::prep_cnv_dat()
+#' @param cnv_data list object of cnv data from SlideCNA::prep_cnv_dat()
 #' @param cluster_label character string of which column name to keep 
 #' @param plotDir output plot directory path
 #’ @Import ggplot2
@@ -218,7 +218,7 @@ quantile_plot <- function(cnv_data,
 #' This function colors and plots each bin by its mean CNV score
 #' on spatial coordinates for each chromosome
 #'
-#' @param cnv_data list object of cnv data from SlideCNV::prep_cnv_dat()
+#' @param cnv_data list object of cnv data from SlideCNA::prep_cnv_dat()
 #' @param plotDir output plot directory path
 #’ @Import ggplot2
 
