@@ -318,9 +318,6 @@ run_slide_cna <- function(so,
                                                plotDir) # With just malignant beads
 
         save(best_k_malig, file="best_k_malig.Robj")
-
-        print(cnv_data$all)
-        save(cnv_data$all, file=paste0(plotDir, "/cnv_data01.Robj"))
         
         cnv_data2 <- cnv_data
 
@@ -337,21 +334,16 @@ run_slide_cna <- function(so,
                                             hc_function_plot_clones, 
                                             plotDir,
                                             spatial=spatial)
-        print(cnv_data$all)
-        save(cnv_data$all, file=paste0(plotDir, "/cnv_data02.Robj"))
         
         cnv_data2$all <- merge(cnv_data$all, 
                                data.table::as.data.table(hcl_sub_all), 
                                by='variable')
-        print(cnv_data$all)
-        save(cnv_data$all, file=paste0(plotDir, "/cnv_data03.Robj"))
         
         # Find DEGs and GO markers per clone over all beads
         so_clone_all <- SlideCNA::clone_so(so, 
                                           hcl_sub_all, 
                                           md)
-        print(cnv_data$all)
-        save(cnv_data$all, file=paste0(plotDir, "/cnv_data04.Robj"))
+
         cluster_markers_all_obj <- try(SlideCNA::find_cluster_markers(so_clone_all=so_clone, 
                                                                      type="all", 
                                                                      text_size=text_size,
