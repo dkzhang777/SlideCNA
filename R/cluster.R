@@ -339,7 +339,7 @@ find_cluster_markers <- function(so_clone,
                                                                    only.pos=only.pos))
     # select top n markers 
     top_markers_clone <- markers_clone[order(avg_log2FC,decreasing=TRUE),
-                                       .SD[1:n_markers,], by="cluster"][p_val<.05,]
+                                       .SD[1:n_markers,], by="cluster"][p_val_adj<.05,]
 
     # recreate counts table
     counts_re <- as.data.frame(Seurat::GetAssayData(object = so_clone, slot = "counts"))
@@ -443,7 +443,7 @@ find_go_terms <- function(cluster_markers_obj,
     # Select top n_terms GO terms
     top_en_clone <-en_clone[GO_Biological_Process_2018.Adjusted.P.value<0.05][order(GO_Biological_Process_2018.Adjusted.P.value),.SD[1:n_terms],by="cluster"] 
 
-    top_en_clone$neglog10p <- -log10(top_en_clone$GO_Biological_Process_2018.P.value)
+    top_en_clone$neglog10p <- -log10(top_en_clone$GO_Biological_Process_2018.Adjusted.P.value)
     top_en_clone$GO_Biological_Process_2018.Term <- gsub("\\s*\\([^\\)]+\\)","",top_en_clone$GO_Biological_Process_2018.Term) # Rename to look nicer                            
     top_en_clone$cluster <- factor(top_en_clone$cluster, 
                                    levels = sort(as.numeric(levels(top_en_clone$cluster))))
