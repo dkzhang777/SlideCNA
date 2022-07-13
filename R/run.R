@@ -85,7 +85,9 @@ run_slide_cna <- function(so,
     raw_dat=data.table::as.data.table(so@assays$RNA@counts[rowSums(as.matrix(so@assays$RNA@counts!=0))>50,],
                           keep.rownames = "GENE")
     
-    normal_beads <- md[md$cluster_type == 'Normal',]$bc
+    md[md$cluster_type == 'Normal',]$cluster_type <- "Non-malignant" # Rename normal beads as "Non-malignant"
+    
+    normal_beads <- md[md$cluster_type == 'Non-malignant',]$bc
     prep_dat <- SlideCNA::prep(raw_dat, 
                               normal_beads, 
                               gene_pos=gene_pos, 

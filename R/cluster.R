@@ -218,12 +218,12 @@ plot_clones = function(cnv_data,
     
     # Set colors
     ann_colors = list(
-    'Tissue Type' = c(Malignant="#F8776D", Normal="#00BFC4"),                       
+    'Tissue Type' = c("Malignant"="#F8776D", "Non-malignant"="#00BFC4"),                       
     'Cluster' = clone_colors,
     chr = chrom_colors)
 
     # Plot CNV heatmap with clone labelling    
-    png(file = paste0(plotDir,"/", type, "_", k, "_clones_cnv_heatmap.png"), width = 1000, height = 900) #png version
+    png(file = paste0(plotDir,"/", type, "_", k, "_clones_cnv_heatmap.png"), width = 1500, height = 1000) #png version
     print(pheatmap::pheatmap(sub_wide, 
                              color = colorRampPalette(c("navy", "white","firebrick3"))(50), 
                              cluster_rows = TRUE, 
@@ -238,6 +238,24 @@ plot_clones = function(cnv_data,
                              fontsize=14, 
                              filename= paste0(plotDir,"/", type, "_", k, "_clones_cnv_heatmap.png")))
     dev.off()
+    
+     # Plot CNV heatmap with clone labelling    
+    pdf(file = paste0(plotDir,"/", type, "_", k, "_clones_cnv_heatmap.pdf"), width = 18, height = 15) #pdf version
+    print(pheatmap::pheatmap(sub_wide, 
+                             color = colorRampPalette(c("navy", "white","firebrick3"))(50), 
+                             cluster_rows = TRUE, 
+                             cluster_cols = FALSE, 
+                             clustering_distance_rows = "euclidean",
+                             clustering_method = hc_function, 
+                             annotation_row = annot_row, 
+                             annotation_col = annot_col,
+                             annotation_colors=ann_colors, 
+                             show_rownames=FALSE, 
+                             show_colnames=FALSE, 
+                             fontsize=14, 
+                             filename= paste0(plotDir,"/", type, "_", k, "_clones_cnv_heatmap.pdf")))
+    dev.off()
+    
     return(hcl_sub)
 }
             

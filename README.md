@@ -1,5 +1,8 @@
 # SlideCNA 
 
+### Introduction
+SlideCNA is a method to call copy number alterations (CNA) from spatial transcriptomics data (specifically adapted for Slide-seq data). SlideCNA uses expression smoothing across the genome to extract changes in copy number and implements a spatio-molecular binning process to boost signal and consolidate reads. Based on the CNA profiles, SlideCNA can identify clusters across space. 
+
 ### Installation
 ```
 library(devtools)
@@ -13,7 +16,7 @@ bc (chr): bead labels \
 seurat_clusters (fct): Seurat-defined clusters\
 pos_x (dbl): x-coordinate bead position\
 pos_y (dbl): y-coordinate bead position\
-cluster_type (chr): annotation of the bead as 'Normal' or 'Malignant'
+cluster_type (chr): annotation of the bead as 'Normal' (Non-malignant) or 'Malignant'
     
 ### Running SlideCNA
 ```
