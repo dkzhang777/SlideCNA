@@ -148,7 +148,6 @@ cnv_heatmap <- function(cnv_data,
                              annotation_colors=ann_colors, 
                              show_rownames=FALSE, 
                              show_colnames=FALSE, 
-                             fontsize=14, 
                              filename=paste0(plotDir,"/cnv_heatmap.png")))
     dev.off()
     
@@ -165,7 +164,6 @@ cnv_heatmap <- function(cnv_data,
                              annotation_colors=ann_colors, 
                              show_rownames=FALSE, 
                              show_colnames=FALSE, 
-                             fontsize=14, 
                              filename=paste0(plotDir,"/cnv_heatmap.pdf")))
     dev.off()
 }
