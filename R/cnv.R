@@ -150,10 +150,9 @@ cnv_heatmap <- function(cnv_data,
                              show_colnames=FALSE, 
                              filename=paste0(plotDir,"/cnv_heatmap.png")))
     dev.off()
-    
-    # Plot heat map
-    pdf(file = paste0(plotDir,"/cnv_heatmap.pdf"), width = 18, height = 15) # pdf version
-    print(pheatmap::pheatmap(cnv_data$all_wide, 
+ 
+    # Plot heat map (pdf)
+    pheatmap::pheatmap(cnv_data$all_wide, 
                              color = colorRampPalette(c("navy", "white","firebrick3"))(50), 
                              cluster_rows = TRUE, 
                              cluster_cols = FALSE, 
@@ -164,8 +163,9 @@ cnv_heatmap <- function(cnv_data,
                              annotation_colors=ann_colors, 
                              show_rownames=FALSE, 
                              show_colnames=FALSE, 
-                             filename=paste0(plotDir,"/cnv_heatmap.pdf")))
-    dev.off()
+                             filename=paste0(plotDir,"/cnv_heatmap.pdf"),
+                              width=18,
+                              height=15)
 }
 
 #' Plot CNV score quantiles per bin and per chromosome

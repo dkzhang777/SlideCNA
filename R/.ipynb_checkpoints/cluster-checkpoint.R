@@ -238,9 +238,8 @@ plot_clones = function(cnv_data,
                              filename= paste0(plotDir,"/", type, "_", k, "_clones_cnv_heatmap.png")))
     dev.off()
     
-     # Plot CNV heatmap with clone labelling    
-    pdf(file = paste0(plotDir,"/", type, "_", k, "_clones_cnv_heatmap.pdf"), width = 18, height = 15) #pdf version
-    print(pheatmap::pheatmap(sub_wide, 
+     # Plot CNV heatmap with clone labelling (pdf)
+     pheatmap::pheatmap(sub_wide, 
                              color = colorRampPalette(c("navy", "white","firebrick3"))(50), 
                              cluster_rows = TRUE, 
                              cluster_cols = FALSE, 
@@ -251,8 +250,9 @@ plot_clones = function(cnv_data,
                              annotation_colors=ann_colors, 
                              show_rownames=FALSE, 
                              show_colnames=FALSE, 
-                             filename= paste0(plotDir,"/", type, "_", k, "_clones_cnv_heatmap.pdf")))
-    dev.off()
+                             filename= paste0(plotDir,"/", type, "_", k, "_clones_cnv_heatmap.pdf"),
+                       width=18,
+                       height=15)
     
     return(hcl_sub)
 }
