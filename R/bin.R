@@ -280,7 +280,6 @@ long_to_bin <- function(dat_long,
     else {
         # combine constituent beads to bins
         dat_bin=dat_long[,.(value=mean(value),
-                            labels_cl_unif=mode(labels_cl_unif), 
                             cluster_type=mode(cluster_type)), 
                             by=c("bin_all", "GENE", "chr",
                                  "start","end","rel_gene_pos",
