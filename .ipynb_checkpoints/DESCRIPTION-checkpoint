@@ -1,0 +1,32 @@
+Package: SlideCNA
+Title: Calls Copy Number Alterations (CNAs) from Slide-seq data
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Diane",
+           family = "Zhang",
+           role = c("aut", "cre"),
+           email = "dkzhang@mit.edu",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: This takes spatial single-cell-type RNA-seq data (specifically designed for Slide-seq v2) and calls CNAs, clustering based on CNA profile and visualizing spatial CNA patterns.
+Imports: 
+    data.table,
+    reshape2,
+    dplyr,
+    ggplot2,
+    scales,
+    pheatmap,
+    cluster,
+    factoextra,
+    dendextend,
+    Seurat,
+    tidyselect,
+    stringr,
+    magrittr,
+    enrichR (>= 3.0)
+Remotes: wjawaid/enrichR
+License: `use_mit_license()`, `use_gpl3_license()` or friends to
+    pick a license
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
