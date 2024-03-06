@@ -47,7 +47,7 @@ run_slide_cna(
 \arguments{
 \item{so}{Seurat object that contains raw counts matrix and meta data with cell type annotations}
 
-\item{md}{data.table of metadata of each bead (beads x annotations)}
+\item{md}{data.table of metadata of each bead (beads x annotations); contains columns 'bc' with values of bead names, 'cluster_type' with values of 'Normal' or 'Malignant', 'pos_x' with x-coordinate bead positions, 'pos_y' with y-coordinate bead positions, and 'nCount_RNA' with RNA counts per bead}
 
 \item{gene_pos}{data.table with columns for GENE, chr, start, end, rel_gene_pos (1 : # of genes on chromosome)}
 

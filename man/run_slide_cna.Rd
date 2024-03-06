@@ -67,7 +67,7 @@ run_slide_cna(
 
 \item{ex_k}{expressional weight}
 
-\item{hc_function_bin}{hierarchical clustering function for binning}
+\item{hc_function_bin}{hierarchical clustering function for binning; to feed hclust's method argument, one of "ward.D", "ward.D2", "single", "complete", "average", "mcquitty", "median" or "centroid"}
 
 \item{spatial_vars_to_plot}{character vector of features to plot/columns of metadata}
 
@@ -78,12 +78,12 @@ thresholds based on 1 + or - the mean of absolute min and max vlaues}
 
 \item{upper_bound_cnv}{numeric float to represent the upper cap for CNV scores}
 
-\item{hc_function_cnv}{character for which hierarchical clustering function to use for CNV-calling}
+\item{hc_function_cnv}{character for which hierarchical clustering function to use for CNV-calling; to feed hclust's method argument, one of "ward.D", "ward.D2", "single", "complete", "average", "mcquitty", "median" or "centroid"}
 
 \item{quantile_plot_cluster_label}{character string of which column name to keep in quantile plot}
 
 \item{hc_function_silhouette}{character string for which hierarchical clustering function to use for
-the Silhouette method}
+the Silhouette method; to feed hclust's method argument, one of "ward.D", "ward.D2", "single", "complete", "average", "mcquitty", "median" or "centroid"}
 
 \item{max_k_silhouette}{integer of number max number of clusters to evaluate (2:max_k_silhouette)
 .       in Silhouette method}
@@ -103,7 +103,7 @@ in plotting clones}
 
 \item{legend_height_bar}{integer of height of legend bar in some ggplots}
 
-\item{hc_function}{character for which hierarchical clustering function to use for visualzing CNV heat map}
+\item{hc_function}{character for which hierarchical clustering function to use for visualzing CNV heat map; to feed hclust's method argument, one of "ward.D", "ward.D2", "single", "complete", "average", "mcquitty", "median" or "centroid"}
 }
 \description{
 Take a raw expression counts, cell type annotations, and positional cooridnates to identify CNVs patterns across space and CNV-based clustering patterns
