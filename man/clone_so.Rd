@@ -2,7 +2,7 @@
 % Please edit documentation in R/cluster.R
 \name{clone_so}
 \alias{clone_so}
-\title{Add clone information to meta data of seurat object}
+\title{Add clone information to meta data of seurat object and bin the beads}
 \usage{
 clone_so(so, hcl_sub, md, mal = FALSE)
 }
@@ -19,5 +19,5 @@ clone_so(so, hcl_sub, md, mal = FALSE)
 A seurat object updated with clone information
 }
 \description{
-This function adds another column for cluster designation to a seurat object's meta data
+This function adds another column for cluster designation to a seurat object's meta data and bins beads
 }

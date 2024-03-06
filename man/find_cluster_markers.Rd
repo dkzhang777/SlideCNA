@@ -10,16 +10,21 @@ find_cluster_markers(
   logfc.threshold = 0.2,
   min.pct = 0,
   only.pos = TRUE,
-  n_markers = 5,
+  n_markers,
   text_size,
   title_size,
   legend_size_pt,
-  plotDir
+  p_val_thresh = 0.05,
+  bin = FALSE,
+  plotDir = None
 )
 }
 \arguments{
 \item{type}{character string that is 'all' if using malignant and normal clusters and 'malig'
 if just using malignant clusters}
+
+\item{logfc.threshold}{numeric float that is seurat parameter,
+representing the minimum log2 fold change for DEGs to be significant}
 
 \item{min.pct}{numeric Seurat function parameter}
 
@@ -27,12 +32,19 @@ if just using malignant clusters}
 
 \item{n_markers}{integer of number of top DEGs to plot/use}
 
+\item{text_size}{integer of text size for ggplot}
+
+\item{title_size}{integer of title size for ggplot}
+
+\item{legend_size_pt}{integer of legend size for ggplot}
+
+\item{p_val_thresh}{threshold for p_val_adj}
+
+\item{bin}{TRUE if using binned beads seurat object}
+
 \item{plotDir}{output plot directory path}
 
-\item{data}{so seurat object with clone information}
-
-\item{md}{logfc.threshold numeric float that is seurat parameter,
-representing the minimum log2 fold change for DEGs to be significant}
+\item{so}{seurat object with clone information}
 }
 \value{
 A list object with cluster marker information
