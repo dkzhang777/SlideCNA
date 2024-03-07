@@ -288,7 +288,7 @@ clone_so <- function(so,
     counts_t <- Seurat::GetAssayData(object = so, slot = "counts") %>%
         t() %>%
         as.data.frame() %>%
-        add_rownames(var = "bc")
+        tibble::rownames_to_column(var = "bc")
     
     # add bin information
     counts_t_labeled <- dplyr::left_join(md[,c('bc','bin_all')], 
