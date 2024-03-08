@@ -288,7 +288,7 @@ clone_so <- function(so,
     print(head(so_counts))
     print("---so_counts good---")
     
-    so_counts_t <- so_counts %>% t()
+    so_counts_t <- so_counts %>% as.matrix() %>% t()
     print(head(so_counts_t))
     print("---so_counts_t good---")
     
