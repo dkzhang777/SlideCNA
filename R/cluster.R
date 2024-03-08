@@ -284,7 +284,7 @@ clone_so <- function(so,
         md <- md[cluster_type=='Malignant']
     }
     
-    so_counts <- Seurat::GetAssayData(object = so, slot = "counts"))
+    so_counts <- Seurat::GetAssayData(object = so, slot = "counts")
     print(head(so_counts))
     print("---so_counts good---")
     
