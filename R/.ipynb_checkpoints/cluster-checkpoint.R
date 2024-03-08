@@ -284,13 +284,21 @@ clone_so <- function(so,
         md <- md[cluster_type=='Malignant']
     }
     
-    print(head(Seurat::GetAssayData(object = so, slot = "counts")))
+    so_counts <- Seurat::GetAssayData(object = so, slot = "counts"))
+    print(head(so_counts))
+    print("---so_counts good---")
+    
+    so_counts_t <- so_counts %>% t()
+    print(head(so_counts_t))
+    print("---so_counts_t good---")
     
     # Get original counts and transpose
     counts_t <- Seurat::GetAssayData(object = so, slot = "counts") %>%
         t() %>%
         as.data.frame() %>%
         tibble::rownames_to_column(var = "bc")
+    
+    print("---counts_t good---")
     
     # add bin information
     counts_t_labeled <- dplyr::left_join(md[,c('bc','bin_all')], 
