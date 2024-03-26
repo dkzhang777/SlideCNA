@@ -9,7 +9,7 @@ run_slide_cna(
   md,
   gene_pos,
   plotDir,
-  OUPUT_DIRECTORY,
+  OUTPUT_DIRECTORY,
   spatial = TRUE,
   roll_mean_window = 101,
   avg_bead_per_bin = 12,
@@ -53,7 +53,7 @@ run_slide_cna(
 
 \item{plotDir}{output plot directory path}
 
-\item{OUPUT_DIRECTORY}{output directory path}
+\item{OUTPUT_DIRECTORY}{output directory path}
 
 \item{spatial}{TRUE if using spatial information FALSE if not}
 

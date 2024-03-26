@@ -6,7 +6,7 @@
 #' @param md data.table of metadata of each bead (beads x annotations); contains columns 'bc' with values of bead names, 'cluster_type' with values of 'Normal' or 'Malignant', 'pos_x' with x-coordinate bead positions, 'pos_y' with y-coordinate bead positions, and 'nCount_RNA' with RNA counts per bead 
 #' @param gene_pos data.table with columns for GENE, chr, start, end, rel_gene_pos (1 : # of genes on chromosome)
 #' @param plotDir output plot directory path
-#' @param OUPUT_DIRECTORY output directory path
+#' @param OUTPUT_DIRECTORY output directory path
 #' @param spatial TRUE if using spatial information FALSE if not
 #' @param roll_mean_window integer number of adjacent genes for which to average over in pyramidal weighting scheme
 #' @param avg_bead_per_bin integer of average number of beads there should be per bin 
@@ -41,7 +41,7 @@ run_slide_cna <- function(so,
                           md, 
                           gene_pos, 
                           plotDir,
-                          OUPUT_DIRECTORY, 
+                          OUTPUT_DIRECTORY, 
                           spatial=TRUE,
                           roll_mean_window=101,
                           avg_bead_per_bin=12, 
@@ -79,7 +79,7 @@ run_slide_cna <- function(so,
                           legend_size_pt = 4,
                           legend_height_bar = 1.5) {
     
-    setwd(OUPUT_DIRECTORY)
+    setwd(OUTPUT_DIRECTORY)
     
     # Pre-process data
     raw_dat=data.table::as.data.table(so@assays$RNA@counts[rowSums(as.matrix(so@assays$RNA@counts!=0))>50,],

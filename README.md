@@ -81,7 +81,7 @@ run_slide_cna(so,
 `md` (data.table): metadata of each bead (beads x annotations); contains columns 'bc' with values of bead names, 'cluster_type' with values of 'Normal' or 'Malignant', 'pos_x' with x-coordinate bead positions, 'pos_y' with y-coordinate bead positions, and 'nCount_RNA' with RNA counts per bead \
 `gene_pos` (data.table): table with columns for GENE, chr, start, end, rel_gene_pos (1 : # of genes on chromosome)\
 `plotDir` (char): output plot directory path\
-`OUPUT_DIRECTORY` (char): output directory path\
+`OUTPUT_DIRECTORY` (char): output directory path\
 `spatial` (bool): TRUE if using spatial information FALSE if not\
 `roll_mean_window` (int): integer number of adjacent genes for which to average over in pyramidal weighting scheme\
 `avg_bead_per_bin` (int): integer of average number of beads there should be per bin \
@@ -107,4 +107,4 @@ run_slide_cna(so,
 `legend_height_bar` (int): height of legend bar in some ggplots
 
 ### Results
-Results will appear in OUPUT_DIRECTORY and plotDir
+Results will appear in OUTPUT_DIRECTORY and plotDir
