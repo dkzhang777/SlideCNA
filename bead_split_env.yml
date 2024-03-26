@@ -1,0 +1,9 @@
+name: TACCO_env
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python>3.7.0,!=3.8.0,<3.12
+  - tacco
+  - leidenalg
+  - ipykernel
