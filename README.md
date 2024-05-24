@@ -11,7 +11,7 @@ Example Jupyter notebooks of SlideCNA applied to Slide-seq, snRNA-seq, and Slide
 
 Create a clean environment with conda using the SlideCNA_env.yml file from the SlideCNA repository:
 ```
-conda env create -f "https://github.com/dkzhang777/SlideCNA/SlideCNA_env.yml"
+conda env create -f "https://github.com/dkzhang777/SlideCNA/blob/main/SlideCNA_env.yml"
 ```
 (For older versions of conda one needs to download the environment.yml and use the local file for installation.)
 
