@@ -7,9 +7,9 @@ Example Jupyter notebooks of SlideCNA applied to Slide-seq, snRNA-seq, and Slide
 
 ### Installation
 
-#### Clean
+#### New Conda Environment
 
-Create a clean environment with conda using the SlideCNA_env.yml file from the SlideCNA repository:
+Create a new conda environment using the SlideCNA_env.yml file from the SlideCNA repository:
 ```
 conda env create -f "https://github.com/dkzhang777/SlideCNA/blob/main/SlideCNA_env.yml"
 ```
@@ -25,11 +25,13 @@ library(SlideCNA)
 Prepare a Seurat Data object of the Slide-seq data that contains counts matrix and metadata with cell type annotations. Metadata should contain the following columns in the provided format:
 
 bc (chr): bead labels \
-seurat_clusters (fct): Seurat-defined clusters\
+seurat_clusters (fct): Seurat-defined clusters<sup>*</sup>\
 pos_x (dbl): x-coordinate bead position\
 pos_y (dbl): y-coordinate bead position\
 cluster_type (chr): annotation of the bead as 'Normal' (Non-malignant) or 'Malignant'
     
+<sup>*</sup> Seurat clusters are included to guide interpretation of cell type annotations. RCTD-defined cell types and malignant/non-malignant status should generally correspond to distinct Seurat clusters.
+
 ### Running SlideCNA
 ```
 run_slide_cna(so, 
