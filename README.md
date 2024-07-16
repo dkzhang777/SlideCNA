@@ -13,9 +13,8 @@ Create a new conda environment using the SlideCNA_env.yml file from the SlideCNA
 ```
 conda env create -f "https://github.com/dkzhang777/SlideCNA/blob/main/SlideCNA_env.yml"
 ```
-(For older versions of conda one needs to download the environment.yml and use the local file for installation.)
 
-#### Github
+Install SlideCNA through R from Github:
 ```
 library(devtools)
 devtools::install_github("dkzhang777/SlideCNA@main", force=TRUE)
