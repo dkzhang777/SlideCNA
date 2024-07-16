@@ -1,4 +1,4 @@
-name: TACCO_env
+name: TACCO_slidecna
 channels:
   - conda-forge
   - bioconda
