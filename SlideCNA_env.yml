@@ -1,4 +1,4 @@
-name: /ahg/regevdata/users/dzhang/condapkgs/SlideCNA
+name: SlideCNA
 channels:
   - anaconda
   - bioconda
@@ -294,7 +294,7 @@ dependencies:
   - r-cellranger=1.1.0=r43h6115d3f_0
   - r-cli=3.6.1=r43h884c59f_0
   - r-clipr=0.8.0=r43h6115d3f_0
-  - r-cluster=2.1.4=r43h640688f_0
+  - r-cluster=2.1.6=r43h61816a4_0
   - r-codetools=0.2_19=r43h6115d3f_0
   - r-colorspace=2.1_0=r43h76d94ec_0
   - r-commonmark=1.9.0=r43h76d94ec_0
@@ -599,4 +599,3 @@ dependencies:
   - zlib=1.2.13=hd590300_5
   - zlib-ng=2.0.7=h5eee18b_0
   - zstd=1.5.5=hc292b87_0
-prefix: /ahg/regevdata/users/dzhang/condapkgs/SlideCNA
