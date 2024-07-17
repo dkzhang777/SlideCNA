@@ -90,10 +90,15 @@ get_num_clust <- function(data,
 #'
 #' This function plots cluster dendrograms, spatial assignment, and the CNV heat map
 #'
-#' @param data cnv_data list object of cnv data from SlideCNA::prep_cnv_dat()
+#' @param cnv_data list object of cnv data from SlideCNA::prep_cnv_dat()
 #' @param md data.table of metadata of each bead
-#' @param k integwer of number of clusters/clones
+#' @param k integer of number of clusters/clones
 #' @param type character string, being "all" if using all binned beads, or "malig" if just malignant binned beads
+#' @param chrom_colors vector of colors labeled by which chromosome they correspond to
+#' @param text_size Ggplot2 text size
+#' @param title_size Ggplot2 title size
+#' @param legend_size_pt Ggplot2 legend_size_pt
+#' @param legend_height_bar Ggplot2 legend_height_bar
 #' @param hc_function character string for which hierarchical clustering function to use
 #' @param plotDir output plot directory path
 #' @param spatial TRUE if using spatial information
@@ -267,7 +272,7 @@ plot_clones = function(cnv_data,
 #'
 #' This function adds another column for cluster designation to a seurat object's meta data and bins beads
 #'
-#' @param data so seurat object of beads and their meta data
+#' @param so Seurat object of beads and their meta data
 #' @param hcl_sub hierarchical clustering object of cluster assignemnt as outputted from SlideCNA::plot_clones()
 #' @param md data.table of metadata of each bead
 #' @param mal TRUE if only using malignant beads
@@ -322,7 +327,7 @@ clone_so <- function(so,
 #'
 #' This function uses Seurat's marker finding capability to find DEGs of each cluster
 #'
-#' @param so seurat object with clone information
+#' @param so_clone seurat object with 'clone' (SlideCNA-designated cluster) annotations
 #' @param type character string that is 'all' if using malignant and normal clusters and 'malig'
 #'        if just using malignant clusters
 #' @param logfc.threshold numeric float that is seurat parameter,
@@ -471,10 +476,12 @@ find_cluster_markers <- function(so_clone,
 #' This function utilizes cluster-specific DEGs to identify cluster-specifc GO biological processes
 #' and plots these if they occur
 #'
-#' @param data cluster_markers_obj list object with cluster marker information
+#' @param cluster_markers_obj list object with cluster marker information
 #' @param type character string that is 'all' if using malignant and normal clusters and 'malig'
 #'        if just using malignant clusters
 #' @param n_terms integer of number of top DEGs to plot/use
+#' @param text_size integer of text size for ggplot
+#' @param title_size integer of title size for ggplot
 #' @param plotDir output plot directory path
 #' @return A list object with cluster GO term information
 #'         en_clone = data.table of cluster GO terms
@@ -537,11 +544,18 @@ find_go_terms <- function(cluster_markers_obj,
     }
 }                             
 
-### Subfunction to get significantly enriched GO terms given a set of signfiicant beads and genes
+#' Subfunction to get significantly enriched GO terms given a set of signfiicant beads and genes  
+#'
+#' This function finds the GO biological processes associated with the top n genes using enrichR
+#'
+#' @param genes vector of differentially expressed genes
+#' @param n_genes number of the most significantly enriched DEGs to base gene enrichment from
+#' @return A data.table of the most significant GO terms and their meta data
+
 #' @export
 run_enrichr=function(genes,
-                     ngenes) {
-    res=data.table::as.data.table(enrichR::enrichr(genes[1:ngenes]
+                     n_genes) {
+    res=data.table::as.data.table(enrichR::enrichr(genes[1:n_genes]
                                                    ,databases = c("GO_Biological_Process_2018")))
     return(res)
 }

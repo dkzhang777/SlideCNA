@@ -11,6 +11,8 @@ cnv_heatmap(cnv_data, md, chrom_colors, hc_function = "ward.D2", plotDir)
 
 \item{md}{data.table of metadata of each bead}
 
+\item{chrom_colors}{vector of colors labeled by which chromosome they correspond to}
+
 \item{hc_function}{character for which hierarchical clustering function to use}
 
 \item{plotDir}{output plot directory path}

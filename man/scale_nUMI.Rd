@@ -10,7 +10,7 @@ scale_nUMI(dat_bin, thresh_hard = FALSE)
 \item{dat_bin}{data.table of relative expression intensities per bin}
 
 \item{thresh_hard}{TRUE if using strict thresholds for expression thresholds and FALSE if adjusting
-thresholds based on 1 + or - the mean of absolute min and max vlaues}
+thresholds based on 1 + or - the mean of absolute min and max values}
 }
 \value{
 data.table of CNV scores per bin

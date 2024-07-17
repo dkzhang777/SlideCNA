@@ -20,12 +20,13 @@
 #' @param lower_bound_cnv numeric float to represent the lower cap for CNV scores
 #' @param upper_bound_cnv numeric float to represent the upper cap for CNV scores 
 #' @param hc_function_cnv character for which hierarchical clustering function to use for CNV-calling; to feed hclust's method argument, one of "ward.D", "ward.D2", "single", "complete", "average", "mcquitty", "median" or "centroid"
-#' @param hc_function character for which hierarchical clustering function to use for visualzing CNV heat map; to feed hclust's method argument, one of "ward.D", "ward.D2", "single", "complete", "average", "mcquitty", "median" or "centroid"
+#' @param hc_function_cnv_heatmap character for which hierarchical clustering function to use for visualzing CNV heat map; to feed hclust's method argument, one of "ward.D", "ward.D2", "single", "complete", "average", "mcquitty", "median" or "centroid"
 #' @param quantile_plot_cluster_label character string of which column name to keep in quantile plot
 #' @param hc_function_silhouette character string for which hierarchical clustering function to use for 
 #'        the Silhouette method; to feed hclust's method argument, one of "ward.D", "ward.D2", "single", "complete", "average", "mcquitty", "median" or "centroid"
 #' @param max_k_silhouette integer of number max number of clusters to evaluate (2:max_k_silhouette) 
 #'.       in Silhouette method
+#' @param plot_silhouette TRUE if plotting silhouette scores for clustering 
 #' @param hc_function_plot_clones character string for which hierarchical clustering function to use 
 #'        in plotting clones
 #' @param chrom_ord character vector of order and names of chromosomes

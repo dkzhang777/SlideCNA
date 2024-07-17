@@ -104,6 +104,7 @@ prep_cnv_dat <- function(dat_bin,
 #'
 #' @param cnv_data list object of cnv data from SlideCNA::prep_cnv_dat()
 #' @param md data.table of metadata of each bead
+#' @param chrom_colors vector of colors labeled by which chromosome they correspond to
 #' @param hc_function character for which hierarchical clustering function to use
 #' @param plotDir output plot directory path
 
@@ -175,13 +176,17 @@ cnv_heatmap <- function(cnv_data,
 #'
 #' @param cnv_data list object of cnv data from SlideCNA::prep_cnv_dat()
 #' @param cluster_label character string of which column name to keep 
+#' @param text_size integer of text size for ggplot
+#' @param title_size integer of title size for ggplot
+#' @param legend_height_bar integer of bar height of legend for ggplot
 #' @param plotDir output plot directory path
 #’ @Import ggplot2
 
 #' @export
 quantile_plot <- function(cnv_data, 
                           cluster_label="seurat_clusters", 
-                          text_size, title_size, 
+                          text_size, 
+                          title_size, 
                           legend_height_bar, 
                           plotDir) {
     plot_data <- cnv_data$all
@@ -234,6 +239,9 @@ quantile_plot <- function(cnv_data,
 #' on spatial coordinates for each chromosome
 #'
 #' @param cnv_data list object of cnv data from SlideCNA::prep_cnv_dat()
+#' @param text_size integer of text size for ggplot
+#' @param title_size integer of title size for ggplot
+#' @param legend_height_bar integer of bar height of legend for ggplot
 #' @param plotDir output plot directory path
 #’ @Import ggplot2
 

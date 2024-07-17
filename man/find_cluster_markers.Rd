@@ -20,6 +20,8 @@ find_cluster_markers(
 )
 }
 \arguments{
+\item{so_clone}{seurat object with 'clone' (SlideCNA-designated cluster) annotations}
+
 \item{type}{character string that is 'all' if using malignant and normal clusters and 'malig'
 if just using malignant clusters}
 
@@ -43,8 +45,6 @@ representing the minimum log2 fold change for DEGs to be significant}
 \item{bin}{TRUE if using binned beads seurat object}
 
 \item{plotDir}{output plot directory path}
-
-\item{so}{seurat object with clone information}
 }
 \value{
 A list object with cluster marker information

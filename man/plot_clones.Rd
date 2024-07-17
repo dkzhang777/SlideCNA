@@ -20,19 +20,29 @@ plot_clones(
 )
 }
 \arguments{
+\item{cnv_data}{list object of cnv data from SlideCNA::prep_cnv_dat()}
+
 \item{md}{data.table of metadata of each bead}
 
-\item{k}{integwer of number of clusters/clones}
+\item{k}{integer of number of clusters/clones}
 
 \item{type}{character string, being "all" if using all binned beads, or "malig" if just malignant binned beads}
+
+\item{chrom_colors}{vector of colors labeled by which chromosome they correspond to}
+
+\item{text_size}{Ggplot2 text size}
+
+\item{title_size}{Ggplot2 title size}
+
+\item{legend_size_pt}{Ggplot2 legend_size_pt}
+
+\item{legend_height_bar}{Ggplot2 legend_height_bar}
 
 \item{hc_function}{character string for which hierarchical clustering function to use}
 
 \item{plotDir}{output plot directory path}
 
 \item{spatial}{TRUE if using spatial information}
-
-\item{data}{cnv_data list object of cnv data from SlideCNA::prep_cnv_dat()}
 }
 \value{
 A hierarchical clustering object of the clusters

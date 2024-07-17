@@ -6,6 +6,8 @@
 #' @param dat data.table of raw counts
 #' @param normal_beads vector of names of normal beads 
 #' @param gene_pos data.table with columns for GENE, chr, start, end, rel_gene_pos (1 : # of genes on chromosome)
+#' @param chrom_ord vector of the names of chromosomes in order
+#' @param logTPM TRUE if performing adjustment with logTPM
 #' @return A data.table of normalized, capped, and ref-adjusted counts with genomic psoition info 
 
 #' @export
@@ -99,9 +101,17 @@ weight_rollmean <- function(dat,
     return(rm)
     
 }
-      
-# Subfunction of weight_rollmean
-#' @export                              
+                   
+#' Subfunction of weight_rollmean
+#'
+#' Take in a counts matrix and apply pyramidal weighting 
+#' with a window size k to create smoothed expression intensities
+#'
+#' @param mat matrix of normalized/adjusted counts
+#' @param k size of window for weighting 
+#' @return A matrix of smoothed counts
+                              
+#' @export
 weight_rollmean_sub <- function(mat, 
                                 k) {
     new_mat <- mat

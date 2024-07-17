@@ -18,6 +18,12 @@ quantile_plot(
 
 \item{cluster_label}{character string of which column name to keep}
 
+\item{text_size}{integer of text size for ggplot}
+
+\item{title_size}{integer of title size for ggplot}
+
+\item{legend_height_bar}{integer of bar height of legend for ggplot}
+
 \item{plotDir}{output plot directory path}
 }
 \description{

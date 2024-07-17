@@ -45,7 +45,20 @@ bin_metadata <- function(md,
     
 }   
 
-### Subfunction of bin_metadata() for Expression/Positional Binning 
+#' Subfunction of bin_metadata() for expression/positional binning 
+#'
+#' This function computes a pseudospatial distance between beads that combines spatial distance and distance from the expression space, then using the silhouette score and hierarchical clustering, segregates beads into bins
+#'
+#' @param dat data.table of smoothed relative expression intensities 
+#' @param md data.table of metadata of each bead
+#' @param k number of malignant bins to set
+#' @param pos number of malignant clusters
+#' @param pos TRUE if doing spatial and expressional binning, FALSE if just expressional binning
+#' @param pos_k positional weight
+#' @param ex_k expressional weight
+#' @param hc_function hierarchical clustering function
+#' @param plotDir output plot directory path
+#' @return A data.table of bead metadata combined with bin designations
                               
 #' @export
 bin <- function(dat, 
@@ -127,6 +140,10 @@ dat_to_long <- function(dat,
 #'
 #' @param dat_long data.table of bead expression intensities per gene with metadata in long format
 #' @param vars character vector of features to plot/columns of metadata
+#' @param text_size Ggplot2 text size
+#' @param title_size Ggplot2 title size
+#' @param legend_size_pt Ggplot2 legend_size_pt
+#' @param legend_height_bar Ggplot2 legend_height_bar
 #' @param plotDir output plot directory path
 
 #' @export
@@ -292,8 +309,13 @@ long_to_bin <- function(dat_long,
     return(dat_bin)
 }                               
 
-### Subfunction for long_to_bin() that finds mode of vector/column
-
+#' Subfunction of long_to_bin() that finds mode of vector/column
+#'
+#' This function finds the mode of a vector
+#'
+#' @param x vector (column in data.table) to calculate the mode from
+#' @return mode of the vector
+                              
 #' @export
 mode <- function(x) {
   ux <- unique(x)
@@ -307,7 +329,7 @@ mode <- function(x) {
 #'
 #' @param dat_bin data.table of relative expression intensities per bin
 #' @param thresh_hard TRUE if using strict thresholds for expression thresholds and FALSE if adjusting 
-#' thresholds based on 1 + or - the mean of absolute min and max vlaues
+#' thresholds based on 1 + or - the mean of absolute min and max values
 #' @return data.table of CNV scores per bin
 
 #' @export
@@ -344,7 +366,16 @@ scale_nUMI <- function(dat_bin,
     return(dat_bin)
 }                  
 
-### Subfunction for scale_nUMI that normalizes a given bin for UMI count and centers the  mean CNV score at 1
+#' Subfunction for scale_nUMI that normalizes a given bin for UMI count and centers the  mean CNV score at 1
+#'
+#' This function re-scales expression intensities to be in a smaller range, normalizes for nUMI per bin,
+#' and centers the CNV scores to have a mean of 1
+#'
+#' @param obj data.table of relative expression intensities per bin
+#' @param nbin nUMIs in that specific bin
+#' @param start lower bound of CNV scores
+#' @param end upper bound of CNV scores
+#' @return vector of adjusted CNV scores for that bins with nbin number of nUMIs within the range (inclusive) of start to end
 
 #' @export
 scalefit <- function(obj, 

@@ -9,6 +9,12 @@ mean_cnv_plot(cnv_data, text_size, title_size, legend_height_bar, plotDir)
 \arguments{
 \item{cnv_data}{list object of cnv data from SlideCNA::prep_cnv_dat()}
 
+\item{text_size}{integer of text size for ggplot}
+
+\item{title_size}{integer of title size for ggplot}
+
+\item{legend_height_bar}{integer of bar height of legend for ggplot}
+
 \item{plotDir}{output plot directory path}
 }
 \description{
