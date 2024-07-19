@@ -44,6 +44,7 @@ bin_metadata <- function(md,
     return(md)
     
 }   
+utils::globalVariables(c("cluster_type", "pct_mal", "icluster_type", ".N", "bin_all"))
 
 #' Subfunction of bin_metadata() for expression/positional binning 
 #'
@@ -78,7 +79,7 @@ bin <- function(dat,
     row.names(dat_var) <- dat_var$bc
     dat_var <- dat_var[,-1]  
     dat_var <- scale(sapply(dat_var, as.numeric))
-    expr_distance <- dist(dat_var) # get distances from expression matrix
+    expr_distance <- stats::dist(dat_var) # get distances from expression matrix
     
     md[,icluster_type:=ifelse(cluster_type=='Non-malignant',0,1)]
     icluster_type <- as.data.frame(dplyr::select(md, bc, icluster_type))
@@ -90,7 +91,7 @@ bin <- function(dat,
         pos <- as.data.frame(dplyr::select(md, bc, pos_x, pos_y))
         row.names(pos) <- pos$bc
         pos <- pos[,-1]
-        pos_distance <- dist(pos) # get distances from position matrix
+        pos_distance <- stats::dist(pos) # get distances from position matrix
         
         # linearly combine expression and position matrices
         distance <- pos_k * pos_distance + ex_k * expr_distance
@@ -100,13 +101,13 @@ bin <- function(dat,
     }
     
     # hierarchical clustering on combined distances
-    hcl <- hclust(distance, method=hc_function)
-    pdf(file = paste0(plotDir, "/bin_hclust_dend.pdf"), width = 10, height = 6)
+    hcl <- stats::hclust(distance, method=hc_function)
+    grDevices::pdf(file = paste0(plotDir, "/bin_hclust_dend.pdf"), width = 10, height = 6)
     plot(hcl)
-    dev.off()
+    grDevices::dev.off()
     
     # get bins 
-    hcl_sub <- cutree(hcl, k = k)
+    hcl_sub <- stats::cutree(hcl, k = k)
     
     # update bead metadata with bin designations
     new_md <- dplyr::mutate(md, bin_all = hcl_sub)
@@ -115,6 +116,8 @@ bin <- function(dat,
     
     return(new_md)
 }
+utils::globalVariables(c("bc", "cluster_type", "pos_x", "pos_y", "N_bin", ".N",
+                         "bin_all", "umi_bin", "nCount_RNA"))
 
 #' Convert data to long format and add in metadata
 #'
@@ -197,9 +200,9 @@ SpatialPlot <- function(dat_long,
             coord_fixed() +
             guides(color = guide_legend(override.aes = list(size = legend_size_pt)))
             
-            pdf(file = paste0(plotDir,"/", var, "_spatial.pdf"), width = 6, height = 8)
+            grDevices::pdf(file = paste0(plotDir,"/", var, "_spatial.pdf"), width = 6, height = 8)
             print(gg)
-            dev.off()
+            grDevices::dev.off()
             print(gg)
         }
         
@@ -218,11 +221,11 @@ SpatialPlot <- function(dat_long,
             ylab("Position Y") + 
             labs(color = legend_title) + 
             coord_fixed() +
-            scale_color_gradientn(colours = sample(rainbow(500), 500))
+            scale_color_gradientn(colours = sample(grDevices::rainbow(500), 500))
             
-            pdf(file = paste0(plotDir,"/", var, "_spatial.pdf"), width = 6, height = 8)
+            grDevices::pdf(file = paste0(plotDir,"/", var, "_spatial.pdf"), width = 6, height = 8)
             print(gg)
-            dev.off()
+            grDevices::dev.off()
             print(gg)
         }
         
@@ -242,9 +245,9 @@ SpatialPlot <- function(dat_long,
             labs(color = legend_title) +
             coord_fixed()
             
-            pdf(file = paste0(plotDir,"/", var, "_spatial.pdf"), width = 6, height = 8)
+            grDevices::pdf(file = paste0(plotDir,"/", var, "_spatial.pdf"), width = 6, height = 8)
             print(gg)
-            dev.off()
+            grDevices::dev.off()
             print(gg)
 
         }        
@@ -252,6 +255,7 @@ SpatialPlot <- function(dat_long,
     }
     
 }
+utils::globalVariables(c("pos_x", "pos_y"))
 
 #' Convert to wide bin x genes + metadata format
 #'
@@ -287,9 +291,9 @@ long_to_bin <- function(dat_long,
         gg <- ggplot2::ggplot(unique(dat_bin[,c('pos_x','pos_y','seurat_clusters')])) +
           geom_jitter(aes(pos_x, pos_y, color = seurat_clusters), width = 0.1)
 
-        pdf(file = paste0(plotDir,"/seurat_clusters_bin_spatial.pdf"), width = 10, height = 6)
+        grDevices::pdf(file = paste0(plotDir,"/seurat_clusters_bin_spatial.pdf"), width = 10, height = 6)
         print(gg)
-        dev.off()
+        grDevices::dev.off()
         print(gg)
     }
     
@@ -308,6 +312,7 @@ long_to_bin <- function(dat_long,
     
     return(dat_bin)
 }                               
+utils::globalVariables(c("value", "pos_x", "pos_y", "seurat_clusters", "cluster_type", "plot_order", "."))
 
 #' Subfunction of long_to_bin() that finds mode of vector/column
 #'
@@ -338,8 +343,8 @@ scale_nUMI <- function(dat_bin,
     
     # Setting thresholds for scale range
     if (!isTRUE(thresh_hard)) {
-        bot <- quantile(dat_bin$value, na.rm=TRUE)[[1]] # min
-        top <- quantile(dat_bin$value, na.rm=TRUE)[[5]] # max
+        bot <- stats::quantile(dat_bin$value, na.rm=TRUE)[[1]] # min
+        top <- stats::quantile(dat_bin$value, na.rm=TRUE)[[5]] # max
 
         thresh=mean(abs(c(bot, top)))
         bot_thresh <- 1-thresh

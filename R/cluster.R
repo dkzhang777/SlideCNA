@@ -48,8 +48,8 @@ get_num_clust <- function(data,
         # Get the k (number of clusters) that maximizes silhouette score
         best_score <- -Inf
         for (k in 2:max_k) {
-            sil_cl <- cluster::silhouette(cutree(hcl, k=k), 
-                                          dist(expr_data))
+            sil_cl <- cluster::silhouette(stats::cutree(hcl, k=k), 
+                                          stats::dist(expr_data))
             avg_sil_score <- mean(sil_cl[,3])
             if (avg_sil_score > best_score) { #in case of ties, takes lower k
                 best_score <- avg_sil_score
@@ -68,23 +68,24 @@ get_num_clust <- function(data,
         
         # Cluster embedding plot
         fviz <- factoextra::fviz_cluster(list(data=expr_data, 
-                                              cluster=cutree(hcl, k=best_k)))
-        pdf(file = paste0(plotDir, "/", type, "_clone_dim_red.pdf"), width = 8, height = 6)
+                                              cluster=stats::cutree(hcl, k=best_k)))
+        grDevices::pdf(file = paste0(plotDir, "/", type, "_clone_dim_red.pdf"), width = 8, height = 6)
         print(fviz)
-        dev.off()
+        grDevices::dev.off()
         print(fviz)
         
         # Silhouette plot
-        sil_cl <- cluster::silhouette(cutree(hcl, k=best_k), 
-                                      dist(expr_data))
-        pdf(file = paste0(plotDir,"/", type, "_clone_silhouette_plot.pdf"), width = 8, height = 6)
+        sil_cl <- cluster::silhouette(stats::cutree(hcl, k=best_k), 
+                                      stats::dist(expr_data))
+        grDevices::pdf(file = paste0(plotDir,"/", type, "_clone_silhouette_plot.pdf"), width = 8, height = 6)
         plot(sil_cl, border=NA)
-        dev.off()
+        grDevices::dev.off()
         plot(sil_cl, border=NA)
 
     }
     return(best_k)
-}            
+}      
+utils::globalVariables(c("var"))
 
 #' Plot cluster/clone information
 #'
@@ -133,15 +134,15 @@ plot_clones = function(cnv_data,
     }
     
     # Plot hierarchical clustering dendrogram of how clones are separated    
-    gg_dend <- ggplot2::ggplot(dendextend::as.ggdend(as.dendrogram(hcl) %>%
+    gg_dend <- ggplot2::ggplot(dendextend::as.ggdend(stats::as.dendrogram(hcl) %>%
       dendextend::set("branches_k_color", k = k)))
 
-    pdf(file = paste0(plotDir,"/", type, "_", k, "_clones_dend.pdf"), width = 6, height = 8)
+    grDevices::pdf(file = paste0(plotDir,"/", type, "_", k, "_clones_dend.pdf"), width = 6, height = 8)
     print(gg_dend)
-    dev.off()
+    grDevices::dev.off()
     
     # Cut tree into k clones
-    hcl_sub <- as.data.frame(cutree(hcl, k = k))
+    hcl_sub <- as.data.frame(stats::cutree(hcl, k = k))
     colnames(hcl_sub) <- c('clone')
     hcl_sub$variable <- as.factor(rownames(hcl_sub))
     
@@ -193,9 +194,9 @@ plot_clones = function(cnv_data,
         guides(color = guide_legend(override.aes = list(size = legend_size_pt))) +
         scale_color_manual(values=spatial_colors)
 
-        pdf(file = paste0(plotDir,"/", type, "_", k, "_clones_spatial.pdf"), width = 6, height = 8)
+        grDevices::pdf(file = paste0(plotDir,"/", type, "_", k, "_clones_spatial.pdf"), width = 6, height = 8)
         print(gg_spatial)
-        dev.off()
+        grDevices::dev.off()
         print(gg_spatial)    
     }
     else {
@@ -234,9 +235,9 @@ plot_clones = function(cnv_data,
     chr = chrom_colors)
 
     # Plot CNV heatmap with clone labelling    
-    png(file = paste0(plotDir,"/", type, "_", k, "_clones_cnv_heatmap.png"), width = 1500, height = 1000) #png version
+    grDevices::png(file = paste0(plotDir,"/", type, "_", k, "_clones_cnv_heatmap.png"), width = 1500, height = 1000) #png version
     print(pheatmap::pheatmap(sub_wide, 
-                             color = colorRampPalette(c("navy", "white","firebrick3"))(50), 
+                             color = grDevices::colorRampPalette(c("navy", "white","firebrick3"))(50), 
                              cluster_rows = TRUE, 
                              cluster_cols = FALSE, 
                              clustering_distance_rows = "euclidean",
@@ -247,11 +248,11 @@ plot_clones = function(cnv_data,
                              show_rownames=FALSE, 
                              show_colnames=FALSE, 
                              filename= paste0(plotDir,"/", type, "_", k, "_clones_cnv_heatmap.png")))
-    dev.off()
+    grDevices::dev.off()
     
      # Plot CNV heatmap with clone labelling (pdf)
      pheatmap::pheatmap(sub_wide, 
-                             color = colorRampPalette(c("navy", "white","firebrick3"))(50), 
+                             color = grDevices::colorRampPalette(c("navy", "white","firebrick3"))(50), 
                              cluster_rows = TRUE, 
                              cluster_cols = FALSE, 
                              clustering_distance_rows = "euclidean",
@@ -267,7 +268,8 @@ plot_clones = function(cnv_data,
     
     return(hcl_sub)
 }
-            
+utils::globalVariables(c("clone", "pos_x", "pos_y"))
+
 #' Add clone information to meta data of seurat object and bin the beads   
 #'
 #' This function adds another column for cluster designation to a seurat object's meta data and bins beads
@@ -300,14 +302,14 @@ clone_so <- function(so,
     counts_t_labeled <- dplyr::left_join(md[,c('bc','bin_all')], 
                                           counts_t, 
                                           by='bc') %>%
-        select(-bc)
+        dplyr::select(-bc)
     
     # aggregate counts by bin
-    counts_bin <- aggregate(.~bin_all, counts_t_labeled, sum)
+    counts_bin <- stats::aggregate(.~bin_all, counts_t_labeled, sum)
     
     counts_bin <- counts_bin %>%
         `rownames<-`(counts_bin$bin_all) %>%
-        select(-bin_all) %>%
+        dplyr::select(-bin_all) %>%
         t() %>%
         as.data.frame()
     
@@ -317,11 +319,45 @@ clone_so <- function(so,
     `colnames<-`(c("clone", "bin_all"))
 
     # make binned seurat object
-    so_clone <- make_seurat_annot(counts_bin, md_bin_only)
+    so_clone <- SlideCNA::make_seurat_annot(counts_bin, md_bin_only)
+    
     so_clone <- Seurat::SetIdent(so_clone, value = so_clone@meta.data$clone)
         
     return(so_clone)
 }       
+utils::globalVariables(c("cluster_type", "bc", "bin_all"))
+
+#' Make a Seurat object
+#'
+#' Using a counts matrix and meta data, create a Seurat object with defined annotations 
+#'
+#' @param cb counts matrix
+#' @param md data.frame of metadata for Seurat object
+#' @param seed_FindClusters seed for Seurat's FindClusters() function
+#' @param seed_RunTSNE seed for Seurat's RunTSNE() function
+#' @param seed_RunUMAP seed for Seurat's RunUMAP() function
+#' @return A Seurat object created from the counts matrix with the corresponding metadata
+                             
+#' @export
+make_seurat_annot <- function(cb, 
+                              md, 
+                              seed_FindClusters = 0, 
+                              seed_RunTSNE = 1, 
+                              seed_RunUMAP = 42) {
+    so <- Seurat::CreateSeuratObject(counts = cb,min.features = 0, min.cells = 3)
+    so <- Seurat::PercentageFeatureSet(so, pattern = "^MT-",col.name = "percent.mito")
+    so <- Seurat::NormalizeData(object = so)
+    so <- Seurat::FindVariableFeatures(object = so)
+    so <- Seurat::ScaleData(object = so,vars.to.regress = c("nCount_RNA", "percent.mito"))
+    so <- Seurat::RunPCA(object = so)
+    so <- Seurat::FindNeighbors(object = so)
+    so <- Seurat::FindClusters(object = so, algorithm = 1, random.seed = seed_FindClusters)
+    so <- Seurat::RunTSNE(object = so,dims = 1:10, check_duplicates = FALSE, seed.use = seed_RunTSNE)
+    so <- Seurat::RunUMAP(object = so, dims = 1:10, seed.use = seed_RunUMAP)
+    so <- Seurat::AddMetaData(so, metadata = md)
+        
+    return(so)   
+}
 
 #' Find and plot top n DEGs per cluster  
 #'
@@ -449,10 +485,10 @@ find_cluster_markers <- function(so_clone,
          size = size_title) + 
     guides(color = guide_legend(override.aes = list(size = legend_size_pt)))
     
-    pdf(file = paste0(plotDir,"/", "top_", n_markers, "_markers_", type, "_broad.pdf"), 
+    grDevices::pdf(file = paste0(plotDir,"/", "top_", n_markers, "_markers_", type, "_broad.pdf"), 
         width = 10, height = 6)
     print(gg)
-    dev.off()
+   grDevices:: dev.off()
     print(gg)
 
     # Create combined cluster object
@@ -469,7 +505,7 @@ find_cluster_markers <- function(so_clone,
         return(cluster_markers_malig_broad_obj)
     }                             
 }     
-                          
+utils::globalVariables(c("None", "p_val_adj", ".SD"))
 
 #' Find and plot top n GO-enriched terms per cluster  
 #'
@@ -515,7 +551,7 @@ find_go_terms <- function(cluster_markers_obj,
                           aes(x=stringr::str_wrap(GO_Biological_Process_2018.Term,20),
                               y=neglog10p)) + 
     geom_bar(stat="identity") + 
-    facet_wrap(~cluster,scale="free_y") + 
+    facet_wrap(~cluster,scales="free_y") + 
     theme_bw() + 
     theme(axis.text=element_text(size=text_size), 
           axis.title=element_text(size=title_size,face='bold'), 
@@ -526,9 +562,9 @@ find_go_terms <- function(cluster_markers_obj,
     ylab((("-Log_10(p)"))) +
     coord_flip()
     
-    pdf(file = paste0(plotDir,"/", "top_", n_terms, "_go_terms_", type, ".pdf"), width = 15, height = 6)
+    grDevices::pdf(file = paste0(plotDir,"/", "top_", n_terms, "_go_terms_", type, ".pdf"), width = 15, height = 6)
     print(gg)
-    dev.off()
+    grDevices::dev.off()
     print(gg)   
     
     # Combine data structures in list object format
@@ -543,6 +579,8 @@ find_go_terms <- function(cluster_markers_obj,
         return(go_terms_malig_obj)
     }
 }                             
+utils::globalVariables(c("avg_log2FC", "gene", "GO_Biological_Process_2018.Adjusted.P.value",
+                        ".SD", "GO_Biological_Process_2018.Term", "neglog10p"))
 
 #' Subfunction to get significantly enriched GO terms given a set of signfiicant beads and genes  
 #'

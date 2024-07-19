@@ -39,9 +39,9 @@ prep <- function(dat,
     }
 
     lower_bound <- mean(apply(dat_inter, 2,
-                              function(x) quantile(x, na.rm=TRUE)[[1]]))
+                              function(x) stats::quantile(x, na.rm=TRUE)[[1]]))
     upper_bound <- mean(apply(dat_inter, 2,
-                              function(x) quantile(x, na.rm=TRUE)[[5]]))
+                              function(x) stats::quantile(x, na.rm=TRUE)[[5]]))
 
     thresh=mean(abs(c(lower_bound, upper_bound)))
     
@@ -60,6 +60,7 @@ prep <- function(dat,
     dat <- data.table::as.data.table(dat)
     return(dat)
 }
+utils::globalVariables(c("..normal_i"))
 
 #' Expressional smoothing along a chromosome using a weighted pyramidal moving average
 #'
@@ -99,9 +100,9 @@ weight_rollmean <- function(dat,
     rm[,7:ncol(rm)] <- as.data.frame(rm_mat)
     rm <- data.table::as.data.table(rm)
     return(rm)
-    
 }
-                   
+utils::globalVariables(c("chr"))
+                              
 #' Subfunction of weight_rollmean
 #'
 #' Take in a counts matrix and apply pyramidal weighting 
