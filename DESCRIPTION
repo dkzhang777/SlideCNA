@@ -2,11 +2,22 @@ Package: SlideCNA
 Title: Calls Copy Number Alterations from Slide-seq data
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "Diane",
+    c(person(given = "Diane",
            family = "Zhang",
            role = c("aut", "cre"),
            email = "dkzhang711@gmail.com",
-           comment = c(ORCID = "0000-0002-0268-4413"))
+           comment = c(ORCID = "0000-0002-0268-4413")),
+      person(given = "Johanna",
+           family = "Klughammer",
+           role = c("aut", "cre"),
+           email = "klughammer@genzentrum.lmu.de",
+           comment = c(ORCID = "0000-0002-3628-9278")),
+      person(given = "Jan",
+           family = "Watter",
+           role = c("aut", "cre"),
+           email = "jan.watter@gmail.com",
+           comment = c(ORCID = "0000-0001-7519-731X")),
+      person("Broad Institute of MIT and Harvard", role = c("cph", "fnd")))
 Description: This takes spatial single-cell-type RNA-seq data (specifically designed for Slide-seq v2) that calls copy number alterations (CNAs) using pseudospatial binning, clusters cellular units (e.g. beads) based on CNA profile, and visualizes spatial CNA patterns.
 Imports: 
     data.table,
