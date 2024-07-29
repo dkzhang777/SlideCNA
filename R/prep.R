@@ -95,10 +95,11 @@ weight_rollmean <- function(dat,
         }
     }
         
-    rm_mat <- rm_mat[-1,]
-    rm <- as.data.frame(dat)
-    rm[,7:ncol(rm)] <- as.data.frame(rm_mat)
-    rm <- data.table::as.data.table(rm)
+    gene_info <- dat[,1:6]
+    rm_mat <- rm_mat[-1,] %>% data.table::data.table()
+    rm <- cbind(gene_info, rm_mat)
+    colnames(rm) <- colnames(dat)
+
     return(rm)
 }
 utils::globalVariables(c("chr"))
@@ -198,13 +199,13 @@ center_rm <- function(rm) {
 #' @export
 ref_adj <- function(centered_rm, 
                     normal_beads) {
-    rm_adj <- as.data.frame(centered_rm[,-c(1:6)])
-    normal_mean <- rowMeans(rm_adj[,normal_beads]) # mean of reference beads
+    rm_adj <- centered_rm[,-c(1:6)]
+    normal_mean <- rowMeans(rm_adj[,..normal_beads]) # mean of reference beads
     
     # Subtract mean of normal beads from all beads for each gene
     rm_adj <- rm_adj - normal_mean
     
     rm_adj <- cbind(centered_rm[,c(1:6)], rm_adj)
-    rm_adj <- data.table::as.data.table(rm_adj)
     return(rm_adj)
 }                              
+utils::globalVariables(c("..normal_beads"))
