@@ -14,14 +14,18 @@ find_go_terms(
 )
 }
 \arguments{
+\item{cluster_markers_obj}{list object with cluster marker information}
+
 \item{type}{character string that is 'all' if using malignant and normal clusters and 'malig'
 if just using malignant clusters}
 
 \item{n_terms}{integer of number of top DEGs to plot/use}
 
-\item{plotDir}{output plot directory path}
+\item{text_size}{integer of text size for ggplot}
 
-\item{data}{cluster_markers_obj list object with cluster marker information}
+\item{title_size}{integer of title size for ggplot}
+
+\item{plotDir}{output plot directory path}
 }
 \value{
 A list object with cluster GO term information

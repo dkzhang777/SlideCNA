@@ -44,8 +44,22 @@ bin_metadata <- function(md,
     return(md)
     
 }   
+utils::globalVariables(c("cluster_type", "pct_mal", "icluster_type", ".N", "bin_all"))
 
-### Subfunction of bin_metadata() for Expression/Positional Binning 
+#' Subfunction of bin_metadata() for expression/positional binning 
+#'
+#' This function computes a pseudospatial distance between beads that combines spatial distance and distance from the expression space, then using the silhouette score and hierarchical clustering, segregates beads into bins
+#'
+#' @param dat data.table of smoothed relative expression intensities 
+#' @param md data.table of metadata of each bead
+#' @param k number of malignant bins to set
+#' @param pos number of malignant clusters
+#' @param pos TRUE if doing spatial and expressional binning, FALSE if just expressional binning
+#' @param pos_k positional weight
+#' @param ex_k expressional weight
+#' @param hc_function hierarchical clustering function
+#' @param plotDir output plot directory path
+#' @return A data.table of bead metadata combined with bin designations
                               
 #' @export
 bin <- function(dat, 
@@ -65,7 +79,7 @@ bin <- function(dat,
     row.names(dat_var) <- dat_var$bc
     dat_var <- dat_var[,-1]  
     dat_var <- scale(sapply(dat_var, as.numeric))
-    expr_distance <- dist(dat_var) # get distances from expression matrix
+    expr_distance <- stats::dist(dat_var) # get distances from expression matrix
     
     md[,icluster_type:=ifelse(cluster_type=='Non-malignant',0,1)]
     icluster_type <- as.data.frame(dplyr::select(md, bc, icluster_type))
@@ -77,7 +91,7 @@ bin <- function(dat,
         pos <- as.data.frame(dplyr::select(md, bc, pos_x, pos_y))
         row.names(pos) <- pos$bc
         pos <- pos[,-1]
-        pos_distance <- dist(pos) # get distances from position matrix
+        pos_distance <- stats::dist(pos) # get distances from position matrix
         
         # linearly combine expression and position matrices
         distance <- pos_k * pos_distance + ex_k * expr_distance
@@ -87,13 +101,13 @@ bin <- function(dat,
     }
     
     # hierarchical clustering on combined distances
-    hcl <- hclust(distance, method=hc_function)
-    pdf(file = paste0(plotDir, "/bin_hclust_dend.pdf"), width = 10, height = 6)
+    hcl <- stats::hclust(distance, method=hc_function)
+    grDevices::pdf(file = paste0(plotDir, "/bin_hclust_dend.pdf"), width = 10, height = 6)
     plot(hcl)
-    dev.off()
+    grDevices::dev.off()
     
     # get bins 
-    hcl_sub <- cutree(hcl, k = k)
+    hcl_sub <- stats::cutree(hcl, k = k)
     
     # update bead metadata with bin designations
     new_md <- dplyr::mutate(md, bin_all = hcl_sub)
@@ -102,6 +116,8 @@ bin <- function(dat,
     
     return(new_md)
 }
+utils::globalVariables(c("bc", "cluster_type", "pos_x", "pos_y", "N_bin", ".N",
+                         "bin_all", "umi_bin", "nCount_RNA"))
 
 #' Convert data to long format and add in metadata
 #'
@@ -127,6 +143,10 @@ dat_to_long <- function(dat,
 #'
 #' @param dat_long data.table of bead expression intensities per gene with metadata in long format
 #' @param vars character vector of features to plot/columns of metadata
+#' @param text_size Ggplot2 text size
+#' @param title_size Ggplot2 title size
+#' @param legend_size_pt Ggplot2 legend_size_pt
+#' @param legend_height_bar Ggplot2 legend_height_bar
 #' @param plotDir output plot directory path
 
 #' @export
@@ -180,9 +200,9 @@ SpatialPlot <- function(dat_long,
             coord_fixed() +
             guides(color = guide_legend(override.aes = list(size = legend_size_pt)))
             
-            pdf(file = paste0(plotDir,"/", var, "_spatial.pdf"), width = 6, height = 8)
+            grDevices::pdf(file = paste0(plotDir,"/", var, "_spatial.pdf"), width = 6, height = 8)
             print(gg)
-            dev.off()
+            grDevices::dev.off()
             print(gg)
         }
         
@@ -201,11 +221,11 @@ SpatialPlot <- function(dat_long,
             ylab("Position Y") + 
             labs(color = legend_title) + 
             coord_fixed() +
-            scale_color_gradientn(colours = sample(rainbow(500), 500))
+            scale_color_gradientn(colours = sample(grDevices::rainbow(500), 500))
             
-            pdf(file = paste0(plotDir,"/", var, "_spatial.pdf"), width = 6, height = 8)
+            grDevices::pdf(file = paste0(plotDir,"/", var, "_spatial.pdf"), width = 6, height = 8)
             print(gg)
-            dev.off()
+            grDevices::dev.off()
             print(gg)
         }
         
@@ -225,9 +245,9 @@ SpatialPlot <- function(dat_long,
             labs(color = legend_title) +
             coord_fixed()
             
-            pdf(file = paste0(plotDir,"/", var, "_spatial.pdf"), width = 6, height = 8)
+            grDevices::pdf(file = paste0(plotDir,"/", var, "_spatial.pdf"), width = 6, height = 8)
             print(gg)
-            dev.off()
+            grDevices::dev.off()
             print(gg)
 
         }        
@@ -235,6 +255,7 @@ SpatialPlot <- function(dat_long,
     }
     
 }
+utils::globalVariables(c("pos_x", "pos_y"))
 
 #' Convert to wide bin x genes + metadata format
 #'
@@ -270,9 +291,9 @@ long_to_bin <- function(dat_long,
         gg <- ggplot2::ggplot(unique(dat_bin[,c('pos_x','pos_y','seurat_clusters')])) +
           geom_jitter(aes(pos_x, pos_y, color = seurat_clusters), width = 0.1)
 
-        pdf(file = paste0(plotDir,"/seurat_clusters_bin_spatial.pdf"), width = 10, height = 6)
+        grDevices::pdf(file = paste0(plotDir,"/seurat_clusters_bin_spatial.pdf"), width = 10, height = 6)
         print(gg)
-        dev.off()
+        grDevices::dev.off()
         print(gg)
     }
     
@@ -291,9 +312,15 @@ long_to_bin <- function(dat_long,
     
     return(dat_bin)
 }                               
+utils::globalVariables(c("value", "pos_x", "pos_y", "seurat_clusters", "cluster_type", "plot_order", "."))
 
-### Subfunction for long_to_bin() that finds mode of vector/column
-
+#' Subfunction of long_to_bin() that finds mode of vector/column
+#'
+#' This function finds the mode of a vector
+#'
+#' @param x vector (column in data.table) to calculate the mode from
+#' @return mode of the vector
+                              
 #' @export
 mode <- function(x) {
   ux <- unique(x)
@@ -307,7 +334,7 @@ mode <- function(x) {
 #'
 #' @param dat_bin data.table of relative expression intensities per bin
 #' @param thresh_hard TRUE if using strict thresholds for expression thresholds and FALSE if adjusting 
-#' thresholds based on 1 + or - the mean of absolute min and max vlaues
+#' thresholds based on 1 + or - the mean of absolute min and max values
 #' @return data.table of CNV scores per bin
 
 #' @export
@@ -316,8 +343,8 @@ scale_nUMI <- function(dat_bin,
     
     # Setting thresholds for scale range
     if (!isTRUE(thresh_hard)) {
-        bot <- quantile(dat_bin$value, na.rm=TRUE)[[1]] # min
-        top <- quantile(dat_bin$value, na.rm=TRUE)[[5]] # max
+        bot <- stats::quantile(dat_bin$value, na.rm=TRUE)[[1]] # min
+        top <- stats::quantile(dat_bin$value, na.rm=TRUE)[[5]] # max
 
         thresh=mean(abs(c(bot, top)))
         bot_thresh <- 1-thresh
@@ -344,7 +371,16 @@ scale_nUMI <- function(dat_bin,
     return(dat_bin)
 }                  
 
-### Subfunction for scale_nUMI that normalizes a given bin for UMI count and centers the  mean CNV score at 1
+#' Subfunction for scale_nUMI that normalizes a given bin for UMI count and centers the  mean CNV score at 1
+#'
+#' This function re-scales expression intensities to be in a smaller range, normalizes for nUMI per bin,
+#' and centers the CNV scores to have a mean of 1
+#'
+#' @param obj data.table of relative expression intensities per bin
+#' @param nbin nUMIs in that specific bin
+#' @param start lower bound of CNV scores
+#' @param end upper bound of CNV scores
+#' @return vector of adjusted CNV scores for that bins with nbin number of nUMIs within the range (inclusive) of start to end
 
 #' @export
 scalefit <- function(obj, 

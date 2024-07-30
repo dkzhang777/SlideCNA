@@ -1,13 +1,24 @@
 Package: SlideCNA
-Title: Calls Copy Number Alterations (CNAs) from Slide-seq data
+Title: Calls Copy Number Alterations from Slide-seq data
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "Diane",
+    c(person(given = "Diane",
            family = "Zhang",
            role = c("aut", "cre"),
-           email = "dkzhang@mit.edu",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: This takes spatial single-cell-type RNA-seq data (specifically designed for Slide-seq v2) and calls CNAs, clustering based on CNA profile and visualizing spatial CNA patterns.
+           email = "dkzhang711@gmail.com",
+           comment = c(ORCID = "0000-0002-0268-4413")),
+      person(given = "Johanna",
+           family = "Klughammer",
+           role = c("aut"),
+           email = "klughammer@genzentrum.lmu.de",
+           comment = c(ORCID = "0000-0002-3628-9278")),
+      person(given = "Jan",
+           family = "Watter",
+           role = c("aut"),
+           email = "jan.watter@gmail.com",
+           comment = c(ORCID = "0000-0001-7519-731X")),
+      person("Broad Institute of MIT and Harvard", role = c("cph", "fnd")))
+Description: This takes spatial single-cell-type RNA-seq data (specifically designed for Slide-seq v2) that calls copy number alterations (CNAs) using pseudospatial binning, clusters cellular units (e.g. beads) based on CNA profile, and visualizes spatial CNA patterns.
 Imports: 
     data.table,
     reshape2,
@@ -22,11 +33,14 @@ Imports:
     tidyselect,
     stringr,
     magrittr,
-    enrichR (>= 3.0)
+    enrichR (>= 3.0),
+    tibble
 Remotes: wjawaid/enrichR
-License: `use_mit_license()`, `use_gpl3_license()` or friends to
-    pick a license
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

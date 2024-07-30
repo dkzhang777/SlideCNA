@@ -7,13 +7,13 @@
 clone_so(so, hcl_sub, md, mal = FALSE)
 }
 \arguments{
+\item{so}{Seurat object of beads and their meta data}
+
 \item{hcl_sub}{hierarchical clustering object of cluster assignemnt as outputted from SlideCNA::plot_clones()}
 
 \item{md}{data.table of metadata of each bead}
 
 \item{mal}{TRUE if only using malignant beads}
-
-\item{data}{so seurat object of beads and their meta data}
 }
 \value{
 A seurat object updated with clone information

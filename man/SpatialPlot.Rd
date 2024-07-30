@@ -19,6 +19,14 @@ SpatialPlot(
 
 \item{vars}{character vector of features to plot/columns of metadata}
 
+\item{text_size}{Ggplot2 text size}
+
+\item{title_size}{Ggplot2 title size}
+
+\item{legend_size_pt}{Ggplot2 legend_size_pt}
+
+\item{legend_height_bar}{Ggplot2 legend_height_bar}
+
 \item{plotDir}{output plot directory path}
 }
 \description{

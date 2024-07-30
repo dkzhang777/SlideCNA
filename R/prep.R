@@ -6,6 +6,8 @@
 #' @param dat data.table of raw counts
 #' @param normal_beads vector of names of normal beads 
 #' @param gene_pos data.table with columns for GENE, chr, start, end, rel_gene_pos (1 : # of genes on chromosome)
+#' @param chrom_ord vector of the names of chromosomes in order
+#' @param logTPM TRUE if performing adjustment with logTPM
 #' @return A data.table of normalized, capped, and ref-adjusted counts with genomic psoition info 
 
 #' @export
@@ -37,9 +39,9 @@ prep <- function(dat,
     }
 
     lower_bound <- mean(apply(dat_inter, 2,
-                              function(x) quantile(x, na.rm=TRUE)[[1]]))
+                              function(x) stats::quantile(x, na.rm=TRUE)[[1]]))
     upper_bound <- mean(apply(dat_inter, 2,
-                              function(x) quantile(x, na.rm=TRUE)[[5]]))
+                              function(x) stats::quantile(x, na.rm=TRUE)[[5]]))
 
     thresh=mean(abs(c(lower_bound, upper_bound)))
     
@@ -58,6 +60,7 @@ prep <- function(dat,
     dat <- data.table::as.data.table(dat)
     return(dat)
 }
+utils::globalVariables(c("..normal_i"))
 
 #' Expressional smoothing along a chromosome using a weighted pyramidal moving average
 #'
@@ -92,16 +95,25 @@ weight_rollmean <- function(dat,
         }
     }
         
-    rm_mat <- rm_mat[-1,]
-    rm <- as.data.frame(dat)
-    rm[,7:ncol(rm)] <- as.data.frame(rm_mat)
-    rm <- data.table::as.data.table(rm)
+    gene_info <- dat[,1:6]
+    rm_mat <- rm_mat[-1,] %>% data.table::data.table()
+    rm <- cbind(gene_info, rm_mat)
+    colnames(rm) <- colnames(dat)
+
     return(rm)
-    
 }
-      
-# Subfunction of weight_rollmean
-#' @export                              
+utils::globalVariables(c("chr"))
+                              
+#' Subfunction of weight_rollmean
+#'
+#' Take in a counts matrix and apply pyramidal weighting 
+#' with a window size k to create smoothed expression intensities
+#'
+#' @param mat matrix of normalized/adjusted counts
+#' @param k size of window for weighting 
+#' @return A matrix of smoothed counts
+                              
+#' @export
 weight_rollmean_sub <- function(mat, 
                                 k) {
     new_mat <- mat
@@ -187,13 +199,13 @@ center_rm <- function(rm) {
 #' @export
 ref_adj <- function(centered_rm, 
                     normal_beads) {
-    rm_adj <- as.data.frame(centered_rm[,-c(1:6)])
-    normal_mean <- rowMeans(rm_adj[,normal_beads]) # mean of reference beads
+    rm_adj <- centered_rm[,-c(1:6)]
+    normal_mean <- rowMeans(rm_adj[,..normal_beads]) # mean of reference beads
     
     # Subtract mean of normal beads from all beads for each gene
     rm_adj <- rm_adj - normal_mean
     
     rm_adj <- cbind(centered_rm[,c(1:6)], rm_adj)
-    rm_adj <- data.table::as.data.table(rm_adj)
     return(rm_adj)
 }                              
+utils::globalVariables(c("..normal_beads"))

@@ -61,17 +61,17 @@ prep_cnv_dat <- function(dat_bin,
                                    numeric = TRUE)]
 
     # hierarchical clustering of bins by CNV score
-    hcl=hclust(dist(malig_wide), method=hc_function)
-    hcl_all=hclust(dist(all_wide), method=hc_function)
+    hcl=stats::hclust(stats::dist(malig_wide), method=hc_function)
+    hcl_all=stats::hclust(stats::dist(all_wide), method=hc_function)
     
     # plot dendrogram of hierarchical clustering
-    pdf(file = paste0(plotDir,"/hcl_cnv.pdf"), width = 10, height = 6)
-    par(mfrow=c(1,2)) 
+    grDevices::pdf(file = paste0(plotDir,"/hcl_cnv.pdf"), width = 10, height = 6)
+    graphics::par(mfrow=c(1,2)) 
     plot(hcl,labels=FALSE)
     plot(hcl_all,labels=FALSE)
-    dev.off()
+    grDevices::dev.off()
     
-    par(mfrow=c(1,2)) 
+    graphics::par(mfrow=c(1,2)) 
     plot(hcl,labels=FALSE)
     plot(hcl_all,labels=FALSE)
     
@@ -79,15 +79,15 @@ prep_cnv_dat <- function(dat_bin,
     dat_bin[,variable:=factor(variable,levels=hcl_all$labels[hcl_all$order])]
 
     # plot distribution of values across number of beads/bin and umi/bin
-    pdf(file = paste0(plotDir,"/beads_umi_per_bin.pdf"), width = 10, height = 6)
-    par(mfrow=c(1,2)) 
-    boxplot(dat_malig$value ~ dat_malig$N_bin)
-    boxplot(dat_malig$value ~ dat_malig$umi_bin)
-    dev.off()
+    grDevices::pdf(file = paste0(plotDir,"/beads_umi_per_bin.pdf"), width = 10, height = 6)
+    graphics::par(mfrow=c(1,2)) 
+    graphics::boxplot(dat_malig$value ~ dat_malig$N_bin)
+    graphics::boxplot(dat_malig$value ~ dat_malig$umi_bin)
+    grDevices::dev.off()
     
-    par(mfrow=c(1,2)) 
-    boxplot(dat_malig$value ~ dat_malig$N_bin)
-    boxplot(dat_malig$value ~ dat_malig$umi_bin)
+    graphics::par(mfrow=c(1,2)) 
+    graphics::boxplot(dat_malig$value ~ dat_malig$N_bin)
+    graphics::boxplot(dat_malig$value ~ dat_malig$umi_bin)
     
     cnv_data <- list("all" = dat_bin, 
                      "malig" = dat_malig, 
@@ -97,6 +97,7 @@ prep_cnv_dat <- function(dat_bin,
                      "hcl_all" = hcl_all)
     return(cnv_data)
 }
+utils::globalVariables(c("cluster_type", "variable", "value", "total_order"))
 
 #' Plot CNV scores on a heat map
 #'
@@ -104,6 +105,7 @@ prep_cnv_dat <- function(dat_bin,
 #'
 #' @param cnv_data list object of cnv data from SlideCNA::prep_cnv_dat()
 #' @param md data.table of metadata of each bead
+#' @param chrom_colors vector of colors labeled by which chromosome they correspond to
 #' @param hc_function character for which hierarchical clustering function to use
 #' @param plotDir output plot directory path
 
@@ -136,9 +138,9 @@ cnv_heatmap <- function(cnv_data,
     ann_colors = list("Tissue Type" = c("Malignant"="#F8776D", "Non-malignant"="#00BFC4"), chr = chrom_colors)
     
     # Plot heat map
-    png(file = paste0(plotDir,"/cnv_heatmap.png"), width = 1500, height = 1000) # png version
+    grDevices::png(file = paste0(plotDir,"/cnv_heatmap.png"), width = 1500, height = 1000) # png version
     print(pheatmap::pheatmap(cnv_data$all_wide, 
-                             color = colorRampPalette(c("navy", "white","firebrick3"))(50), 
+                             color = grDevices::colorRampPalette(c("navy", "white","firebrick3"))(50), 
                              cluster_rows = TRUE, 
                              cluster_cols = FALSE, 
                              clustering_distance_rows = "euclidean",
@@ -149,11 +151,11 @@ cnv_heatmap <- function(cnv_data,
                              show_rownames=FALSE, 
                              show_colnames=FALSE, 
                              filename=paste0(plotDir,"/cnv_heatmap.png")))
-    dev.off()
+    grDevices::dev.off()
  
     # Plot heat map (pdf)
     pheatmap::pheatmap(cnv_data$all_wide, 
-                             color = colorRampPalette(c("navy", "white","firebrick3"))(50), 
+                             color = grDevices::colorRampPalette(c("navy", "white","firebrick3"))(50), 
                              cluster_rows = TRUE, 
                              cluster_cols = FALSE, 
                              clustering_distance_rows = "euclidean",
@@ -175,13 +177,17 @@ cnv_heatmap <- function(cnv_data,
 #'
 #' @param cnv_data list object of cnv data from SlideCNA::prep_cnv_dat()
 #' @param cluster_label character string of which column name to keep 
+#' @param text_size integer of text size for ggplot
+#' @param title_size integer of title size for ggplot
+#' @param legend_height_bar integer of bar height of legend for ggplot
 #' @param plotDir output plot directory path
 #’ @Import ggplot2
 
 #' @export
 quantile_plot <- function(cnv_data, 
                           cluster_label="seurat_clusters", 
-                          text_size, title_size, 
+                          text_size, 
+                          title_size, 
                           legend_height_bar, 
                           plotDir) {
     plot_data <- cnv_data$all
@@ -190,11 +196,11 @@ quantile_plot <- function(cnv_data,
     # get quantile values
     min_plot <- plot_data[,new_value:=min(value),by=c("variable","chr")]
     min_plot$level <- '1'
-    first_plot <- plot_data[,new_value:=quantile(value, .25),by=c("variable","chr")]
+    first_plot <- plot_data[,new_value:=stats::quantile(value, .25),by=c("variable","chr")]
     first_plot$level <- '2'
-    med_plot <- plot_data[,new_value:=median(value),by=c("variable","chr")]
+    med_plot <- plot_data[,new_value:=stats::median(value),by=c("variable","chr")]
     med_plot$level <- '3'
-    third_plot <- plot_data[,new_value:=quantile(value, .75),by=c("variable","chr")]
+    third_plot <- plot_data[,new_value:=stats::quantile(value, .75),by=c("variable","chr")]
     third_plot$level <- '4'
     max_plot <- plot_data[,new_value:=max(value),by=c("variable","chr")]
     max_plot$level <- '5'
@@ -207,7 +213,7 @@ quantile_plot <- function(cnv_data,
     legend_title='CNV Score'
     gg <- ggplot2::ggplot(quant_combined) +
     geom_point(aes(pos_x, pos_y, color = new_value)) + 
-    facet_wrap(chr~level,scale="free_x") +
+    facet_wrap(chr~level,scales="free_x") +
     scale_color_gradient2(midpoint=1, low="blue", mid="white", high="red") +
     theme_bw() +
     theme(panel.background = element_rect(fill = "black"),
@@ -222,18 +228,22 @@ quantile_plot <- function(cnv_data,
     ylab("Position Y") + 
     labs(color = legend_title)
     
-    png(file = paste0(plotDir,"/cnv_score_quantiles.png"), width = 1000, height = 1200) # png version
+    grDevices::png(file = paste0(plotDir,"/cnv_score_quantiles.png"), width = 1000, height = 1200) # png version
     print(gg)
-    dev.off()
+    grDevices::dev.off()
     print(gg)
 }                              
-                              
+utils::globalVariables(c("new_value", "value", "variable", "chr", "pos_x", "pos_y", "level"))
+
 #' Plot mean CNV scores per bin and per chromosome
 #'
 #' This function colors and plots each bin by its mean CNV score
 #' on spatial coordinates for each chromosome
 #'
 #' @param cnv_data list object of cnv data from SlideCNA::prep_cnv_dat()
+#' @param text_size integer of text size for ggplot
+#' @param title_size integer of title size for ggplot
+#' @param legend_height_bar integer of bar height of legend for ggplot
 #' @param plotDir output plot directory path
 #’ @Import ggplot2
 
@@ -258,7 +268,7 @@ mean_cnv_plot <- function(cnv_data,
     legend_title='CNV Score'
     gg <- ggplot2::ggplot(mean_plot) +
     geom_point(aes(pos_x, pos_y, color = cnv_score)) + 
-    facet_wrap(~chr,scale="free_x") +
+    facet_wrap(~chr,scales="free_x") +
     scale_color_gradient2(midpoint=1, low="blue", mid="white", high="red") +
     theme_bw() +
     theme(panel.background = element_rect(fill = "black"), 
@@ -272,8 +282,9 @@ mean_cnv_plot <- function(cnv_data,
           panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
     xlab("Position X") + ylab("Position Y") + labs(color = legend_title) 
     
-    png(file = paste0(plotDir,"/mean_cnv_score.png"), width = 1200, height = 1200) # png version
+    grDevices::png(file = paste0(plotDir,"/mean_cnv_score.png"), width = 1200, height = 1200) # png version
     print(gg)
-    dev.off()
+    grDevices::dev.off()
     print(gg)
 }                              
+utils::globalVariables(c("cnv_score", "value", "pos_x", "pos_y"))

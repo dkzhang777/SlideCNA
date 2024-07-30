@@ -12,6 +12,10 @@ prep(dat, normal_beads, gene_pos, chrom_ord, logTPM = FALSE)
 \item{normal_beads}{vector of names of normal beads}
 
 \item{gene_pos}{data.table with columns for GENE, chr, start, end, rel_gene_pos (1 : # of genes on chromosome)}
+
+\item{chrom_ord}{vector of the names of chromosomes in order}
+
+\item{logTPM}{TRUE if performing adjustment with logTPM}
 }
 \value{
 A data.table of normalized, capped, and ref-adjusted counts with genomic psoition info
