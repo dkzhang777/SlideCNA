@@ -124,7 +124,7 @@ plot_clones = function(cnv_data,
     # Initialize data based on CNV object
     if (type == 'all') {
         sub = cnv_data$all
-        sub_wide = cnv_data$all_wide
+        sub_wide = cnv_data$al_wide
         hcl = cnv_data$hcl_all
     }
     else if (type == 'malig') {
@@ -359,11 +359,66 @@ make_seurat_annot <- function(cb,
     return(so)   
 }
 
+#' Make a binned version of a Seurat object
+#'
+#' Aggregate Seurat object counts by bin to create a new Seurat object with binned beads
+#' as units instead of beads
+#'
+#' @param so Seurat object of beads and their meta data
+#' @param md data.frame of metadata for Seurat object
+#' @param hcl_sub hierarchical clustering object of cluster assignemnt as outputted from SlideCNA::plot_clones()
+#' @param mal TRUE if using malignant beads only
+#' @return A Seurat object with binned beads as units and corresponding binned metadata
+                             
+#' @export
+make_so_bin <- function(so, 
+                        md, 
+                        hcl_sub,
+                        mal=FALSE) {
+    
+    # Only malignant beads
+    if (isTRUE(mal)) {
+        md <- md[cluster_type=='Malignant']
+    }
+    
+    # Get original counts and transpose
+    counts_t <- Seurat::GetAssayData(object = so, slot = "counts") %>%
+        t() %>%
+        as.data.frame() %>%
+        dplyr::add_rownames(var = "bc")
+    
+    # add bin information
+    counts_t_labeled <- dplyr::left_join(md[,c('bc','bin_all')], 
+                                          counts_t, 
+                                          by='bc') %>%
+        dplyr::select(-bc)
+    
+    # aggregate counts by bin
+    counts_bin <- stats::aggregate(.~bin_all, counts_t_labeled, sum)
+    
+    counts_bin <- counts_bin %>%
+        `rownames<-`(counts_bin$bin_all) %>%
+        dplyr::select(-bin_all) %>%
+        t() %>%
+        as.data.frame()
+    
+    # create a meta data object that just contains clone and bin info
+    md_bin_only <- hcl_sub %>% 
+    `rownames<-`(hcl_sub$variable) %>%
+    `colnames<-`(c("clone", "bin_all"))
+
+    # make binned seurat object
+    so_bin <- SlideCNA::make_seurat_annot(counts_bin, md_bin_only)
+    so_bin <- Seurat::SetIdent(so_bin, value = so_bin@meta.data$clone)
+    
+    return(so_bin)
+}
+
 #' Find and plot top n DEGs per cluster  
 #'
 #' This function uses Seurat's marker finding capability to find DEGs of each cluster
 #'
-#' @param so_clone seurat object with 'clone' (SlideCNA-designated cluster) annotations
+#' @param so_clone seurat object with 'clone' (SlideCNA-designated cluster) and bin annotations
 #' @param type character string that is 'all' if using malignant and normal clusters and 'malig'
 #'        if just using malignant clusters
 #' @param logfc.threshold numeric float that is seurat parameter,
@@ -371,12 +426,13 @@ make_seurat_annot <- function(cb,
 #' @param min.pct numeric Seurat function parameter 
 #' @param only.pos TRUE if only using DEGs with positive log2 fold change
 #' @param n_markers integer of number of top DEGs to plot/use
-#' @param text_size integer of text size for ggplot
-#' @param title_size integer of title size for ggplot
-#' @param legend_size_pt integer of legend size for ggplot
-#' @param p_val_thresh threshold for p_val_adj
-#' @param bin TRUE if using binned beads seurat object
+#' @param value expression value of DEGs;  one of ("log2_expr", "avg_expr", and "avg_log2FC") for log2-normalized aerage epxression, average expression, or log2 fold change
+#' @param text_size Ggplot2 text size
+#' @param title_size Ggplot2 title size
+#' @param legend_size_pt Ggplot2 legend_size_pt
 #' @param plotDir output plot directory path
+#' @param p_val_thresh value for p value cutoff for DEGs
+#' @param bin TRUE if using binned beads
 #' @return A list object with cluster marker information
 #'         markers_clone = data.table of all cluster markers
 #'         top_markers_clone = data.table of just top cluster markers
@@ -389,14 +445,17 @@ find_cluster_markers <- function(so_clone,
                                  logfc.threshold=0.2, 
                                  min.pct=0, 
                                  only.pos=TRUE, 
-                                 n_markers, 
-                                 text_size, 
-                                 title_size, 
-                                 legend_size_pt, 
+                                 n_markers=5, 
+                                 value="log2_expr",
+                                 text_size=16, 
+                                 title_size=18, 
+                                 legend_size_pt=4, 
                                 p_val_thresh=0.05,
-                                bin=FALSE,
+                                bin=TRUE,
                                  plotDir=None) {
     
+    Seurat::Idents(object = so_clone) <- "clone"
+
     # get all marker genes per cluster
     markers_clone = Seurat::FindAllMarkers(so_clone,
                                            test.use="negbinom",
@@ -414,22 +473,27 @@ find_cluster_markers <- function(so_clone,
     # recreate counts table
     counts_re <- as.data.frame(Seurat::GetAssayData(object = so_clone, slot = "counts"))
     
-    # Put the top DEGs in a form that can be easily visualized, by getting the average expression of each DEG per cluster and the percent of beads in that cluster it is expressed in (count>0)
+    # Put the top DEGs in a form that can be easily visualized, by getting the average expression of each DEG per cluster, average log2FC relative to other clusters, and the percent of beads in that cluster it is expressed in (count>0)
     genes <- c()
     gene_pct <- c()
     avg_expr <- c()
+    avg_log2FC <- c()
     cluster <- c()
     gene_order <- c()
     
     if(bin) {
         for (clust in sort(unique(as.factor(so_clone@meta.data$clone)))) {
+            fc <- Seurat::FoldChange(so_clone, ident.1 = clust)
+        
             for (gene in top_markers_clone$gene) {
                 counts_clust <- dplyr::select(counts_re, 
                                               tidyselect::all_of(so_clone@meta.data[so_clone@meta.data$clone==clust,]$bin_all))
                 genes <- c(genes,gene)
                 cluster <- c(cluster, clust)
-                gene_pct <- c(gene_pct, length(which(counts_clust[gene,]>0))/(length(counts_clust[gene,])))
+                gene_pct <- c(gene_pct, fc[gene,]$pct.1)
+                avg_log2FC <- c(avg_log2FC, fc[gene,]$avg_log2FC)
                 avg_expr <- c(avg_expr, mean(as.numeric(counts_clust[gene,])))
+
                 if (!(gene %in% gene_order)) {
                     gene_order <- c(gene_order, gene)
                 }
@@ -438,13 +502,17 @@ find_cluster_markers <- function(so_clone,
     }
     else {
         for (clust in sort(unique(as.factor(so_clone@meta.data$clone)))) {
+            fc <- Seurat::FoldChange(so_clone, ident.1 = clust)
+            
             for (gene in top_markers_clone$gene) {
                 counts_clust <- dplyr::select(counts_re, 
                                               tidyselect::all_of(so_clone@meta.data[so_clone@meta.data$clone==clust,]$bc))
                 genes <- c(genes,gene)
                 cluster <- c(cluster, clust)
-                gene_pct <- c(gene_pct, length(which(counts_clust[gene,]>0))/(length(counts_clust[gene,])))
+                gene_pct <- c(gene_pct, fc[gene,]$pct.1)
+                avg_log2FC <- c(avg_log2FC, fc[gene,]$avg_log2FC)
                 avg_expr <- c(avg_expr, mean(as.numeric(counts_clust[gene,])))
+                
                 if (!(gene %in% gene_order)) {
                     gene_order <- c(gene_order, gene)
                 }
@@ -457,19 +525,28 @@ find_cluster_markers <- function(so_clone,
     top_clone_vis <- data.frame(gene=factor(genes, levels=gene_order),
                                 cluster=cluster,
                                 gene_pct=gene_pct,
-                                avg_expr=avg_expr)
+                                avg_expr=avg_expr,
+                                avg_log2FC=avg_log2FC,
+                                log2_expr=log(avg_expr, 2)) # get log2-normalized expression
     
     # Plot of top DEGs per cluster and their average expressions + percentage of beads they are expressed in per cluster
     size_title = "Percent Expressed"
-    color_title = "Average Expression"
+    if (value=="log2_expr") {
+        color_title = "Log2 Expression"
+    }
+    else if (value == 'avg_expr') {
+        color_title = "Average Expression"
+    }
+    else if (value == "avg_log2FC") {
+        color_title = "Average Log2 Fold Change"
+    }
 
     gg <- ggplot2::ggplot(top_clone_vis, 
                           aes(x = gene, 
                               y = cluster, 
                               size = gene_pct, 
-                              colour = avg_expr)) +
+                              colour = eval(as.name(value)))) +
     geom_point() + 
-    scale_colour_viridis_c(option='C') + 
     scale_size_area(max_size = 15) + 
     theme_bw() +
     theme(axis.text=element_text(size=text_size), 
@@ -485,10 +562,20 @@ find_cluster_markers <- function(so_clone,
          size = size_title) + 
     guides(color = guide_legend(override.aes = list(size = legend_size_pt)))
     
-    grDevices::pdf(file = paste0(plotDir,"/", "top_", n_markers, "_markers_", type, "_broad.pdf"), 
-        width = 10, height = 6)
+    if (value == "log2_expr" | value == "avg_expr") {
+        gg <- gg + scale_colour_viridis_c(option='C')
+    } 
+    else if (value == "avg_log2FC") {
+        # blue, grey, red
+        gg <- gg + scale_colour_gradient2(low = "#2166AC", 
+                                           mid = "#F7F7F7", 
+                                           high = "#B2182B", midpoint = 0)
+    }
+    
+    grDevices::pdf(file = paste0(plotDir,"/", "top_", n_markers, "_markers_", type, ".pdf"), 
+        width = 10, height = 8)
     print(gg)
-   grDevices:: dev.off()
+    grDevices::dev.off()
     print(gg)
 
     # Create combined cluster object

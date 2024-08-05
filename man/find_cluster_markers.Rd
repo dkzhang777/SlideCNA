@@ -10,17 +10,18 @@ find_cluster_markers(
   logfc.threshold = 0.2,
   min.pct = 0,
   only.pos = TRUE,
-  n_markers,
-  text_size,
-  title_size,
-  legend_size_pt,
+  n_markers = 5,
+  value = "log2_expr",
+  text_size = 16,
+  title_size = 18,
+  legend_size_pt = 4,
   p_val_thresh = 0.05,
-  bin = FALSE,
+  bin = TRUE,
   plotDir = None
 )
 }
 \arguments{
-\item{so_clone}{seurat object with 'clone' (SlideCNA-designated cluster) annotations}
+\item{so_clone}{seurat object with 'clone' (SlideCNA-designated cluster) and bin annotations}
 
 \item{type}{character string that is 'all' if using malignant and normal clusters and 'malig'
 if just using malignant clusters}
@@ -34,15 +35,17 @@ representing the minimum log2 fold change for DEGs to be significant}
 
 \item{n_markers}{integer of number of top DEGs to plot/use}
 
-\item{text_size}{integer of text size for ggplot}
+\item{value}{expression value of DEGs;  one of ("log2_expr", "avg_expr", and "avg_log2FC") for log2-normalized aerage epxression, average expression, or log2 fold change}
 
-\item{title_size}{integer of title size for ggplot}
+\item{text_size}{Ggplot2 text size}
 
-\item{legend_size_pt}{integer of legend size for ggplot}
+\item{title_size}{Ggplot2 title size}
 
-\item{p_val_thresh}{threshold for p_val_adj}
+\item{legend_size_pt}{Ggplot2 legend_size_pt}
 
-\item{bin}{TRUE if using binned beads seurat object}
+\item{p_val_thresh}{value for p value cutoff for DEGs}
+
+\item{bin}{TRUE if using binned beads}
 
 \item{plotDir}{output plot directory path}
 }

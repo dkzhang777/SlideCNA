@@ -206,14 +206,20 @@ run_slide_cna <- function(so,
                                data.table::as.data.table(hcl_sub_all), 
                                by='variable')
 
+        # Make binned seurat object
+        so_bin_all <- SlideCNA::make_so_bin(so, 
+                                            hcl_sub_all,
+                                            md)
+        
         # Find DEGs and GO markers per clone over all beads
         so_clone_all <- SlideCNA::clone_so(so, 
                                           hcl_sub_all,
                                           md)
 
-        cluster_markers_all_obj <- try(SlideCNA::find_cluster_markers(so_clone=so_clone_all, 
+        cluster_markers_all_obj <- try(SlideCNA::find_cluster_markers(so_clone=so_bin_all, 
                                                                      type="all",
                                                                       n_markers=5,
+                                                                      value="log2_expr",
                                                                      text_size=text_size,
                                                                      title_size=title_size,
                                                                      legend_size_pt=legend_size_pt,
@@ -246,6 +252,12 @@ run_slide_cna <- function(so,
         
         cnv_data <- cnv_data2 
         
+        # Make binned Seurat object with malignant binned beads
+        so_bin_malig <- SlideCNA::make_so_bin(so, 
+                                              hcl_sub_malig, 
+                                              md, 
+                                              mal=TRUE)
+        
         # Find DEGs and GO markers per clone over malignant beads
         so_clone_malig <- SlideCNA::clone_so(so, 
                                             hcl_sub_malig, 
@@ -254,6 +266,7 @@ run_slide_cna <- function(so,
         cluster_markers_malig_obj <- try(SlideCNA::find_cluster_markers(so_clone=so_clone_malig, 
                                                                        type="malig", 
                                                                         n_markers=5,
+                                                                        value="log2_expr",
                                                                        text_size=text_size,
                                                                        title_size=title_size,
                                                                        legend_size_pt=legend_size_pt,
@@ -351,6 +364,11 @@ run_slide_cna <- function(so,
                                data.table::as.data.table(hcl_sub_all), 
                                by='variable')
         
+        # Make binned seurat object
+        so_bin_all <- SlideCNA::make_so_bin(so, 
+                                            hcl_sub_all,
+                                            md)
+        
         # Find DEGs and GO markers per clone over all beads
         so_clone_all <- SlideCNA::clone_so(so, 
                                           hcl_sub_all, 
@@ -359,6 +377,7 @@ run_slide_cna <- function(so,
         cluster_markers_all_obj <- try(SlideCNA::find_cluster_markers(so_clone=so_clone_all, 
                                                                      type="all", 
                                                                       n_markers=5,
+                                                                      value="log2_expr",
                                                                      text_size=text_size,
                                                                      title_size=title_size,
                                                                      legend_size_pt=legend_size_pt,
@@ -391,6 +410,12 @@ run_slide_cna <- function(so,
         
         cnv_data <- cnv_data2
         
+        # Make binned seurat object with malignant beads
+        so_bin_all <- SlideCNA::make_so_bin(so, 
+                                            hcl_sub_all,
+                                            md,
+                                            mal=TRUE)
+        
         # Find DEGs and GO markers per clone over malignant beads
         so_clone_malig <- SlideCNA::clone_so(so, 
                                                hcl_sub_malig, 
@@ -400,6 +425,7 @@ run_slide_cna <- function(so,
         cluster_markers_malig_obj <- try(SlideCNA::find_cluster_markers(so_clone=so_clone_malig, 
                                                                        type="malig", 
                                                                         n_markers=5,
+                                                                        value="log2_expr",
                                                                        text_size=text_size,
                                                                        title_size=title_size,
                                                                        legend_size_pt=legend_size_pt,
