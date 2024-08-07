@@ -263,7 +263,7 @@ run_slide_cna <- function(so,
                                             hcl_sub_malig, 
                                             md, 
                                             mal=TRUE)
-        cluster_markers_malig_obj <- try(SlideCNA::find_cluster_markers(so_clone=so_clone_malig, 
+        cluster_markers_malig_obj <- try(SlideCNA::find_cluster_markers(so_clone=so_bin_malig, 
                                                                        type="malig", 
                                                                         n_markers=5,
                                                                         value="log2_expr",
@@ -374,7 +374,7 @@ run_slide_cna <- function(so,
                                           hcl_sub_all, 
                                           md)
 
-        cluster_markers_all_obj <- try(SlideCNA::find_cluster_markers(so_clone=so_clone_all, 
+        cluster_markers_all_obj <- try(SlideCNA::find_cluster_markers(so_clone=so_bin_all, 
                                                                      type="all", 
                                                                       n_markers=5,
                                                                       value="log2_expr",
@@ -411,8 +411,8 @@ run_slide_cna <- function(so,
         cnv_data <- cnv_data2
         
         # Make binned seurat object with malignant beads
-        so_bin_all <- SlideCNA::make_so_bin(so, 
-                                            hcl_sub_all,
+        so_bin_malig <- SlideCNA::make_so_bin(so, 
+                                            hcl_sub_malig,
                                             md,
                                             mal=TRUE)
         
@@ -422,7 +422,7 @@ run_slide_cna <- function(so,
                                                md, 
                                                mal=TRUE)
         
-        cluster_markers_malig_obj <- try(SlideCNA::find_cluster_markers(so_clone=so_clone_malig, 
+        cluster_markers_malig_obj <- try(SlideCNA::find_cluster_markers(so_clone=so_bin_malig, 
                                                                        type="malig", 
                                                                         n_markers=5,
                                                                         value="log2_expr",
