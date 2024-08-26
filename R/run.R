@@ -207,9 +207,9 @@ run_slide_cna <- function(so,
                                by='variable')
 
         # Make binned seurat object
-        so_bin_all <- SlideCNA::make_so_bin(so, 
-                                            hcl_sub_all,
-                                            md)
+        so_bin_all <- SlideCNA::make_so_bin(so,
+                                            md,
+                                            hcl_sub_all)
         
         # Find DEGs and GO markers per clone over all beads
         so_clone_all <- SlideCNA::clone_so(so, 
@@ -253,9 +253,9 @@ run_slide_cna <- function(so,
         cnv_data <- cnv_data2 
         
         # Make binned Seurat object with malignant binned beads
-        so_bin_malig <- SlideCNA::make_so_bin(so, 
-                                              hcl_sub_malig, 
-                                              md, 
+        so_bin_malig <- SlideCNA::make_so_bin(so,
+                                              md,
+                                              hcl_sub_malig,
                                               mal=TRUE)
         
         # Find DEGs and GO markers per clone over malignant beads
