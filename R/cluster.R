@@ -124,7 +124,7 @@ plot_clones = function(cnv_data,
     # Initialize data based on CNV object
     if (type == 'all') {
         sub = cnv_data$all
-        sub_wide = cnv_data$al_wide
+        sub_wide = cnv_data$all_wide
         hcl = cnv_data$hcl_all
     }
     else if (type == 'malig') {
