@@ -383,8 +383,8 @@ make_so_bin <- function(so,
     
     # Get original counts and transpose
     counts_t <- Seurat::GetAssayData(object = so, slot = "counts") %>%
-        t() %>%
         as.matrix() %>%
+        t() %>%
         as.data.frame() %>%
         tibble::rownames_to_column(var = "bc")
     
