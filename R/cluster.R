@@ -384,8 +384,9 @@ make_so_bin <- function(so,
     # Get original counts and transpose
     counts_t <- Seurat::GetAssayData(object = so, slot = "counts") %>%
         t() %>%
+        as.matrix() %>%
         as.data.frame() %>%
-        dplyr::add_rownames(var = "bc")
+        tibble::rownames_to_column(var = "bc")
     
     # add bin information
     counts_t_labeled <- dplyr::left_join(md[,c('bc','bin_all')], 
