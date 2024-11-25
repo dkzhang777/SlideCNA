@@ -24,12 +24,12 @@ library(SlideCNA)
 Preparation of Slide-seq data raw counts matrix and meta data with cell type annotations. Meta data should contain the following columns in the provided format:
 
 bc (chr): bead labels \
-cluster_type (chr): annotation of the bead as 'Normal' (Non-malignant) or 'Malignant' \
+cluster_type (chr): annotation of the bead as 'Normal' (Non-malignant) or 'Malignant' 
 
 and, if using spatially-aware binning:
 
 pos_x (dbl): x-coordinate bead position\
-pos_y (dbl): y-coordinate bead position\
+pos_y (dbl): y-coordinate bead position
     
 ### Running SlideCNA
 ```
@@ -48,7 +48,7 @@ run_slide_cna <- function(counts,
 `gene_pos` (data.frame): table with columns for GENE, chr, start, end, rel_gene_pos (1 : # of genes on chromosome)\
 `output_directory` (char): output directory path\
 `plot_directory` (char): output plot directory path\
-`spatial` (bool): TRUE if using spatial information FALSE if not\
+`spatial` (bool): TRUE if using spatial information FALSE if not
 
 ### Results
 Results will appear in output_directory and plot_directory
