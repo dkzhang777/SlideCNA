@@ -4,7 +4,13 @@
 \alias{cnv_heatmap}
 \title{Plot CNV scores on a heat map}
 \usage{
-cnv_heatmap(cnv_data, md, chrom_colors, hc_function = "ward.D2", plotDir)
+cnv_heatmap(
+  cnv_data,
+  md,
+  chrom_colors,
+  hc_function = "ward.D2",
+  plot_directory
+)
 }
 \arguments{
 \item{cnv_data}{list object of cnv data from SlideCNA::prep_cnv_dat()}
@@ -15,7 +21,7 @@ cnv_heatmap(cnv_data, md, chrom_colors, hc_function = "ward.D2", plotDir)
 
 \item{hc_function}{character for which hierarchical clustering function to use}
 
-\item{plotDir}{output plot directory path}
+\item{plot_directory}{output plot directory path}
 }
 \description{
 This function prepares data for plotting and makes a heat map of CNV scores per bead across all genes

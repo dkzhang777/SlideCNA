@@ -5,11 +5,11 @@
 \title{Run SlideCNA workflow}
 \usage{
 run_slide_cna(
-  so,
-  md,
+  counts,
+  beads_df,
   gene_pos,
-  plotDir,
-  OUTPUT_DIRECTORY,
+  output_directory,
+  plot_directory,
   spatial = TRUE,
   roll_mean_window = 101,
   avg_bead_per_bin = 12,
@@ -29,6 +29,7 @@ run_slide_cna(
   max_k_silhouette = 10,
   plot_silhouette = TRUE,
   hc_function_plot_clones = "ward.D2",
+  use_GO_terms = TRUE,
   chrom_ord = c("chr1", "chr2", "chr3", "chr4", "chr5", "chr6", "chr7", "chr8", "chr9",
     "chr10", "chr11", "chr12", "chr13", "chr14", "chr15", "chr16", "chr17", "chr18",
     "chr19", "chr20", "chr21", "chr22", "chr23", "chrX", "chrY", "chrM"),
@@ -45,15 +46,15 @@ run_slide_cna(
 )
 }
 \arguments{
-\item{so}{Seurat object that contains raw counts matrix and meta data with cell type annotations}
+\item{counts}{data.frame of raw counts (genes x beads)}
 
-\item{md}{data.table of metadata of each bead (beads x annotations); contains columns 'bc' with values of bead names, 'cluster_type' with values of 'Normal' or 'Malignant', 'pos_x' with x-coordinate bead positions, 'pos_y' with y-coordinate bead positions, and 'nCount_RNA' with RNA counts per bead}
+\item{beads_df}{data.frame of annotation of each bead (beads x annotations); contains columns 'bc' for bead names, 'cluster_type' for annotations of 'Normal' or 'Malignant', 'pos_x' for x-coordinate bead positions, and 'pos_y' for y-coordinate bead positions}
 
-\item{gene_pos}{data.table with columns for GENE, chr, start, end, rel_gene_pos (1 : # of genes on chromosome)}
+\item{gene_pos}{data.frame with columns for GENE, chr, start, end, rel_gene_pos (1 : # of genes on chromosome)}
 
-\item{plotDir}{output plot directory path}
+\item{output_directory}{output directory path}
 
-\item{OUTPUT_DIRECTORY}{output directory path}
+\item{plot_directory}{output plot directory path}
 
 \item{spatial}{TRUE if using spatial information FALSE if not}
 
@@ -95,6 +96,8 @@ the Silhouette method; to feed hclust's method argument, one of "ward.D", "ward.
 \item{hc_function_plot_clones}{character string for which hierarchical clustering function to use
 in plotting clones}
 
+\item{use_GO_terms}{TRUE if using enrichR to get Gene Ontology terms for SlideCNA-defined clusters}
+
 \item{chrom_ord}{character vector of order and names of chromosomes}
 
 \item{chrom_colors}{character vector of which colors each chromosome should be in heat map}
@@ -108,5 +111,5 @@ in plotting clones}
 \item{legend_height_bar}{integer of height of legend bar in some ggplots}
 }
 \description{
-Take a raw expression counts, cell type annotations, and positional cooridnates to identify CNVs patterns across space and CNV-based clustering patterns
+Take a raw expression counts, cell type annotations, and positional cooridnates to identify CNA patterns across space and CNA-based clustering patterns
 }

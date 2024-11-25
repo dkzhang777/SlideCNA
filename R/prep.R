@@ -1,9 +1,44 @@
+### Make a Seurat object
+#' Creation of Seurat object
+#'
+#' This function takes in raw counts (and potentially meta data) to make a Seurat object
+#' and process it
+#'
+#' @param cb sparse counts matrix (genes x cells/beads)
+#' @param md data.frame of meta data for cells/beads if specific annotations known
+#' @param seed_FindClusters seed number for FindCLusters
+#' @param seed_RunTSNE seed number for RunTSNE
+#' @param seed_RunUMAP seed number for RunUMAP
+#' @return A Seurat object with specific Seurat features run
+
+#' @export
+make_seurat_annot <- function(cb, 
+                              md=NULL, 
+                              seed_FindClusters = 0, 
+                              seed_RunTSNE = 1, 
+                              seed_RunUMAP = 42){
+    so <- Seurat::CreateSeuratObject(counts = cb,min.features = 0, min.cells = 3)
+    so <- Seurat::PercentageFeatureSet(so, pattern = "^MT-",col.name = "percent.mito")
+    so <- Seurat::NormalizeData(object = so)
+    so <- Seurat::FindVariableFeatures(object = so)
+    so <- Seurat::ScaleData(object = so,vars.to.regress = c("nCount_RNA", "percent.mito"))
+    so <- Seurat::RunPCA(object = so)
+    so <- Seurat::FindNeighbors(object = so)
+    so <- Seurat::FindClusters(object = so, algorithm = 1, random.seed = seed_FindClusters)
+    so <- Seurat::RunTSNE(object = so,dims = 1:10, check_duplicates = FALSE, seed.use = seed_RunTSNE)
+    so <- Seurat::RunUMAP(object = so, dims = 1:10, seed.use = seed_RunUMAP)
+    if (!is.null(md)) {
+        so <- Seurat::AddMetaData(so, metadata = md)
+    }        
+    return(so)   
+}
+
 #' Infercnv-based preparation of relative gene expression intensities
 #'
 #' This function takes in a data table of raw counts and a vector of reference/normal beads
 #' to normalize counts and adjust for reference expression. 
 #'
-#' @param dat data.table of raw counts
+#' @param so Seurat object of Slide-seq data with raw counts
 #' @param normal_beads vector of names of normal beads 
 #' @param gene_pos data.table with columns for GENE, chr, start, end, rel_gene_pos (1 : # of genes on chromosome)
 #' @param chrom_ord vector of the names of chromosomes in order
@@ -11,16 +46,22 @@
 #' @return A data.table of normalized, capped, and ref-adjusted counts with genomic psoition info 
 
 #' @export
-prep <- function(dat, 
+prep <- function(so, 
                  normal_beads, 
                  gene_pos, 
                  chrom_ord, 
                  logTPM=FALSE) {
     
-    dat <- as.data.frame(dat)
+    # filter for genes with >50 counts across all beads
+    dat <- so@assays$RNA@counts[rowSums(as.matrix(so@assays$RNA@counts!=0))>50,] %>%
+           data.table::as.data.table(keep.rownames = "GENE") %>%
+           as.data.frame()
+    
+    # get indices of normal beads
     normal_i <- which(colnames(dat[,-1]) %in% normal_beads)
     
-    dat=merge(gene_pos,dat,by="GENE")
+    # add gene chromosomal positions
+    dat <- merge(gene_pos, dat, by="GENE")
     
     # Normalize for gene length then sequencing depth using TPM -> log-2(TPM + 1)
     gene_pos$length <- gene_pos$end - gene_pos$start

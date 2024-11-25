@@ -12,7 +12,7 @@ bin_metadata(
   pos_k = 55,
   ex_k = 1,
   hc_function = "ward.D2",
-  plotDir
+  plot_directory
 )
 }
 \arguments{
@@ -30,7 +30,7 @@ bin_metadata(
 
 \item{hc_function}{hierarchical clustering function}
 
-\item{plotDir}{output plot directory path}
+\item{plot_directory}{output plot directory path}
 }
 \value{
 A data.table of bead metadata combined with binned expression intensities for all genes for all beads

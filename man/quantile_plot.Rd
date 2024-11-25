@@ -10,7 +10,7 @@ quantile_plot(
   text_size,
   title_size,
   legend_height_bar,
-  plotDir
+  plot_directory
 )
 }
 \arguments{
@@ -24,7 +24,7 @@ quantile_plot(
 
 \item{legend_height_bar}{integer of bar height of legend for ggplot}
 
-\item{plotDir}{output plot directory path}
+\item{plot_directory}{output plot directory path}
 }
 \description{
 This function colors and plots each bin by its CNV score quantiles (min, 1st quartile, median, 3rd quartile, max)

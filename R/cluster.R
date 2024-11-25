@@ -9,7 +9,7 @@
 #' @param plot TRUE if plotting silhoutte scores per cluster
 #' @param malig TRUE if only using malignant bins and FALSE if using all bins
 #' @param k integer of optimal number of clusters, if known, and NA if not known
-#' @param plotDir output plot directory path
+#' @param plot_directory output plot directory path
 #' @return An integer representing the number of clusters that optimizes the silhouette score
 
 #' @export
@@ -19,7 +19,7 @@ get_num_clust <- function(data,
                           plot=TRUE, 
                           malig=FALSE, 
                           k=NA, 
-                          plotDir) {
+                          plot_directory) {
     
     if (malig == TRUE) {
         type = 'malig'
@@ -69,7 +69,7 @@ get_num_clust <- function(data,
         # Cluster embedding plot
         fviz <- factoextra::fviz_cluster(list(data=expr_data, 
                                               cluster=stats::cutree(hcl, k=best_k)))
-        grDevices::pdf(file = paste0(plotDir, "/", type, "_clone_dim_red.pdf"), width = 8, height = 6)
+        grDevices::pdf(file = paste0(plot_directory, "/", type, "_clone_dim_red.pdf"), width = 8, height = 6)
         print(fviz)
         grDevices::dev.off()
         print(fviz)
@@ -77,7 +77,7 @@ get_num_clust <- function(data,
         # Silhouette plot
         sil_cl <- cluster::silhouette(stats::cutree(hcl, k=best_k), 
                                       stats::dist(expr_data))
-        grDevices::pdf(file = paste0(plotDir,"/", type, "_clone_silhouette_plot.pdf"), width = 8, height = 6)
+        grDevices::pdf(file = paste0(plot_directory,"/", type, "_clone_silhouette_plot.pdf"), width = 8, height = 6)
         plot(sil_cl, border=NA)
         grDevices::dev.off()
         plot(sil_cl, border=NA)
@@ -101,7 +101,7 @@ utils::globalVariables(c("var"))
 #' @param legend_size_pt Ggplot2 legend_size_pt
 #' @param legend_height_bar Ggplot2 legend_height_bar
 #' @param hc_function character string for which hierarchical clustering function to use
-#' @param plotDir output plot directory path
+#' @param plot_directory output plot directory path
 #' @param spatial TRUE if using spatial information
 #' @return A hierarchical clustering object of the clusters
 #' @export
@@ -118,7 +118,7 @@ plot_clones = function(cnv_data,
                        legend_size_pt, 
                        legend_height_bar, 
                        hc_function = 'ward.D2', 
-                       plotDir, 
+                       plot_directory, 
                        spatial=TRUE) {
         
     # Initialize data based on CNV object
@@ -137,7 +137,7 @@ plot_clones = function(cnv_data,
     gg_dend <- ggplot2::ggplot(dendextend::as.ggdend(stats::as.dendrogram(hcl) %>%
       dendextend::set("branches_k_color", k = k)))
 
-    grDevices::pdf(file = paste0(plotDir,"/", type, "_", k, "_clones_dend.pdf"), width = 6, height = 8)
+    grDevices::pdf(file = paste0(plot_directory,"/", type, "_", k, "_clones_dend.pdf"), width = 6, height = 8)
     print(gg_dend)
     grDevices::dev.off()
     
@@ -194,7 +194,7 @@ plot_clones = function(cnv_data,
         guides(color = guide_legend(override.aes = list(size = legend_size_pt))) +
         scale_color_manual(values=spatial_colors)
 
-        grDevices::pdf(file = paste0(plotDir,"/", type, "_", k, "_clones_spatial.pdf"), width = 6, height = 8)
+        grDevices::pdf(file = paste0(plot_directory,"/", type, "_", k, "_clones_spatial.pdf"), width = 6, height = 8)
         print(gg_spatial)
         grDevices::dev.off()
         print(gg_spatial)    
@@ -235,7 +235,7 @@ plot_clones = function(cnv_data,
     chr = chrom_colors)
 
     # Plot CNV heatmap with clone labelling    
-    grDevices::png(file = paste0(plotDir,"/", type, "_", k, "_clones_cnv_heatmap.png"), width = 1500, height = 1000) #png version
+    grDevices::png(file = paste0(plot_directory,"/", type, "_", k, "_clones_cnv_heatmap.png"), width = 1500, height = 1000) #png version
     print(pheatmap::pheatmap(sub_wide, 
                              color = grDevices::colorRampPalette(c("navy", "white","firebrick3"))(50), 
                              cluster_rows = TRUE, 
@@ -247,7 +247,7 @@ plot_clones = function(cnv_data,
                              annotation_colors=ann_colors, 
                              show_rownames=FALSE, 
                              show_colnames=FALSE, 
-                             filename= paste0(plotDir,"/", type, "_", k, "_clones_cnv_heatmap.png")))
+                             filename= paste0(plot_directory,"/", type, "_", k, "_clones_cnv_heatmap.png")))
     grDevices::dev.off()
     
      # Plot CNV heatmap with clone labelling (pdf)
@@ -262,7 +262,7 @@ plot_clones = function(cnv_data,
                              annotation_colors=ann_colors, 
                              show_rownames=FALSE, 
                              show_colnames=FALSE, 
-                             filename= paste0(plotDir,"/", type, "_", k, "_clones_cnv_heatmap.pdf"),
+                             filename= paste0(plot_directory,"/", type, "_", k, "_clones_cnv_heatmap.pdf"),
                        width=18,
                        height=15)
     
@@ -431,7 +431,7 @@ make_so_bin <- function(so,
 #' @param text_size Ggplot2 text size
 #' @param title_size Ggplot2 title size
 #' @param legend_size_pt Ggplot2 legend_size_pt
-#' @param plotDir output plot directory path
+#' @param plot_directory output plot directory path
 #' @param p_val_thresh value for p value cutoff for DEGs
 #' @param bin TRUE if using binned beads
 #' @return A list object with cluster marker information
@@ -453,7 +453,7 @@ find_cluster_markers <- function(so_clone,
                                  legend_size_pt=4, 
                                 p_val_thresh=0.05,
                                 bin=TRUE,
-                                 plotDir=None) {
+                                 plot_directory=None) {
     
     Seurat::Idents(object = so_clone) <- "clone"
 
@@ -573,7 +573,7 @@ find_cluster_markers <- function(so_clone,
                                            high = "#B2182B", midpoint = 0)
     }
     
-    grDevices::pdf(file = paste0(plotDir,"/", "top_", n_markers, "_markers_", type, ".pdf"), 
+    grDevices::pdf(file = paste0(plot_directory,"/", "top_", n_markers, "_markers_", type, ".pdf"), 
         width = 10, height = 8)
     print(gg)
     grDevices::dev.off()
@@ -606,7 +606,7 @@ utils::globalVariables(c("None", "p_val_adj", ".SD"))
 #' @param n_terms integer of number of top DEGs to plot/use
 #' @param text_size integer of text size for ggplot
 #' @param title_size integer of title size for ggplot
-#' @param plotDir output plot directory path
+#' @param plot_directory output plot directory path
 #' @return A list object with cluster GO term information
 #'         en_clone = data.table of cluster GO terms
 #'         top_en_clone = data.table of just top cluster GO terms
@@ -618,7 +618,7 @@ find_go_terms <- function(cluster_markers_obj,
                           n_terms=5, 
                           text_size, 
                           title_size, 
-                          plotDir) {
+                          plot_directory) {
     
     # Get enriched GO terms from marker genes for each cluster
     en_clone=cluster_markers_obj$markers_clone[order(avg_log2FC, 
@@ -650,7 +650,7 @@ find_go_terms <- function(cluster_markers_obj,
     ylab((("-Log_10(p)"))) +
     coord_flip()
     
-    grDevices::pdf(file = paste0(plotDir,"/", "top_", n_terms, "_go_terms_", type, ".pdf"), width = 15, height = 6)
+    grDevices::pdf(file = paste0(plot_directory,"/", "top_", n_terms, "_go_terms_", type, ".pdf"), width = 15, height = 6)
     print(gg)
     grDevices::dev.off()
     print(gg)   

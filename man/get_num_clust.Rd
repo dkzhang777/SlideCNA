@@ -11,7 +11,7 @@ get_num_clust(
   plot = TRUE,
   malig = FALSE,
   k = NA,
-  plotDir
+  plot_directory
 )
 }
 \arguments{
@@ -27,7 +27,7 @@ get_num_clust(
 
 \item{k}{integer of optimal number of clusters, if known, and NA if not known}
 
-\item{plotDir}{output plot directory path}
+\item{plot_directory}{output plot directory path}
 }
 \value{
 An integer representing the number of clusters that optimizes the silhouette score

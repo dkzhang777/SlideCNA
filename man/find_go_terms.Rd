@@ -10,7 +10,7 @@ find_go_terms(
   n_terms = 5,
   text_size,
   title_size,
-  plotDir
+  plot_directory
 )
 }
 \arguments{
@@ -25,7 +25,7 @@ if just using malignant clusters}
 
 \item{title_size}{integer of title size for ggplot}
 
-\item{plotDir}{output plot directory path}
+\item{plot_directory}{output plot directory path}
 }
 \value{
 A list object with cluster GO term information

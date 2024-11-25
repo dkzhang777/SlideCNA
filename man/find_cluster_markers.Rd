@@ -17,7 +17,7 @@ find_cluster_markers(
   legend_size_pt = 4,
   p_val_thresh = 0.05,
   bin = TRUE,
-  plotDir = None
+  plot_directory = None
 )
 }
 \arguments{
@@ -47,7 +47,7 @@ representing the minimum log2 fold change for DEGs to be significant}
 
 \item{bin}{TRUE if using binned beads}
 
-\item{plotDir}{output plot directory path}
+\item{plot_directory}{output plot directory path}
 }
 \value{
 A list object with cluster marker information

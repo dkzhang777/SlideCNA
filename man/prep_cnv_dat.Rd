@@ -9,7 +9,7 @@ prep_cnv_dat(
   lower = 0.6,
   upper = 1.4,
   hc_function = "ward.D2",
-  plotDir
+  plot_directory
 )
 }
 \arguments{
@@ -21,7 +21,7 @@ prep_cnv_dat(
 
 \item{hc_function}{character for which hierarchical clustering function to use}
 
-\item{plotDir}{output plot directory path}
+\item{plot_directory}{output plot directory path}
 }
 \value{
 A list object for downstream cnv plotting and analysis

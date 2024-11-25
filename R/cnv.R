@@ -7,7 +7,7 @@
 #' @param lower numeric float to represent the lower cap for CNV scores
 #' @param upper numeric float to represent the upper cap for CNV scores 
 #' @param hc_function character for which hierarchical clustering function to use
-#' @param plotDir output plot directory path
+#' @param plot_directory output plot directory path
 #' @return A list object for downstream cnv plotting and analysis
 #'         all = data.table of CNV scores of all bins x (metadata + genes)
 #'         malig = data.table of CNV scores of just malignant bins x (metadata + genes)
@@ -21,7 +21,7 @@ prep_cnv_dat <- function(dat_bin,
                          lower=0.6, 
                          upper=1.4, 
                          hc_function = 'ward.D2', 
-                         plotDir) {                                  
+                         plot_directory) {                                  
     # separate data into all (malignant + non-malignant), malignant, and non-malignant cells
     malig_cells=unique(dat_bin[cluster_type == 'Malignant',]$variable)
     ref_cells=unique(dat_bin[cluster_type == 'Non-malignant',]$variable)
@@ -65,7 +65,7 @@ prep_cnv_dat <- function(dat_bin,
     hcl_all=stats::hclust(stats::dist(all_wide), method=hc_function)
     
     # plot dendrogram of hierarchical clustering
-    grDevices::pdf(file = paste0(plotDir,"/hcl_cnv.pdf"), width = 10, height = 6)
+    grDevices::pdf(file = paste0(plot_directory,"/hcl_cnv.pdf"), width = 10, height = 6)
     graphics::par(mfrow=c(1,2)) 
     plot(hcl,labels=FALSE)
     plot(hcl_all,labels=FALSE)
@@ -79,7 +79,7 @@ prep_cnv_dat <- function(dat_bin,
     dat_bin[,variable:=factor(variable,levels=hcl_all$labels[hcl_all$order])]
 
     # plot distribution of values across number of beads/bin and umi/bin
-    grDevices::pdf(file = paste0(plotDir,"/beads_umi_per_bin.pdf"), width = 10, height = 6)
+    grDevices::pdf(file = paste0(plot_directory,"/beads_umi_per_bin.pdf"), width = 10, height = 6)
     graphics::par(mfrow=c(1,2)) 
     graphics::boxplot(dat_malig$value ~ dat_malig$N_bin)
     graphics::boxplot(dat_malig$value ~ dat_malig$umi_bin)
@@ -107,14 +107,14 @@ utils::globalVariables(c("cluster_type", "variable", "value", "total_order"))
 #' @param md data.table of metadata of each bead
 #' @param chrom_colors vector of colors labeled by which chromosome they correspond to
 #' @param hc_function character for which hierarchical clustering function to use
-#' @param plotDir output plot directory path
+#' @param plot_directory output plot directory path
 
 #' @export
 cnv_heatmap <- function(cnv_data, 
                         md, 
                         chrom_colors, 
                         hc_function = 'ward.D2', 
-                        plotDir) {
+                        plot_directory) {
     
     # get chromosome names
     annot_col <- data.frame(chr=matrix(unlist(strsplit(colnames(cnv_data$all_wide), "_")), 
@@ -138,7 +138,7 @@ cnv_heatmap <- function(cnv_data,
     ann_colors = list("Tissue Type" = c("Malignant"="#F8776D", "Non-malignant"="#00BFC4"), chr = chrom_colors)
     
     # Plot heat map
-    grDevices::png(file = paste0(plotDir,"/cnv_heatmap.png"), width = 1500, height = 1000) # png version
+    grDevices::png(file = paste0(plot_directory,"/cnv_heatmap.png"), width = 1500, height = 1000) # png version
     print(pheatmap::pheatmap(cnv_data$all_wide, 
                              color = grDevices::colorRampPalette(c("navy", "white","firebrick3"))(50), 
                              cluster_rows = TRUE, 
@@ -150,7 +150,7 @@ cnv_heatmap <- function(cnv_data,
                              annotation_colors=ann_colors, 
                              show_rownames=FALSE, 
                              show_colnames=FALSE, 
-                             filename=paste0(plotDir,"/cnv_heatmap.png")))
+                             filename=paste0(plot_directory,"/cnv_heatmap.png")))
     grDevices::dev.off()
  
     # Plot heat map (pdf)
@@ -165,7 +165,7 @@ cnv_heatmap <- function(cnv_data,
                              annotation_colors=ann_colors, 
                              show_rownames=FALSE, 
                              show_colnames=FALSE, 
-                             filename=paste0(plotDir,"/cnv_heatmap.pdf"),
+                             filename=paste0(plot_directory,"/cnv_heatmap.pdf"),
                               width=18,
                               height=15)
 }
@@ -180,7 +180,7 @@ cnv_heatmap <- function(cnv_data,
 #' @param text_size integer of text size for ggplot
 #' @param title_size integer of title size for ggplot
 #' @param legend_height_bar integer of bar height of legend for ggplot
-#' @param plotDir output plot directory path
+#' @param plot_directory output plot directory path
 #’ @Import ggplot2
 
 #' @export
@@ -189,7 +189,7 @@ quantile_plot <- function(cnv_data,
                           text_size, 
                           title_size, 
                           legend_height_bar, 
-                          plotDir) {
+                          plot_directory) {
     plot_data <- cnv_data$all
     plot_data$chr <- factor(plot_data$chr, levels = unique(plot_data$chr))
     
@@ -228,7 +228,7 @@ quantile_plot <- function(cnv_data,
     ylab("Position Y") + 
     labs(color = legend_title)
     
-    grDevices::png(file = paste0(plotDir,"/cnv_score_quantiles.png"), width = 1000, height = 1200) # png version
+    grDevices::png(file = paste0(plot_directory,"/cnv_score_quantiles.png"), width = 1000, height = 1200) # png version
     print(gg)
     grDevices::dev.off()
     print(gg)
@@ -244,7 +244,7 @@ utils::globalVariables(c("new_value", "value", "variable", "chr", "pos_x", "pos_
 #' @param text_size integer of text size for ggplot
 #' @param title_size integer of title size for ggplot
 #' @param legend_height_bar integer of bar height of legend for ggplot
-#' @param plotDir output plot directory path
+#' @param plot_directory output plot directory path
 #’ @Import ggplot2
 
 #' @export
@@ -252,7 +252,7 @@ mean_cnv_plot <- function(cnv_data,
                           text_size, 
                           title_size, 
                           legend_height_bar, 
-                          plotDir) {
+                          plot_directory) {
     
 #     plot_data <- data.table()
 #     for (col in colnames(cnv_data$all)) {
@@ -282,7 +282,7 @@ mean_cnv_plot <- function(cnv_data,
           panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
     xlab("Position X") + ylab("Position Y") + labs(color = legend_title) 
     
-    grDevices::png(file = paste0(plotDir,"/mean_cnv_score.png"), width = 1200, height = 1200) # png version
+    grDevices::png(file = paste0(plot_directory,"/mean_cnv_score.png"), width = 1200, height = 1200) # png version
     print(gg)
     grDevices::dev.off()
     print(gg)

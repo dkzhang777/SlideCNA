@@ -4,10 +4,10 @@
 \alias{prep}
 \title{Infercnv-based preparation of relative gene expression intensities}
 \usage{
-prep(dat, normal_beads, gene_pos, chrom_ord, logTPM = FALSE)
+prep(so, normal_beads, gene_pos, chrom_ord, logTPM = FALSE)
 }
 \arguments{
-\item{dat}{data.table of raw counts}
+\item{so}{Seurat object of Slide-seq data with raw counts}
 
 \item{normal_beads}{vector of names of normal beads}
 

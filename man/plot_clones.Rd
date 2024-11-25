@@ -15,7 +15,7 @@ plot_clones(
   legend_size_pt,
   legend_height_bar,
   hc_function = "ward.D2",
-  plotDir,
+  plot_directory,
   spatial = TRUE
 )
 }
@@ -40,7 +40,7 @@ plot_clones(
 
 \item{hc_function}{character string for which hierarchical clustering function to use}
 
-\item{plotDir}{output plot directory path}
+\item{plot_directory}{output plot directory path}
 
 \item{spatial}{TRUE if using spatial information}
 }

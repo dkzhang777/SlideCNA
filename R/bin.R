@@ -9,7 +9,7 @@
 #' @param pos_k positional weight
 #' @param ex_k expressional weight
 #' @param hc_function hierarchical clustering function
-#' @param plotDir output plot directory path
+#' @param plot_directory output plot directory path
 #' @return A data.table of bead metadata combined with binned expression intensities for all genes for all beads
 
 #' @export
@@ -20,7 +20,7 @@ bin_metadata <- function(md,
                          pos_k=55, 
                          ex_k=1, 
                          hc_function='ward.D2',
-                         plotDir) {
+                         plot_directory) {
     
     # bin malignant beads
     md_mal <- md[cluster_type=='Malignant']
@@ -28,7 +28,7 @@ bin_metadata <- function(md,
                      dat[,which(dat[,c(colnames(dat)%in%md_mal$bc)]), with=FALSE])
     
     n_bin_mal <- round(nrow(md_mal)/avg_bead_per_bin)
-    md_mal <- SlideCNA::bin(dat_mal, md_mal, n_bin_mal, pos, pos_k, ex_k, hc_function, plotDir)
+    md_mal <- SlideCNA::bin(dat_mal, md_mal, n_bin_mal, pos, pos_k, ex_k, hc_function, plot_directory)
     
     # bin reference beads
     md_ref <- md[cluster_type=='Non-malignant']
@@ -36,7 +36,7 @@ bin_metadata <- function(md,
                      dat[,which(dat[,c(colnames(dat)%in%md_ref$bc)]), with=FALSE])
     
     n_bin_ref <- round(nrow(md_ref)/avg_bead_per_bin)
-    md_ref <- SlideCNA::bin(dat_ref, md_ref, n_bin_ref, pos, pos_k, ex_k, hc_function, plotDir)
+    md_ref <- SlideCNA::bin(dat_ref, md_ref, n_bin_ref, pos, pos_k, ex_k, hc_function, plot_directory)
     md_ref$bin_all <- md_ref$bin_all + max(md_mal$bin_all) 
     
     md <- rbind(md_mal, md_ref)
@@ -58,7 +58,7 @@ utils::globalVariables(c("cluster_type", "pct_mal", "icluster_type", ".N", "bin_
 #' @param pos_k positional weight
 #' @param ex_k expressional weight
 #' @param hc_function hierarchical clustering function
-#' @param plotDir output plot directory path
+#' @param plot_directory output plot directory path
 #' @return A data.table of bead metadata combined with bin designations
                               
 #' @export
@@ -69,7 +69,7 @@ bin <- function(dat,
                 pos_k=55, 
                 ex_k=1, 
                 hc_function = 'ward.D2', 
-                plotDir) {
+                plot_directory) {
     
     dat_var <- t(dat[,!c("chr", "start", "end", "rel_gene_pos", "length")]) 
     colnames(dat_var) <- dat_var[1,]
@@ -102,7 +102,7 @@ bin <- function(dat,
     
     # hierarchical clustering on combined distances
     hcl <- stats::hclust(distance, method=hc_function)
-    grDevices::pdf(file = paste0(plotDir, "/bin_hclust_dend.pdf"), width = 10, height = 6)
+    grDevices::pdf(file = paste0(plot_directory, "/bin_hclust_dend.pdf"), width = 10, height = 6)
     plot(hcl)
     grDevices::dev.off()
     
@@ -147,7 +147,7 @@ dat_to_long <- function(dat,
 #' @param title_size Ggplot2 title size
 #' @param legend_size_pt Ggplot2 legend_size_pt
 #' @param legend_height_bar Ggplot2 legend_height_bar
-#' @param plotDir output plot directory path
+#' @param plot_directory output plot directory path
 
 #' @export
 SpatialPlot <- function(dat_long, 
@@ -156,7 +156,7 @@ SpatialPlot <- function(dat_long,
                         title_size, 
                         legend_size_pt, 
                         legend_height_bar, 
-                        plotDir) {
+                        plot_directory) {
     dat_distinct <- dplyr::distinct(dplyr::select(dat_long, 
                                                   c("variable", "pos_x", "pos_y", vars)))
     
@@ -200,7 +200,7 @@ SpatialPlot <- function(dat_long,
             coord_fixed() +
             guides(color = guide_legend(override.aes = list(size = legend_size_pt)))
             
-            grDevices::pdf(file = paste0(plotDir,"/", var, "_spatial.pdf"), width = 6, height = 8)
+            grDevices::pdf(file = paste0(plot_directory,"/", var, "_spatial.pdf"), width = 6, height = 8)
             print(gg)
             grDevices::dev.off()
             print(gg)
@@ -223,7 +223,7 @@ SpatialPlot <- function(dat_long,
             coord_fixed() +
             scale_color_gradientn(colours = sample(grDevices::rainbow(500), 500))
             
-            grDevices::pdf(file = paste0(plotDir,"/", var, "_spatial.pdf"), width = 6, height = 8)
+            grDevices::pdf(file = paste0(plot_directory,"/", var, "_spatial.pdf"), width = 6, height = 8)
             print(gg)
             grDevices::dev.off()
             print(gg)
@@ -245,7 +245,7 @@ SpatialPlot <- function(dat_long,
             labs(color = legend_title) +
             coord_fixed()
             
-            grDevices::pdf(file = paste0(plotDir,"/", var, "_spatial.pdf"), width = 6, height = 8)
+            grDevices::pdf(file = paste0(plot_directory,"/", var, "_spatial.pdf"), width = 6, height = 8)
             print(gg)
             grDevices::dev.off()
             print(gg)
@@ -263,7 +263,7 @@ utils::globalVariables(c("pos_x", "pos_y"))
 #' most common cluster seurat cluster, and most common cluster/tissue type of constituent beads
 #'
 #' @param dat_long data.table of bead expression intensities per gene with metadata in long format
-#' @param plotDir output plot directory path
+#' @param plot_directory output plot directory path
 #' @param spatial True if using spatial information
 #' @return data.table of expression intensities at aggregated bin level
 #' @export
@@ -271,7 +271,7 @@ utils::globalVariables(c("pos_x", "pos_y"))
 
 #' @export
 long_to_bin <- function(dat_long, 
-                        plotDir, 
+                        plot_directory, 
                         spatial=TRUE) {
     
     # Using spatial information
@@ -291,7 +291,7 @@ long_to_bin <- function(dat_long,
         gg <- ggplot2::ggplot(unique(dat_bin[,c('pos_x','pos_y','seurat_clusters')])) +
           geom_jitter(aes(pos_x, pos_y, color = seurat_clusters), width = 0.1)
 
-        grDevices::pdf(file = paste0(plotDir,"/seurat_clusters_bin_spatial.pdf"), width = 10, height = 6)
+        grDevices::pdf(file = paste0(plot_directory,"/seurat_clusters_bin_spatial.pdf"), width = 10, height = 6)
         print(gg)
         grDevices::dev.off()
         print(gg)

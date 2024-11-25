@@ -11,7 +11,7 @@ SpatialPlot(
   title_size,
   legend_size_pt,
   legend_height_bar,
-  plotDir
+  plot_directory
 )
 }
 \arguments{
@@ -27,7 +27,7 @@ SpatialPlot(
 
 \item{legend_height_bar}{Ggplot2 legend_height_bar}
 
-\item{plotDir}{output plot directory path}
+\item{plot_directory}{output plot directory path}
 }
 \description{
 This function will plot information about beads and bins on x and y coordinates

@@ -1,12 +1,12 @@
 #' Run SlideCNA workflow 
 #'
-#' Take a raw expression counts, cell type annotations, and positional cooridnates to identify CNVs patterns across space and CNV-based clustering patterns
+#' Take a raw expression counts, cell type annotations, and positional cooridnates to identify CNA patterns across space and CNA-based clustering patterns
 #'
-#' @param so Seurat object that contains raw counts matrix and meta data with cell type annotations 
-#' @param md data.table of metadata of each bead (beads x annotations); contains columns 'bc' with values of bead names, 'cluster_type' with values of 'Normal' or 'Malignant', 'pos_x' with x-coordinate bead positions, 'pos_y' with y-coordinate bead positions, and 'nCount_RNA' with RNA counts per bead 
-#' @param gene_pos data.table with columns for GENE, chr, start, end, rel_gene_pos (1 : # of genes on chromosome)
-#' @param plotDir output plot directory path
-#' @param OUTPUT_DIRECTORY output directory path
+#' @param counts data.frame of raw counts (genes x beads)
+#' @param beads_df data.frame of annotation of each bead (beads x annotations); contains columns 'bc' for bead names, 'cluster_type' for annotations of 'Normal' or 'Malignant', 'pos_x' for x-coordinate bead positions, and 'pos_y' for y-coordinate bead positions
+#' @param gene_pos data.frame with columns for GENE, chr, start, end, rel_gene_pos (1 : # of genes on chromosome)
+#' @param plot_directory output plot directory path
+#' @param output_directory output directory path
 #' @param spatial TRUE if using spatial information FALSE if not
 #' @param roll_mean_window integer number of adjacent genes for which to average over in pyramidal weighting scheme
 #' @param avg_bead_per_bin integer of average number of beads there should be per bin 
@@ -29,6 +29,7 @@
 #' @param plot_silhouette TRUE if plotting silhouette scores for clustering 
 #' @param hc_function_plot_clones character string for which hierarchical clustering function to use 
 #'        in plotting clones
+#' @param use_GO_terms TRUE if using enrichR to get Gene Ontology terms for SlideCNA-defined clusters
 #' @param chrom_ord character vector of order and names of chromosomes
 #' @param chrom_colors character vector of which colors each chromosome should be in heat map
 #' @param text_size integer of size of text in some ggplots
@@ -38,11 +39,11 @@
 #' 
 #' @export
 
-run_slide_cna <- function(so, 
-                          md, 
+run_slide_cna <- function(counts, 
+                          beads_df, 
                           gene_pos, 
-                          plotDir,
-                          OUTPUT_DIRECTORY, 
+                          output_directory, 
+                          plot_directory,
                           spatial=TRUE,
                           roll_mean_window=101,
                           avg_bead_per_bin=12, 
@@ -61,6 +62,7 @@ run_slide_cna <- function(so,
                           max_k_silhouette=10, 
                           plot_silhouette=TRUE, 
                           hc_function_plot_clones="ward.D2", 
+                          use_GO_terms=TRUE,
                           chrom_ord = c('chr1', 'chr2', 'chr3', 'chr4', 'chr5', 'chr6', 'chr7', 
                                         'chr8', 'chr9','chr10', 'chr11', 'chr12', 'chr13', 
                                         'chr14', 'chr15', 'chr16', 'chr17','chr18', 'chr19', 
@@ -80,41 +82,104 @@ run_slide_cna <- function(so,
                           legend_size_pt = 4,
                           legend_height_bar = 1.5) {
     
-    setwd(OUTPUT_DIRECTORY)
+    setwd(output_directory)
     
-    # Pre-process data
-    raw_dat=data.table::as.data.table(so@assays$RNA@counts[rowSums(as.matrix(so@assays$RNA@counts!=0))>50,],
-                          keep.rownames = "GENE")
+    # Set up logger
+    log_file <- paste0(output_directory, "/SlideCNA.log")
+    if (file.exists(log_file)) {file.remove(log_file)}
+    futile.logger::flog.appender(futile.logger::appender.file(log_file))
+    
+    # Set a global error handler
+    options(error = function(e) {
+        futile.logger::flog.error(paste("Global error handler: Error encountered:", conditionMessage(e)))
+    })
+
+    # Make initial Seurat object and meta data object
+    
+    # Reformat counts and create a sparse matrix for input into Seurat
+    counts_mat <- counts %>% 
+              dplyr::select(beads_df$bc) %>%
+              data.table::as.data.table() %>%
+              mltools::sparsify()
+    row.names(counts_mat) <- row.names(counts)
+    
+    # Ensure beads_df has correct columns 
+    if (isTRUE(spatial)) {
+        if (!("bc" %in% colnames(beads_df)) | 
+            !("cluster_type" %in% colnames(beads_df)) | 
+            !("pos_x" %in% colnames(beads_df)) | 
+            !("pos_y" %in% colnames(beads_df))) {
+            error_msg <- "beads_df does not contain all necessary columns (bc, cluster_type, pos_x, pos_y)"
+            futile.logger::flog.error(error_msg)
+            stop(error_msg)
+        }
+    }
+    else {
+        if (!("bc" %in% colnames(beads_df)) | 
+            !("cluster_type" %in% colnames(beads_df))) {
+            error_msg <- "beads_df does not contain all necessary columns (bc, cluster_type"
+            futile.logger::flog.error(error_msg)
+            stop(error_msg)
+        }
+    }
+        
+    # Make Seurat object
+    futile.logger::flog.info("making initial Seurat object")
+    
+    so <- SlideCNA::make_seurat_annot(counts_mat, 
+                                      beads_df, 
+                                      seed_FindClusters = 0, 
+                                      seed_RunTSNE = 1, 
+                                      seed_RunUMAP = 42)
+    
+    # Capture meta data as a separate object
+    md <- data.table::as.data.table(so@meta.data)
+    rownames(md) <- md$bc
     
     md[md$cluster_type == 'Normal',]$cluster_type <- "Non-malignant" # Rename normal beads as "Non-malignant"
-    
+
+    # save Seurat object and meta data
+    futile.logger::flog.info("saving initial Seurat object and meta data")
+    saveRDS(so, paste0(output_directory, "/so.rds"))
+    saveRDS(md, paste0(output_directory, "/md.rds"))
+        
     normal_beads <- md[md$cluster_type == 'Non-malignant',]$bc
-    prep_dat <- SlideCNA::prep(raw_dat, 
+    
+    gene_pos <- data.table::as.data.table(gene_pos)
+
+    # Normalize counts, cap extreme values, and adjust for reference bead expression    
+    futile.logger::flog.info("preprocessing counts")
+    prep_dat <- SlideCNA::prep(so, 
                               normal_beads, 
                               gene_pos=gene_pos, 
                               chrom_ord=chrom_ord,
                               logTPM=FALSE)
     
-    # Roll mean
+    # Apply pyramidal average weighting scheme to expression values
+    futile.logger::flog.info("getting the pyrimidal weighted rolling mean of expression values")
     rm <- SlideCNA::weight_rollmean(prep_dat, 
                                    roll_mean_window)
-    save(rm, file="rm.Robj")
+    saveRDS(rm, file="rm.rds")
     
     # Center Data
+    futile.logger::flog.info("centering expression values")
     centered_rm <- SlideCNA::center_rm(rm)
 
     # Adjust for reference beads
+    futile.logger::flog.info("adjusting expression values for reference beads")
     rm_adj <- SlideCNA::ref_adj(centered_rm, 
                                normal_beads)
 
     # Reverse log transformation
+    futile.logger::flog.info("reversing log transformation of expression values")
     dat <- cbind(rm_adj[,c("GENE","chr","start","end","rel_gene_pos","length")], 
                  2 ** rm_adj[,!c("GENE","chr","start","end","rel_gene_pos","length")])
-    save(dat, file="dat_adj.Robj")
+    saveRDS(dat, file="dat_adj.rds")
     
     # With spatial information
     if (isTRUE(spatial)) {
         # Expressional/positional binning
+        futile.logger::flog.info("binning beads")
         md <- SlideCNA::bin_metadata(md, 
                                     dat, 
                                     avg_bead_per_bin, 
@@ -122,45 +187,49 @@ run_slide_cna <- function(so,
                                     pos_k, 
                                     ex_k, 
                                     hc_function_bin, 
-                                    plotDir)
-        save(md, file="md_bin.Robj")
+                                    plot_directory)
+        saveRDS(md, file="md_bin.rds")
 
         # Convert data to long format and combine with metadata
         dat_long <- SlideCNA::dat_to_long(dat, md)
 
         # Plot spatial information
+        futile.logger::flog.info("making spatial plots of binned beads")
         SlideCNA::SpatialPlot(dat_long, 
                              spatial_vars_to_plot, 
                              text_size,
                              title_size,
                              legend_size_pt, 
                              legend_height_bar, 
-                             plotDir)
+                             plot_directory)
 
         # Convert data to be by bins
         dat_bin <- SlideCNA::long_to_bin(dat_long, 
-                                        plotDir)
-        save(dat_bin, file="dat_bin.Robj")
+                                        plot_directory)
+        saveRDS(dat_bin, file="dat_bin.rds")
 
         # Scale data by nUMIs
+        futile.logger::flog.info("scaling data by nUMIs")
         dat_bin <- SlideCNA::scale_nUMI(dat_bin, 
                                        scale_bin_thresh_hard)
-        save(dat_bin, file="dat_bin_scaled.Robj")
+        saveRDS(dat_bin, file="dat_bin_scaled.rds")
 
-        # Identify CNVs
+        # Identify CNVs 
+        futile.logger::flog.info("obtaining CNA scores")
         cnv_data <- SlideCNA::prep_cnv_dat(dat_bin, 
                                           lower_bound_cnv, 
                                           upper_bound_cnv, 
                                           hc_function_cnv, 
-                                          plotDir)
-        save(cnv_data, file="cnv_data.Robj")
+                                          plot_directory)
+        saveRDS(cnv_data, file="cnv_data.rds")
 
         # Display CNVs across heatmap of beads x genes
+        futile.logger::flog.info("making CNA plots")
         SlideCNA::cnv_heatmap(cnv_data, 
                              md, 
                              chrom_colors=chrom_colors,
                              hc_function_cnv_heatmap, 
-                             plotDir)
+                             plot_directory)
 
         # Display CNV Score Plots
         SlideCNA::quantile_plot(cnv_data, 
@@ -168,23 +237,24 @@ run_slide_cna <- function(so,
                                text_size,
                                title_size,
                                legend_height_bar,
-                               plotDir)
+                               plot_directory)
         
         SlideCNA::mean_cnv_plot(cnv_data, 
                                text_size,
                                title_size,
                                legend_height_bar,
-                               plotDir)
+                               plot_directory)
         
         # With just malignant beads
+        futile.logger::flog.info("determining number of malignant clusters")
         best_k_malig <- SlideCNA::get_num_clust(cnv_data, 
                                                hc_function_silhouette, 
                                                max_k_silhouette, 
                                                plot_silhouette, 
                                                malig=TRUE, 
                                                k=NA, 
-                                               plotDir) 
-        save(best_k_malig, file="best_k_malig.Robj")
+                                               plot_directory) 
+        saveRDS(best_k_malig, file="best_k_malig.rds")
 
         cnv_data2 <- cnv_data
         
@@ -199,7 +269,7 @@ run_slide_cna <- function(so,
                                             legend_size_pt, 
                                             legend_height_bar, 
                                             hc_function_plot_clones, 
-                                            plotDir,
+                                            plot_directory,
                                             spatial=spatial)
         
         cnv_data2$all <- merge(cnv_data$all, 
@@ -207,11 +277,13 @@ run_slide_cna <- function(so,
                                by='variable')
 
         # Make binned seurat object
+        futile.logger::flog.info("making Seurat object of all binned beads")
         so_bin_all <- SlideCNA::make_so_bin(so,
                                             md,
                                             hcl_sub_all)
         
         # Find DEGs and GO markers per clone over all beads
+        futile.logger::flog.info("trying to find DEGs and GO markers of each cluster")
         so_clone_all <- SlideCNA::clone_so(so, 
                                           hcl_sub_all,
                                           md)
@@ -224,13 +296,18 @@ run_slide_cna <- function(so,
                                                                      title_size=title_size,
                                                                      legend_size_pt=legend_size_pt,
                                                                       bin=TRUE,
-                                                                     plotDir=plotDir))
+                                                                     plot_directory=plot_directory))
         
-        go_terms_all_obj <- try(SlideCNA::find_go_terms(cluster_markers_obj=cluster_markers_all_obj,
+        if(isTRUE(use_GO_terms)) {
+            go_terms_all_obj <- try(SlideCNA::find_go_terms(cluster_markers_obj=cluster_markers_all_obj,
                                                        type='all',
                                                        text_size=text_size,
                                                        title_size=title_size,
-                                                       plotDir=plotDir))
+                                                       plot_directory=plot_directory))
+        }
+        else {
+            go_terms_all_obj <- NULL
+        }
 
         # Get clones over malignant beads from their CNVs
         hcl_sub_malig <- SlideCNA::plot_clones(cnv_data, 
@@ -243,7 +320,7 @@ run_slide_cna <- function(so,
                                               legend_size_pt, 
                                               legend_height_bar, 
                                               hc_function_plot_clones, 
-                                              plotDir, 
+                                              plot_directory, 
                                               spatial=spatial)
         
         cnv_data2$malig <- merge(cnv_data$malig, 
@@ -253,12 +330,14 @@ run_slide_cna <- function(so,
         cnv_data <- cnv_data2 
         
         # Make binned Seurat object with malignant binned beads
+        futile.logger::flog.info("making Seurat object of malignant binned beads")
         so_bin_malig <- SlideCNA::make_so_bin(so,
                                               md,
                                               hcl_sub_malig,
                                               mal=TRUE)
         
         # Find DEGs and GO markers per clone over malignant beads
+futile.logger::flog.info("trying to find DEGs and GO markers of each malignant cluster")
         so_clone_malig <- SlideCNA::clone_so(so, 
                                             hcl_sub_malig, 
                                             md, 
@@ -271,14 +350,18 @@ run_slide_cna <- function(so,
                                                                        title_size=title_size,
                                                                        legend_size_pt=legend_size_pt,
                                                                         bin=TRUE,
-                                                                       plotDir=plotDir))
+                                                                       plot_directory=plot_directory))
         
-        go_terms_malig_obj <- try(SlideCNA::find_go_terms(cluster_markers_obj=cluster_markers_malig_obj, 
+        if(isTRUE(use_GO_terms)) {
+            go_terms_malig_obj <- try(SlideCNA::find_go_terms(cluster_markers_obj=cluster_markers_malig_obj, 
                                                          type="malig", 
                                                          text_size=text_size,
                                                          title_size=title_size,
-                                                         plotDir=plotDir))
-
+                                                         plot_directory=plot_directory))
+        }
+        else {
+            go_terms_malig_obj <- NULL
+        }
     
         cnv_data$hc_sub_all <- hcl_sub_all
         try(cnv_data$cluster_markers_all <- cluster_markers_all_obj)
@@ -287,12 +370,15 @@ run_slide_cna <- function(so,
         try(cnv_data$cluster_markers_malig <- cluster_markers_malig_obj)
         try(cnv_data$go_terms_malig<- go_terms_malig_obj)
         
-        save(cnv_data, file="cnv_data2.Robj")
+        saveRDS(cnv_data, file="cnv_data2.rds")
+
+        futile.logger::flog.info("Done!")
 
     }
     # Without spatial information
     else {
-        # Expressional/positional binning
+        # Expressional binning
+        futile.logger::flog.info("binning beads")
         md <- SlideCNA::bin_metadata(md, 
                                     dat, 
                                     avg_bead_per_bin, 
@@ -300,49 +386,53 @@ run_slide_cna <- function(so,
                                     pos_k, 
                                     ex_k, 
                                     hc_function_bin, 
-                                    plotDir)
-        save(md, file="md_bin.Robj")
+                                    plot_directory)
+        saveRDS(md, file="md_bin.rds")
 
         # Convert data to long format and combine with metadata
         dat_long <- SlideCNA::dat_to_long(dat, md)
 
         # Convert data to be by bins
         dat_bin <- SlideCNA::long_to_bin(dat_long, 
-                                        plotDir, 
+                                        plot_directory, 
                                         spatial=spatial)
-        save(dat_bin, file="dat_bin.Robj")
+        saveRDS(dat_bin, file="dat_bin.rds")
 
         # Scale data by nUMIs
+        futile.logger::flog.info("scaling data by nUMIs")
         dat_bin <- SlideCNA::scale_nUMI(dat_bin, 
                                        scale_bin_thresh_hard)
-        save(dat_bin, file="dat_bin_scaled.Robj")
+        saveRDS(dat_bin, file="dat_bin_scaled.rds")
 
         # Identify CNVs
+        futile.logger::flog.info("obtaining CNA scores")
         cnv_data <- SlideCNA::prep_cnv_dat(dat_bin, 
                                           lower_bound_cnv, 
                                           upper_bound_cnv, 
                                           hc_function_cnv, 
-                                          plotDir)
-        save(cnv_data, file="cnv_data.Robj")
+                                          plot_directory)
+        saveRDS(cnv_data, file="cnv_data.rds")
 
         # Display CNVs across heatmap of beads x genes
+        futile.logger::flog.info("making CNA plots")
         SlideCNA::cnv_heatmap(cnv_data, 
                              md, 
                              chrom_colors,
                              hc_function_cnv_heatmap, 
-                             plotDir)
+                             plot_directory)
 
         # Get heatmap of silhouette scores across all k for all methods
         # Silhouette method to get ideal number of clusters
+        futile.logger::flog.info("determining number of malignant clusters")
         best_k_malig <- SlideCNA::get_num_clust(cnv_data, 
                                                hc_function_silhouette, 
                                                max_k_silhouette, 
                                                plot_silhouette,
                                                malig=TRUE, 
                                                k=NA, 
-                                               plotDir) # With just malignant beads
+                                               plot_directory) # With just malignant beads
 
-        save(best_k_malig, file="best_k_malig.Robj")
+        saveRDS(best_k_malig, file="best_k_malig.rds")
         
         cnv_data2 <- cnv_data
 
@@ -357,7 +447,7 @@ run_slide_cna <- function(so,
                                             legend_size_pt, 
                                             legend_height_bar, 
                                             hc_function_plot_clones, 
-                                            plotDir,
+                                            plot_directory,
                                             spatial=spatial)
         
         cnv_data2$all <- merge(cnv_data$all, 
@@ -365,11 +455,13 @@ run_slide_cna <- function(so,
                                by='variable')
         
         # Make binned seurat object
+        futile.logger::flog.info("making Seurat object of all binned beads")
         so_bin_all <- SlideCNA::make_so_bin(so, 
                                             hcl_sub_all,
                                             md)
         
         # Find DEGs and GO markers per clone over all beads
+        futile.logger::flog.info("trying to find DEGs and GO markers of each cluster")
         so_clone_all <- SlideCNA::clone_so(so, 
                                           hcl_sub_all, 
                                           md)
@@ -382,13 +474,13 @@ run_slide_cna <- function(so,
                                                                      title_size=title_size,
                                                                      legend_size_pt=legend_size_pt,
                                                                       bin=TRUE,
-                                                                     plotDir=plotDir))
+                                                                     plot_directory=plot_directory))
         
         go_terms_all_obj <- try(SlideCNA::find_go_terms(cluster_markers_obj=cluster_markers_all_obj, 
                                                        type='all', 
                                                        text_size=text_size,
                                                        title_size=title_size,
-                                                       plotDir=plotDir))
+                                                       plot_directory=plot_directory))
     
         # Get clones over malignant beads from their CNVs
         hcl_sub_malig <- SlideCNA::plot_clones(cnv_data, 
@@ -401,7 +493,7 @@ run_slide_cna <- function(so,
                                               legend_size_pt, 
                                               legend_height_bar, 
                                               hc_function_plot_clones, 
-                                              plotDir, 
+                                              plot_directory, 
                                               spatial=spatial)
         
         cnv_data2$malig <- merge(cnv_data$malig, 
@@ -411,12 +503,14 @@ run_slide_cna <- function(so,
         cnv_data <- cnv_data2
         
         # Make binned seurat object with malignant beads
+        futile.logger::flog.info("making Seurat object of malignant binned beads")
         so_bin_malig <- SlideCNA::make_so_bin(so, 
                                             hcl_sub_malig,
                                             md,
                                             mal=TRUE)
         
         # Find DEGs and GO markers per clone over malignant beads
+        futile.logger::flog.info("trying to find DEGs and GO markers of each malignant cluster")
         so_clone_malig <- SlideCNA::clone_so(so, 
                                                hcl_sub_malig, 
                                                md, 
@@ -430,13 +524,13 @@ run_slide_cna <- function(so,
                                                                        title_size=title_size,
                                                                        legend_size_pt=legend_size_pt,
                                                                         bin=TRUE,
-                                                                       plotDir=plotDir))
+                                                                       plot_directory=plot_directory))
         
         go_terms_malig_obj <- try(SlideCNA::find_go_terms(cluster_markers_obj=cluster_markers_malig_obj, 
                                                          type="malig", 
                                                          text_size=text_size,
                                                          title_size=title_size,
-                                                         plotDir=plotDir))
+                                                         plot_directory=plot_directory))
         
         cnv_data$hc_sub_all <- hcl_sub_all
         try(cnv_data$cluster_markers_all <- cluster_markers_all_obj)
@@ -445,7 +539,9 @@ run_slide_cna <- function(so,
         try(cnv_data$cluster_markers_malig <- cluster_markers_malig_obj)
         try(cnv_data$go_terms_malig<- go_terms_malig_obj)
 
-        save(cnv_data, file="cnv_data2.Robj")
+        saveRDS(cnv_data, file="cnv_data2.rds")
+        
+        futile.logger::flog.info("Done!")
         
     }
  

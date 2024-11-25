@@ -4,12 +4,12 @@
 \alias{long_to_bin}
 \title{Convert to wide bin x genes + metadata format}
 \usage{
-long_to_bin(dat_long, plotDir, spatial = TRUE)
+long_to_bin(dat_long, plot_directory, spatial = TRUE)
 }
 \arguments{
 \item{dat_long}{data.table of bead expression intensities per gene with metadata in long format}
 
-\item{plotDir}{output plot directory path}
+\item{plot_directory}{output plot directory path}
 
 \item{spatial}{True if using spatial information}
 }

@@ -4,7 +4,13 @@
 \alias{mean_cnv_plot}
 \title{Plot mean CNV scores per bin and per chromosome}
 \usage{
-mean_cnv_plot(cnv_data, text_size, title_size, legend_height_bar, plotDir)
+mean_cnv_plot(
+  cnv_data,
+  text_size,
+  title_size,
+  legend_height_bar,
+  plot_directory
+)
 }
 \arguments{
 \item{cnv_data}{list object of cnv data from SlideCNA::prep_cnv_dat()}
@@ -15,7 +21,7 @@ mean_cnv_plot(cnv_data, text_size, title_size, legend_height_bar, plotDir)
 
 \item{legend_height_bar}{integer of bar height of legend for ggplot}
 
-\item{plotDir}{output plot directory path}
+\item{plot_directory}{output plot directory path}
 }
 \description{
 This function colors and plots each bin by its mean CNV score
