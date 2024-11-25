@@ -33,12 +33,12 @@ pos_y (dbl): y-coordinate bead position
     
 ### Running SlideCNA
 ```
-run_slide_cna <- function(counts, 
-                          beads_df, 
-                          gene_pos, 
-                          output_directory, 
-                          plot_directory,
-                          spatial=TRUE)
+run_slide_cna(counts, 
+              beads_df, 
+              gene_pos, 
+              output_directory, 
+              plot_directory,
+              spatial=TRUE)
 ```
 
 ### Parameter Descriptions
