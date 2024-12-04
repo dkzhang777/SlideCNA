@@ -205,7 +205,6 @@ SpatialPlot <- function(dat_long,
             grDevices::pdf(file = paste0(plot_directory,"/", var, "_spatial.pdf"), width = 6, height = 8)
             print(gg)
             grDevices::dev.off()
-            print(gg)
         }
         
         else if (var == 'bin_all') {
@@ -228,7 +227,6 @@ SpatialPlot <- function(dat_long,
             grDevices::pdf(file = paste0(plot_directory,"/", var, "_spatial.pdf"), width = 6, height = 8)
             print(gg)
             grDevices::dev.off()
-            print(gg)
         }
         
         else {
@@ -250,8 +248,6 @@ SpatialPlot <- function(dat_long,
             grDevices::pdf(file = paste0(plot_directory,"/", var, "_spatial.pdf"), width = 6, height = 8)
             print(gg)
             grDevices::dev.off()
-            print(gg)
-
         }        
              
     }
@@ -296,7 +292,6 @@ long_to_bin <- function(dat_long,
         grDevices::pdf(file = paste0(plot_directory,"/seurat_clusters_bin_spatial.pdf"), width = 10, height = 6)
         print(gg)
         grDevices::dev.off()
-        print(gg)
     }
     
     # Not using spatial information

@@ -231,7 +231,6 @@ quantile_plot <- function(cnv_data,
     grDevices::png(file = paste0(plot_directory,"/cnv_score_quantiles.png"), width = 1000, height = 1200) # png version
     print(gg)
     grDevices::dev.off()
-    print(gg)
 }                              
 utils::globalVariables(c("new_value", "value", "variable", "chr", "pos_x", "pos_y", "level"))
 
@@ -285,6 +284,5 @@ mean_cnv_plot <- function(cnv_data,
     grDevices::png(file = paste0(plot_directory,"/mean_cnv_score.png"), width = 1200, height = 1200) # png version
     print(gg)
     grDevices::dev.off()
-    print(gg)
 }                              
 utils::globalVariables(c("cnv_score", "value", "pos_x", "pos_y"))

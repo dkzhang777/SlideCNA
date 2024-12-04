@@ -72,7 +72,6 @@ get_num_clust <- function(data,
         grDevices::pdf(file = paste0(plot_directory, "/", type, "_clone_dim_red.pdf"), width = 8, height = 6)
         print(fviz)
         grDevices::dev.off()
-        print(fviz)
         
         # Silhouette plot
         sil_cl <- cluster::silhouette(stats::cutree(hcl, k=best_k), 
@@ -197,7 +196,6 @@ plot_clones = function(cnv_data,
         grDevices::pdf(file = paste0(plot_directory,"/", type, "_", k, "_clones_spatial.pdf"), width = 6, height = 8)
         print(gg_spatial)
         grDevices::dev.off()
-        print(gg_spatial)    
     }
     else {
         sub_clone_unique <- unique(sub_clone[,c('variable', 'clone')])
@@ -545,7 +543,6 @@ find_cluster_markers <- function(so_clone,
         width = 10, height = 8)
     print(gg)
     grDevices::dev.off()
-    print(gg)
 
     # Create combined cluster object
     if (type=='all') {
@@ -621,7 +618,6 @@ find_go_terms <- function(cluster_markers_obj,
     grDevices::pdf(file = paste0(plot_directory,"/", "top_", n_terms, "_go_terms_", type, ".pdf"), width = 15, height = 6)
     print(gg)
     grDevices::dev.off()
-    print(gg)   
     
     # Combine data structures in list object format
     if (type=='all') {
