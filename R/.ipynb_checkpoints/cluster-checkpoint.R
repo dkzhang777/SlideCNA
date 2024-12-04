@@ -79,7 +79,6 @@ get_num_clust <- function(data,
         grDevices::pdf(file = paste0(plot_directory,"/", type, "_clone_silhouette_plot.pdf"), width = 8, height = 6)
         plot(sil_cl, border=NA)
         grDevices::dev.off()
-        plot(sil_cl, border=NA)
 
     }
     return(best_k)

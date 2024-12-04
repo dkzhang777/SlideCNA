@@ -254,8 +254,8 @@ run_slide_cna <- function(counts,
                                                k=NA, 
                                                plot_directory) 
         best_k_all <- best_k_malig + 1
-        futile.logger::flog.info("Optimal number of malignant clusters %s", best_k_malig)
-        futile.logger::flog.info("Optimal number of total clusters (# of malignant clusters + 1) %s", best_k_all)
+        futile.logger::flog.info("Optimal number of malignant clusters: %s", best_k_malig)
+        futile.logger::flog.info("Optimal number of total clusters (# of malignant clusters + 1): %s", best_k_all)
         saveRDS(best_k_malig, file="best_k_malig.rds")
         
         cnv_data2 <- cnv_data
@@ -440,8 +440,8 @@ futile.logger::flog.info("trying to find DEGs and GO markers of each malignant c
                                                k=NA, 
                                                plot_directory) # With just malignant beads
         best_k_all <- best_k_malig + 1
-        futile.logger::flog.info("Optimal number of malignant clusters %s", best_k_malig)
-        futile.logger::flog.info("Optimal number of total clusters (# of malignant clusters + 1) %s", best_k_all)
+        futile.logger::flog.info("Optimal number of malignant clusters: %s", best_k_malig)
+        futile.logger::flog.info("Optimal number of total clusters (# of malignant clusters + 1): %s", best_k_all)
         saveRDS(best_k_malig, file="best_k_malig.rds")
         
         cnv_data2 <- cnv_data
