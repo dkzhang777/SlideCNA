@@ -47,7 +47,8 @@ run_slide_cna <- function(counts,
                           spatial=TRUE,
                           roll_mean_window=101,
                           avg_bead_per_bin=12, 
-                          pos=TRUE, pos_k=55, 
+                          pos=TRUE, 
+                          pos_k=55, 
                           ex_k=1, 
                           hc_function_bin='ward.D2', 
                           spatial_vars_to_plot=c("seurat_clusters", "bin_all", "N_bin", 
@@ -157,7 +158,7 @@ run_slide_cna <- function(counts,
                               logTPM=FALSE)
     
     # Apply pyramidal average weighting scheme to expression values
-    futile.logger::flog.info("getting the pyrimidal weighted rolling mean of expression values")
+    futile.logger::flog.info("getting the pyramidal weighted rolling mean of expression values")
     rm <- SlideCNA::weight_rollmean(prep_dat, 
                                    roll_mean_window)
     
