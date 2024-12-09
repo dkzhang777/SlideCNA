@@ -35,7 +35,8 @@ Imports:
     magrittr,
     tibble,
     futile.logger,
-    mltools
+    mltools,
+    utils
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
