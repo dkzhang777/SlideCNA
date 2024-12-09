@@ -62,7 +62,8 @@ run_slide_cna(counts,
 
 ### Results
 
-Results will appear in output_directory and plot_directory. Key output files are described below: \ 
+Results will appear in output_directory and plot_directory. Key output files are described below: 
+
 `so.rds` Seurat object of Slide-seq data \
 `md.txt` metadata of Slide-seq data with Seurat annotations \
 `md_bin.txt` metadata of binned Slide-seq data \
@@ -73,4 +74,4 @@ Results will appear in output_directory and plot_directory. Key output files are
 `cluster_markers_all.txt` DEGs per cluster when performing cluster designation on all binned beads \
 `cluster_markers_malig.txt` DEGs per cluster when performing cluster determination on only malignant binned beads \
 `go_terms_all.txt` GO terms per cluster when performing cluster designation on all binned beads \
-`go_terms_malig.txt` GO terms per cluster when performing cluster determination on only malignant binned beads \
+`go_terms_malig.txt` GO terms per cluster when performing cluster determination on only malignant binned beads 
