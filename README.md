@@ -67,7 +67,7 @@ Results will appear in output_directory and plot_directory. Key output files are
 `so.rds` Seurat object of Slide-seq data \
 `md.txt` metadata of Slide-seq data with Seurat annotations \
 `md_bin.txt` metadata of binned Slide-seq data \
-`dat_bin_scaled.txt` expression values of binned Slide-seq data after applying pyramidal weighting scheme and normalizing for UMI per bin\
+`dat_bin_scaled.txt` CNA scores of binned Slide-seq data after applying pyramidal weighting scheme to expression values and normalizing for UMI per bin used for CNA score heat maps and CNA-based clustering \
 `best_k_malig.rds` value of optimal number of malignant clusters \
 `cluster_labels_all.txt` cluster assignments when performing cluster designation on all binned beads \
 `cluster_labels_malig.txt` cluster assignments when performing cluster determination on only malignant binned beads \
