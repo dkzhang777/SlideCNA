@@ -469,14 +469,14 @@ futile.logger::flog.info("trying to find DEGs and GO markers of each malignant c
         # Make binned seurat object
         futile.logger::flog.info("making Seurat object of all binned beads")
         so_bin_all <- SlideCNA::make_so_bin(so, 
-                                            hcl_sub_all,
-                                            md)
+                                            md,
+                                            hcl_sub_all)
         
         # Find DEGs and GO markers per clone over all beads
         futile.logger::flog.info("trying to find DEGs and GO markers of each cluster")
         so_clone_all <- SlideCNA::clone_so(so, 
-                                          hcl_sub_all, 
-                                          md)
+                                           hcl_sub_all, 
+                                           md)
 
         cluster_markers_all_obj <- try(SlideCNA::find_cluster_markers(so_clone=so_bin_all, 
                                                                      type="all", 
@@ -519,17 +519,17 @@ futile.logger::flog.info("trying to find DEGs and GO markers of each malignant c
         
         # Make binned seurat object with malignant beads
         futile.logger::flog.info("making Seurat object of malignant binned beads")
-        so_bin_malig <- SlideCNA::make_so_bin(so, 
-                                            hcl_sub_malig,
-                                            md,
-                                            mal=TRUE)
+        so_bin_malig <- SlideCNA::make_so_bin(so,
+                                              md,
+                                              hcl_sub_malig,
+                                              mal=TRUE)
         
         # Find DEGs and GO markers per clone over malignant beads
         futile.logger::flog.info("trying to find DEGs and GO markers of each malignant cluster")
         so_clone_malig <- SlideCNA::clone_so(so, 
-                                               hcl_sub_malig, 
-                                               md, 
-                                               mal=TRUE)
+                                             hcl_sub_malig, 
+                                             md, 
+                                             mal=TRUE)
         
         cluster_markers_malig_obj <- try(SlideCNA::find_cluster_markers(so_clone=so_bin_malig, 
                                                                        type="malig", 
