@@ -1,9 +1,9 @@
-name: SlideCNA
+name: /ahg/regevdata/users/dzhang/condapkgs/SlideCNA
 channels:
   - anaconda
+  - conda-forge
   - bioconda
   - defaults
-  - conda-forge
 dependencies:
   - _libgcc_mutex=0.1=conda_forge
   - _openmp_mutex=4.5=2_gnu
@@ -11,6 +11,7 @@ dependencies:
   - anndata=0.8.0=py310hff52083_0
   - anyio=4.2.0=py310h06a4308_0
   - aom=3.6.0=h6a678d5_0
+  - argcomplete=3.4.0=pyhd8ed1ab_0
   - argon2-cffi=21.3.0=pyhd3eb1b0_0
   - argon2-cffi-bindings=21.2.0=py310h7f8727e_0
   - arpack=3.7.0=hdefa2d7_2
@@ -22,6 +23,32 @@ dependencies:
   - beautifulsoup4=4.12.2=py310h06a4308_0
   - binutils_impl_linux-64=2.38=h2a08ee3_1
   - binutils_linux-64=2.38.0=hc2dff05_0
+  - bioconductor-annotationdbi=1.64.1=r43hdfd78af_0
+  - bioconductor-biobase=2.62.0=r43ha9d7317_2
+  - bioconductor-biocfilecache=2.10.1=r43hdfd78af_0
+  - bioconductor-biocgenerics=0.48.1=r43hdfd78af_2
+  - bioconductor-biocio=1.12.0=r43hdfd78af_0
+  - bioconductor-biocparallel=1.36.0=r43hf17093f_2
+  - bioconductor-biomart=2.58.0=r43hdfd78af_0
+  - bioconductor-biostrings=2.70.1=r43ha9d7317_2
+  - bioconductor-data-packages=20231203=hdfd78af_0
+  - bioconductor-delayedarray=0.28.0=r43ha9d7317_2
+  - bioconductor-genomeinfodb=1.38.1=r43hdfd78af_1
+  - bioconductor-genomeinfodbdata=1.2.11=r43hdfd78af_1
+  - bioconductor-genomicalignments=1.38.0=r43ha9d7317_1
+  - bioconductor-genomicranges=1.54.1=r43ha9d7317_2
+  - bioconductor-iranges=2.36.0=r43ha9d7317_2
+  - bioconductor-keggrest=1.42.0=r43hdfd78af_0
+  - bioconductor-matrixgenerics=1.14.0=r43hdfd78af_3
+  - bioconductor-rhtslib=2.4.0=r43ha9d7317_2
+  - bioconductor-rsamtools=2.18.0=r43hf17093f_2
+  - bioconductor-rtracklayer=1.62.0=r43ha9d7317_1
+  - bioconductor-s4arrays=1.2.0=r43ha9d7317_2
+  - bioconductor-s4vectors=0.40.2=r43ha9d7317_2
+  - bioconductor-sparsearray=1.2.2=r43ha9d7317_2
+  - bioconductor-summarizedexperiment=1.32.0=r43hdfd78af_0
+  - bioconductor-xvector=0.42.0=r43ha9d7317_2
+  - bioconductor-zlibbioc=1.48.0=r43ha9d7317_2
   - blas=1.0=openblas
   - bleach=4.1.0=pyhd3eb1b0_0
   - blosc=1.21.3=h6a678d5_0
@@ -34,11 +61,11 @@ dependencies:
   - bzip2=1.0.8=h7b6447c_0
   - c-ares=1.19.1=h5eee18b_0
   - c-blosc2=2.12.0=h80c7b02_0
-  - ca-certificates=2024.2.2=hbcca054_0
+  - ca-certificates=2024.8.30=hbcca054_0
   - cached-property=1.5.2=py_0
   - cached_property=1.5.2=pyha770c72_1
   - cairo=1.16.0=hb05425b_5
-  - certifi=2024.2.2=py310h06a4308_0
+  - certifi=2024.8.30=pyhd8ed1ab_0
   - cffi=1.16.0=py310h5eee18b_0
   - cfitsio=3.470=h5893167_7
   - charls=2.2.0=h2531618_0
@@ -115,6 +142,7 @@ dependencies:
   - jinja2=3.1.3=py310h06a4308_0
   - joblib=1.2.0=py310h06a4308_0
   - jpeg=9e=h5eee18b_1
+  - jq=1.7.1=hd590300_0
   - json5=0.9.6=pyhd3eb1b0_0
   - jsonschema=4.19.2=py310h06a4308_0
   - jsonschema-specifications=2023.7.1=py310h06a4308_0
@@ -218,8 +246,9 @@ dependencies:
   - numexpr=2.8.8=py310hc2d3c2e_100
   - numpy=1.26.4=py310heeff2f4_0
   - numpy-base=1.26.4=py310h8a23956_0
+  - oniguruma=6.9.9=hd590300_0
   - openjpeg=2.4.0=h3ad879b_0
-  - openssl=3.2.1=hd590300_0
+  - openssl=3.3.1=hb9d3cd8_3
   - overrides=7.4.0=py310h06a4308_0
   - packaging=23.1=py310h06a4308_0
   - pandas=1.5.3=py310h1128e8f_0
@@ -281,6 +310,7 @@ dependencies:
   - r-bit=4.0.5=r43h76d94ec_0
   - r-bit64=4.0.5=r43h76d94ec_0
   - r-bitops=1.0_7=r43h76d94ec_0
+  - r-blob=1.2.4=r43hc72bb7e_2
   - r-boot=1.3_28.1=r43h6115d3f_0
   - r-brew=1.0_8=r43h6115d3f_0
   - r-brio=1.1.3=r43h76d94ec_0
@@ -294,7 +324,7 @@ dependencies:
   - r-cellranger=1.1.0=r43h6115d3f_0
   - r-cli=3.6.1=r43h884c59f_0
   - r-clipr=0.8.0=r43h6115d3f_0
-  - r-cluster=2.1.6=r43h61816a4_0
+  - r-cluster=2.1.4=r43h640688f_0
   - r-codetools=0.2_19=r43h6115d3f_0
   - r-colorspace=2.1_0=r43h76d94ec_0
   - r-commonmark=1.9.0=r43h76d94ec_0
@@ -307,6 +337,8 @@ dependencies:
   - r-crosstalk=1.2.0=r43h6115d3f_0
   - r-curl=5.1.0=r43h76d94ec_0
   - r-data.table=1.14.8=r43h76d94ec_0
+  - r-dbi=1.2.3=r43hc72bb7e_1
+  - r-dbplyr=2.4.0=r43hc72bb7e_0
   - r-deldir=1.0_9=r43h640688f_1
   - r-dendextend=1.17.1=r43h6115d3f_0
   - r-desc=1.4.2=r43h6115d3f_0
@@ -329,13 +361,17 @@ dependencies:
   - r-fansi=1.0.5=r43h76d94ec_0
   - r-farver=2.1.1=r43h884c59f_0
   - r-fastmap=1.1.1=r43h884c59f_0
+  - r-filelock=1.0.3=r43hb1dbf0f_1
   - r-fitdistrplus=1.1_11=r43h6115d3f_0
   - r-flashclust=1.01_2=r43h142f84f_0
   - r-fnn=1.1.3.2=r43h884c59f_0
   - r-fontawesome=0.5.2=r43h6115d3f_0
   - r-forcats=1.0.0=r43h6115d3f_0
   - r-foreign=0.8_85=r43h76d94ec_0
+  - r-formatr=1.14=r43hc72bb7e_2
   - r-fs=1.6.3=r43h884c59f_0
+  - r-futile.logger=1.4.3=r43hc72bb7e_1006
+  - r-futile.options=1.0.1=r43hc72bb7e_1005
   - r-future=1.33.0=r43h6115d3f_0
   - r-future.apply=1.11.0=r43h6115d3f_0
   - r-generics=0.1.3=r43h142f84f_0
@@ -377,6 +413,7 @@ dependencies:
   - r-kernsmooth=2.23_22=r43h640688f_0
   - r-knitr=1.44=r43h6115d3f_0
   - r-labeling=0.4.3=r43h6115d3f_0
+  - r-lambda.r=1.2.4=r43hc72bb7e_4
   - r-later=1.3.1=r43h884c59f_0
   - r-lattice=0.22_5=r43h76d94ec_0
   - r-lazyeval=0.2.2=r43h76d94ec_0
@@ -417,6 +454,7 @@ dependencies:
   - r-pkgconfig=2.0.3=r43h6115d3f_0
   - r-pkgdown=2.0.7=r43h142f84f_0
   - r-pkgload=1.3.3=r43h142f84f_0
+  - r-plogr=0.2.0=r43hc72bb7e_1006
   - r-plotly=4.10.2=r43h6115d3f_0
   - r-plyr=1.8.9=r43h884c59f_0
   - r-png=0.1_8=r43h76d94ec_0
@@ -437,7 +475,7 @@ dependencies:
   - r-r.utils=2.12.2=r43h6115d3f_0
   - r-r6=2.5.1=r43h6115d3f_0
   - r-ragg=1.2.6=r43h884c59f_0
-  - r-rann=2.6.1=r43h884c59f_0
+  - r-rann=2.6.2=r43h93ab643_0
   - r-rappdirs=0.3.3=r43h76d94ec_0
   - r-rcmdcheck=1.4.0=r43h142f84f_0
   - r-rcolorbrewer=1.1_3=r43h6115d3f_1
@@ -451,6 +489,7 @@ dependencies:
   - r-rcppprogress=0.4.2=r43h142f84f_0
   - r-rcpptoml=0.2.2=r43h884c59f_0
   - r-rcppziggurat=0.1.6=r43h7ce84a7_3
+  - r-rcurl=1.98_1.14=r43hf9611b0_0
   - r-readr=2.1.4=r43h884c59f_0
   - r-readxl=1.4.3=r43h884c59f_0
   - r-rematch=2.0.0=r43h6115d3f_0
@@ -458,6 +497,7 @@ dependencies:
   - r-remotes=2.4.2.1=r43h142f84f_0
   - r-repr=1.1.6=r43h6115d3f_0
   - r-reshape2=1.4.4=r43h884c59f_0
+  - r-restfulr=0.0.15=r43h56115f1_4
   - r-reticulate=1.34.0=py310r43h884c59f_0
   - r-rfast=2.1.0=r43h08d816e_0
   - r-rio=1.0.1=r43h142f84f_0
@@ -465,9 +505,11 @@ dependencies:
   - r-rlang=1.1.1=r43h884c59f_0
   - r-rmarkdown=2.25=r43h6115d3f_0
   - r-rocr=1.0_11=r43h6115d3f_0
-  - r-roxygen2=7.2.3=r43h884c59f_0
+  - r-roxygen2=7.3.2=r43h0d4f4ea_1
+  - r-rpart=4.1.23=r43hb1dbf0f_1
   - r-rprojroot=2.0.3=r43h6115d3f_0
   - r-rspectra=0.16_1=r43h08d816e_2
+  - r-rsqlite=2.3.7=r43h0d4f4ea_0
   - r-rstatix=0.7.2=r43h6115d3f_0
   - r-rstudioapi=0.15.0=r43h6115d3f_0
   - r-rtsne=0.16=r43h884c59f_0
@@ -482,16 +524,21 @@ dependencies:
   - r-seuratobject=5.0.0=r43h884c59f_0
   - r-shiny=1.7.5.1=r43h6115d3f_0
   - r-sitmo=2.0.2=r43h884c59f_0
+  - r-snow=0.4_4=r43hc72bb7e_3
   - r-sourcetools=0.1.7_1=r43h884c59f_0
   - r-sp=2.1_1=r43h76d94ec_0
   - r-spam=2.9_1=r43h640688f_0
   - r-sparsem=1.81=r43h640688f_0
-  - r-spatstat.data=3.0_1=r43h6115d3f_0
-  - r-spatstat.explore=3.2_3=r43h76d94ec_0
-  - r-spatstat.geom=3.2_5=r43h76d94ec_0
-  - r-spatstat.random=3.1_6=r43h884c59f_0
+  - r-spatstat=3.0_6=r43hc72bb7e_1
+  - r-spatstat.core=2.4_4=r43h0d4f4ea_3
+  - r-spatstat.data=3.1_4=r43hc72bb7e_0
+  - r-spatstat.explore=3.2_6=r43hdb488b9_1
+  - r-spatstat.geom=3.2_9=r43hdb488b9_1
+  - r-spatstat.linnet=3.1_4=r43hdb488b9_1
+  - r-spatstat.model=3.2_6=r43h57805ef_0
+  - r-spatstat.random=3.2_3=r43h0d4f4ea_1
   - r-spatstat.sparse=3.0_2=r43h76d94ec_0
-  - r-spatstat.utils=3.0_3=r43h76d94ec_0
+  - r-spatstat.utils=3.1_0=r43hdb488b9_0
   - r-statmod=1.5.0=r43h640688f_0
   - r-stringi=1.7.12=r43h884c59f_0
   - r-stringr=1.5.0=r43h6115d3f_0
@@ -521,6 +568,7 @@ dependencies:
   - r-writexl=1.4.2=r43h76d94ec_0
   - r-writexls=6.4.0=r43h142f84f_0
   - r-xfun=0.40=r43h76d94ec_0
+  - r-xml=3.99_0.14=r43h76d94ec_0
   - r-xml2=1.3.5=r43h884c59f_0
   - r-xopen=1.0.0=r43h142f84f_0
   - r-xtable=1.8_4=r43h6115d3f_0
@@ -566,7 +614,9 @@ dependencies:
   - tinycss2=1.2.1=py310h06a4308_0
   - tk=8.6.13=noxft_h4845f30_101
   - tktable=2.10=h3d55465_1
+  - toml=0.10.2=pyhd8ed1ab_0
   - tomli=2.0.1=py310h06a4308_0
+  - tomlkit=0.13.0=pyha770c72_0
   - toolz=0.12.0=py310h06a4308_0
   - tornado=6.3.3=py310h5eee18b_0
   - tqdm=4.65.0=py310h2f386ee_0
@@ -581,6 +631,7 @@ dependencies:
   - websocket-client=0.58.0=py310h06a4308_4
   - wheel=0.41.2=py310h06a4308_0
   - widgetsnbextension=4.0.10=pyhd8ed1ab_0
+  - xmltodict=0.13.0=pyhd8ed1ab_0
   - xorg-kbproto=1.0.7=h7f98852_1002
   - xorg-libice=1.1.1=hd590300_0
   - xorg-libsm=1.2.4=h7391055_0
@@ -593,9 +644,11 @@ dependencies:
   - xorg-xproto=7.0.31=h27cfd23_1007
   - xz=5.4.6=h5eee18b_0
   - yaml=0.2.5=h7b6447c_0
+  - yq=3.4.3=pyhd8ed1ab_0
   - zeromq=4.3.5=h6a678d5_0
   - zfp=1.0.0=h6a678d5_0
   - zipp=3.17.0=py310h06a4308_0
   - zlib=1.2.13=hd590300_5
   - zlib-ng=2.0.7=h5eee18b_0
   - zstd=1.5.5=hc292b87_0
+prefix: /ahg/regevdata/users/dzhang/condapkgs/SlideCNA

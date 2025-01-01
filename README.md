@@ -1,4 +1,4 @@
-# SlideCNA 
+# SlideCNA
 
 ### Introduction
 SlideCNA is a method to call copy number alterations (CNA) from spatial transcriptomics data (adapted for Slide-seq data). SlideCNA uses expression smoothing across the genome to extract changes in copy number and implements a spatio-molecular binning process to boost signal and consolidate reads. Based on the CNA profiles, SlideCNA can identify clusters across space. 
@@ -11,7 +11,7 @@ Example Jupyter notebooks of SlideCNA applied to Slide-seq, snRNA-seq, and Slide
 
 Create a new conda environment using the SlideCNA_env.yml file from the SlideCNA repository:
 ```
-conda env create -f "https://github.com/dkzhang777/SlideCNA/blob/main/SlideCNA_env.yml"
+conda env create -f "https://github.com/dkzhang777/SlideCNA/blob/main/inst/SlideCNA_env.yml"
 ```
 
 Install SlideCNA through R from Github:
