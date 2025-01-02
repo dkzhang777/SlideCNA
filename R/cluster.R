@@ -644,6 +644,13 @@ utils::globalVariables(c("avg_log2FC", "gene", "GO_Biological_Process_2018.Adjus
 #' @export
 run_enrichr=function(genes,
                      n_genes) {
+    
+    # Check if enrichR is installed
+    if (!requireNamespace("enrichR", quietly = TRUE)) {
+          stop("The 'enrichR' package is required if use_GO_terms is true.",
+               "Please install it using install_github('wjawaid/enrichR').")
+     }
+    
     res=data.table::as.data.table(enrichR::enrichr(genes[1:n_genes]
                                                    ,databases = c("GO_Biological_Process_2018")))
     return(res)
