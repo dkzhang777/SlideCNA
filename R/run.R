@@ -94,6 +94,14 @@ run_slide_cna <- function(counts,
     options(error = function(e) {
         futile.logger::flog.error(paste("Global error handler: Error encountered:", conditionMessage(e)))
     })
+    
+    # Check if enrichR is installed if obtaining GO terms for SlideCNA-based clusters
+    if (isTRUE(use_GO_terms)) {
+      if (!requireNamespace("packageName", quietly = TRUE)) {
+          stop("The 'enrichR' package is required if use_GO_terms is true.",
+               "Please install it using install_github('wjawaid/enrichR').")
+      }
+    }
 
     # Make initial Seurat object and meta data object
     
