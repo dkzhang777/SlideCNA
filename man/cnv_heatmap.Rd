@@ -23,6 +23,9 @@ cnv_heatmap(
 
 \item{plot_directory}{output plot directory path}
 }
+\value{
+No return value, called for side effects
+}
 \description{
 This function prepares data for plotting and makes a heat map of CNV scores per bead across all genes
 }
