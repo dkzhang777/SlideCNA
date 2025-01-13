@@ -143,7 +143,7 @@ run_slide_cna <- function(counts,
     futile.logger::flog.info("saving initial Seurat object and meta data")
     saveRDS(so, paste0(output_directory, "/so.rds"))
     saveRDS(md, paste0(output_directory, "/md.rds"))
-    utils::write.table(md, file="md.txt")
+    utils::write.table(md, file=paste0(output_directory, "/md.txt"))
         
     normal_beads <- md[md$cluster_type == 'Non-malignant',]$bc
     
@@ -188,8 +188,8 @@ run_slide_cna <- function(counts,
                                     ex_k, 
                                     hc_function_bin, 
                                     plot_directory)
-        saveRDS(md, file="md_bin.rds")
-        utils::write.table(md, file="md_bin.txt")
+        saveRDS(md, file=paste0(output_directory, "/md_bin.rds"))
+        utils::write.table(md, file=paste0(output_directory, "/md_bin.txt"))
 
         # Convert data to long format and combine with metadata
         dat_long <- SlideCNA::dat_to_long(dat, md)
@@ -212,8 +212,8 @@ run_slide_cna <- function(counts,
         futile.logger::flog.info("scaling data by nUMIs")
         dat_bin <- SlideCNA::scale_nUMI(dat_bin, 
                                        scale_bin_thresh_hard)
-        saveRDS(dat_bin, file="dat_bin_scaled.rds")
-        utils::write.table(dat_bin, file="dat_bin_scaled.txt")
+        saveRDS(dat_bin, file=paste0(output_directory, "/dat_bin_scaled.rds"))
+        utils::write.table(dat_bin, file=paste0(output_directory, "/dat_bin_scaled.txt"))
 
         # Identify CNVs 
         futile.logger::flog.info("obtaining CNA scores")
@@ -257,7 +257,7 @@ run_slide_cna <- function(counts,
         best_k_all <- best_k_malig + 1
         futile.logger::flog.info("Optimal number of malignant clusters: %s", best_k_malig)
         futile.logger::flog.info("Optimal number of total clusters (# of malignant clusters + 1): %s", best_k_all)
-        saveRDS(best_k_malig, file="best_k_malig.rds")
+        saveRDS(best_k_malig, file=paste0(output_directory, "/best_k_malig.rds"))
         
         cnv_data2 <- cnv_data
         
@@ -274,7 +274,7 @@ run_slide_cna <- function(counts,
                                             hc_function_plot_clones, 
                                             plot_directory,
                                             spatial=spatial)
-        utils::write.table(hcl_sub_all, "cluster_labels_all.txt")
+        utils::write.table(hcl_sub_all, paste0(output_directory, "/cluster_labels_all.txt"))
         
         cnv_data2$all <- merge(cnv_data$all, 
                                data.table::as.data.table(hcl_sub_all), 
@@ -301,7 +301,8 @@ run_slide_cna <- function(counts,
                                                                      legend_size_pt=legend_size_pt,
                                                                       bin=TRUE,
                                                                      plot_directory=plot_directory))
-        try(utils::write.table(cluster_markers_all_obj$markers_clone, "cluster_markers_all.txt"))
+        try(utils::write.table(cluster_markers_all_obj$markers_clone, 
+                               paste0(output_directory, "/cluster_markers_all.txt")))
         
         if(isTRUE(use_GO_terms)) {
             go_terms_all_obj <- try(SlideCNA::find_go_terms(cluster_markers_obj=cluster_markers_all_obj,
@@ -309,7 +310,8 @@ run_slide_cna <- function(counts,
                                                        text_size=text_size,
                                                        title_size=title_size,
                                                        plot_directory=plot_directory))
-            try(utils::write.table(go_terms_all_obj$en_clone, "go_terms_all.txt"))
+            try(utils::write.table(go_terms_all_obj$en_clone, 
+                                   paste0(output_directory, "/go_terms_all.txt")))
         }
         else {
             go_terms_all_obj <- NULL
@@ -328,7 +330,7 @@ run_slide_cna <- function(counts,
                                               hc_function_plot_clones, 
                                               plot_directory, 
                                               spatial=spatial)
-        utils::write.table(hcl_sub_malig, "cluster_labels_malig.txt")
+        utils::write.table(hcl_sub_malig, paste0(output_directory, "/cluster_labels_malig.txt"))
         
         cnv_data2$malig <- merge(cnv_data$malig, 
                                  data.table::as.data.table(hcl_sub_malig), 
@@ -358,7 +360,8 @@ futile.logger::flog.info("trying to find DEGs and GO markers of each malignant c
                                                                        legend_size_pt=legend_size_pt,
                                                                         bin=TRUE,
                                                                        plot_directory=plot_directory))
-        try(utils::write.table(cluster_markers_malig_obj$markers_clone, "cluster_markers_malig.txt"))
+        try(utils::write.table(cluster_markers_malig_obj$markers_clone, 
+                               paste0(output_directory, "/cluster_markers_malig.txt")))
         
         if(isTRUE(use_GO_terms)) {
             go_terms_malig_obj <- try(SlideCNA::find_go_terms(cluster_markers_obj=cluster_markers_malig_obj, 
@@ -366,7 +369,8 @@ futile.logger::flog.info("trying to find DEGs and GO markers of each malignant c
                                                          text_size=text_size,
                                                          title_size=title_size,
                                                          plot_directory=plot_directory))
-            try(utils::write.table(go_terms_malig_obj$en_clone, "go_terms_malig.txt"))
+            try(utils::write.table(go_terms_malig_obj$en_clone, 
+                                   paste0(output_directory, "/go_terms_malig.txt")))
         }
         else {
             go_terms_malig_obj <- NULL
@@ -379,7 +383,7 @@ futile.logger::flog.info("trying to find DEGs and GO markers of each malignant c
         try(cnv_data$cluster_markers_malig <- cluster_markers_malig_obj)
         try(cnv_data$go_terms_malig<- go_terms_malig_obj)
         
-        saveRDS(cnv_data, file="cnv_data.rds")
+        saveRDS(cnv_data, file=paste0(output_directory, "/cnv_data.rds"))
 
         futile.logger::flog.info("Done!")
 
@@ -396,8 +400,8 @@ futile.logger::flog.info("trying to find DEGs and GO markers of each malignant c
                                     ex_k, 
                                     hc_function_bin, 
                                     plot_directory)
-        saveRDS(md, file="md_bin.rds")
-        utils::write.table(md, file="md_bin.txt")
+        saveRDS(md, file=paste0(output_directory, "/md_bin.rds"))
+        utils::write.table(md, file=paste0(output_directory, "/md_bin.txt"))
 
         # Convert data to long format and combine with metadata
         dat_long <- SlideCNA::dat_to_long(dat, md)
@@ -411,8 +415,8 @@ futile.logger::flog.info("trying to find DEGs and GO markers of each malignant c
         futile.logger::flog.info("scaling data by nUMIs")
         dat_bin <- SlideCNA::scale_nUMI(dat_bin, 
                                        scale_bin_thresh_hard)
-        saveRDS(dat_bin, file="dat_bin_scaled.rds")
-        utils::write.table(dat_bin, file="dat_bin_scaled.txt")
+        saveRDS(dat_bin, file=paste0(output_directory, "/dat_bin_scaled.rds"))
+        utils::write.table(dat_bin, file=paste0(output_directory, "/dat_bin_scaled.txt"))
 
         # Identify CNVs
         futile.logger::flog.info("obtaining CNA scores")
@@ -443,7 +447,7 @@ futile.logger::flog.info("trying to find DEGs and GO markers of each malignant c
         best_k_all <- best_k_malig + 1
         futile.logger::flog.info("Optimal number of malignant clusters: %s", best_k_malig)
         futile.logger::flog.info("Optimal number of total clusters (# of malignant clusters + 1): %s", best_k_all)
-        saveRDS(best_k_malig, file="best_k_malig.rds")
+        saveRDS(best_k_malig, file=paste0(output_directory, "/best_k_malig.rds"))
         
         cnv_data2 <- cnv_data
 
@@ -460,7 +464,7 @@ futile.logger::flog.info("trying to find DEGs and GO markers of each malignant c
                                             hc_function_plot_clones, 
                                             plot_directory,
                                             spatial=spatial)
-        utils::write.table(hcl_sub_all, "cluster_labels_all.txt")
+        utils::write.table(hcl_sub_all, paste0(output_directory, "/cluster_labels_all.txt"))
         
         cnv_data2$all <- merge(cnv_data$all, 
                                data.table::as.data.table(hcl_sub_all), 
@@ -487,14 +491,16 @@ futile.logger::flog.info("trying to find DEGs and GO markers of each malignant c
                                                                      legend_size_pt=legend_size_pt,
                                                                       bin=TRUE,
                                                                      plot_directory=plot_directory))
-        try(utils::write.table(cluster_markers_all_obj$markers_clone, "cluster_markers_all.txt"))
+        try(utils::write.table(cluster_markers_all_obj$markers_clone, 
+                               paste0(output_directory, "/cluster_markers_all.txt")))
         
         go_terms_all_obj <- try(SlideCNA::find_go_terms(cluster_markers_obj=cluster_markers_all_obj, 
                                                        type='all', 
                                                        text_size=text_size,
                                                        title_size=title_size,
                                                        plot_directory=plot_directory))
-        try(utils::write.table(go_terms_all_obj$en_clone, "go_terms_all.txt"))
+        try(utils::write.table(go_terms_all_obj$en_clone, 
+                               paste0(output_directory, "/go_terms_all.txt")))
     
         # Get clones over malignant beads from their CNVs
         hcl_sub_malig <- SlideCNA::plot_clones(cnv_data, 
@@ -509,7 +515,7 @@ futile.logger::flog.info("trying to find DEGs and GO markers of each malignant c
                                               hc_function_plot_clones, 
                                               plot_directory, 
                                               spatial=spatial)
-        utils::write.table(hcl_sub_malig, "cluster_labels_malig.txt")
+        utils::write.table(hcl_sub_malig, paste0(output_directory, "/cluster_labels_malig.txt"))
         
         cnv_data2$malig <- merge(cnv_data$malig, 
                                  data.table::as.data.table(hcl_sub_malig), 
@@ -540,7 +546,8 @@ futile.logger::flog.info("trying to find DEGs and GO markers of each malignant c
                                                                        legend_size_pt=legend_size_pt,
                                                                         bin=TRUE,
                                                                        plot_directory=plot_directory))
-        try(utils::write.table(cluster_markers_malig_obj$markers_clone, "cluster_markers_malig.txt"))
+        try(utils::write.table(cluster_markers_malig_obj$markers_clone, 
+                               paste0(output_directory, "/cluster_markers_malig.txt")))
 
         
         go_terms_malig_obj <- try(SlideCNA::find_go_terms(cluster_markers_obj=cluster_markers_malig_obj, 
@@ -548,7 +555,7 @@ futile.logger::flog.info("trying to find DEGs and GO markers of each malignant c
                                                          text_size=text_size,
                                                          title_size=title_size,
                                                          plot_directory=plot_directory))
-        try(utils::write.table(go_terms_malig_obj$en_clone, "go_terms_malig.txt"))
+        try(utils::write.table(go_terms_malig_obj$en_clone, paste0(output_directory, "/go_terms_malig.txt")))
         
         cnv_data$hc_sub_all <- hcl_sub_all
         try(cnv_data$cluster_markers_all <- cluster_markers_all_obj)
@@ -557,7 +564,7 @@ futile.logger::flog.info("trying to find DEGs and GO markers of each malignant c
         try(cnv_data$cluster_markers_malig <- cluster_markers_malig_obj)
         try(cnv_data$go_terms_malig<- go_terms_malig_obj)
 
-        saveRDS(cnv_data, file="cnv_data.rds")
+        saveRDS(cnv_data, file=paste0(output_directory, "/cnv_data.rds"))
         
         futile.logger::flog.info("Done!")
         
