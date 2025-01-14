@@ -4,8 +4,15 @@
 
 * New submission
   
-* Suggests or Enhances not in mainstream repositories:
+*   Suggests or Enhances not in mainstream repositories:
     enrichR
+    
+    Availability using Additional_repositories specification:
+    enrichR   no   ?                                 
+    ?          ?   https://github.com/wjawaid/enrichR
+    
+    Additional repositories with no packages:
+    https://github.com/wjawaid/enrichR
     
   This is a new package.
 
