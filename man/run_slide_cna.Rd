@@ -110,9 +110,6 @@ in plotting clones}
 
 \item{legend_height_bar}{integer of height of legend bar in some ggplots}
 }
-\value{
-No return value, called for side effects
-}
 \description{
 Take a raw expression counts, cell type annotations, and positional cooridnates to identify CNA patterns across space and CNA-based clustering patterns
 }

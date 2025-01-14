@@ -29,9 +29,6 @@ SpatialPlot(
 
 \item{plot_directory}{output plot directory path}
 }
-\value{
-No return value, called for side effects
-}
 \description{
 This function will plot information about beads and bins on x and y coordinates
 }
