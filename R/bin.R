@@ -150,6 +150,7 @@ dat_to_long <- function(dat,
 #' @param legend_size_pt Ggplot2 legend_size_pt
 #' @param legend_height_bar Ggplot2 legend_height_bar
 #' @param plot_directory output plot directory path
+#' @return None
 
 #' @export
 SpatialPlot <- function(dat_long, 

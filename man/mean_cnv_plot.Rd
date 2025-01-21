@@ -23,6 +23,9 @@ mean_cnv_plot(
 
 \item{plot_directory}{output plot directory path}
 }
+\value{
+None
+}
 \description{
 This function colors and plots each bin by its mean CNV score
 on spatial coordinates for each chromosome

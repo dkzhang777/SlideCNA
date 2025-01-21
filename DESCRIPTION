@@ -18,7 +18,7 @@ Authors@R:
            email = "jan.watter@gmail.com",
            comment = c(ORCID = "0000-0001-7519-731X")),
       person("Broad Institute of MIT and Harvard", role = c("cph", "fnd")))
-Description: This takes spatial single-cell-type RNA-seq data (specifically designed for Slide-seq v2) that calls copy number alterations (CNAs) using pseudo-spatial binning, clusters cellular units (e.g. beads) based on CNA profile, and visualizes spatial CNA patterns. Documentation about 'SlideCNA' is included in the the pre-print by Zhang et al. (2022, <doi:10.1101/2022.11.25.517982>).
+Description: This takes spatial single-cell-type RNA-seq data (specifically designed for Slide-seq v2) that calls copy number alterations (CNAs) using pseudo-spatial binning, clusters cellular units (e.g. beads) based on CNA profile, and visualizes spatial CNA patterns. Documentation about 'SlideCNA' is included in the the pre-print by Zhang et al. (2022, <doi:10.1101/2022.11.25.517982>). The package 'enrichR' (>= 3.0), conditionally used to annotate SlideCNA-determined clusters with gene ontology terms, can be installed at <https://github.com/wjawaid/enrichR> or with install_github("wjawaid/enrichR").
 Imports: 
     data.table,
     reshape2,
@@ -46,4 +46,3 @@ Suggests:
     testthat (>= 3.0.0),
     enrichR (>= 3.0)
 Config/testthat/edition: 3
-Additional_repositories: https://github.com/wjawaid/enrichR

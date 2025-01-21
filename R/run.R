@@ -36,6 +36,7 @@
 #' @param title_size integer of size of title in some ggplots
 #' @param legend_size_pt integer of size of legend text size in some ggplots
 #' @param legend_height_bar integer of height of legend bar in some ggplots
+#' @return None
 #' 
 #' @export
 
@@ -82,14 +83,18 @@ run_slide_cna <- function(counts,
                           title_size = 18,
                           legend_size_pt = 4,
                           legend_height_bar = 1.5) {
-    
-    setwd(output_directory)
-    
+        
     # Set up logger
     log_file <- paste0(output_directory, "/SlideCNA.log")
     if (file.exists(log_file)) {file.remove(log_file)}
     futile.logger::flog.appender(futile.logger::appender.file(log_file))
     
+    # Store the current error handler
+    old_error_handler <- getOption("error")
+  
+    # Ensure it is restored upon function exit
+    on.exit(options(error = old_error_handler), add = TRUE)
+
     # Set a global error handler
     options(error = function(e) {
         futile.logger::flog.error(paste("Global error handler: Error encountered:", conditionMessage(e)))

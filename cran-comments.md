@@ -4,16 +4,9 @@
 
 * New submission
   
-*   Suggests or Enhances not in mainstream repositories:
+* Suggests or Enhances not in mainstream repositories:
     enrichR
     
-    Availability using Additional_repositories specification:
-    enrichR   no   ?                                 
-    ?          ?   https://github.com/wjawaid/enrichR
-    
-    Additional repositories with no packages:
-    https://github.com/wjawaid/enrichR
-    
-  This is a new package.
+This is a new package.
 
-  The package 'enrichR' is only found on Github (removed from CRAN). It is conditionally used and is preceded by a requireNamespace() check with installation instructions.
+The package 'enrichR' is only found on Github (removed from CRAN). It is conditionally used and is preceded by a requireNamespace() check with installation instructions. In addition, the URL and R command for installation are provided in the Description. 

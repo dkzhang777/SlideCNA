@@ -26,6 +26,9 @@ quantile_plot(
 
 \item{plot_directory}{output plot directory path}
 }
+\value{
+None
+}
 \description{
 This function colors and plots each bin by its CNV score quantiles (min, 1st quartile, median, 3rd quartile, max)
 on spatial coordinates for each chromosome

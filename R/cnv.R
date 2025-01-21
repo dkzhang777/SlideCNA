@@ -21,7 +21,12 @@ prep_cnv_dat <- function(dat_bin,
                          lower=0.6, 
                          upper=1.4, 
                          hc_function = 'ward.D2', 
-                         plot_directory) {                                  
+                         plot_directory) {     
+    
+    # store old par value to restore upon exit
+    old_par <- graphics::par(no.readonly = TRUE) 
+    on.exit(graphics::par(old_par)) 
+    
     # separate data into all (malignant + non-malignant), malignant, and non-malignant cells
     malig_cells=unique(dat_bin[cluster_type == 'Malignant',]$variable)
     ref_cells=unique(dat_bin[cluster_type == 'Non-malignant',]$variable)
@@ -71,10 +76,6 @@ prep_cnv_dat <- function(dat_bin,
     plot(hcl_all,labels=FALSE)
     grDevices::dev.off()
     
-    graphics::par(mfrow=c(1,2)) 
-    plot(hcl,labels=FALSE)
-    plot(hcl_all,labels=FALSE)
-    
     dat_malig[,variable:=factor(variable,levels=hcl$labels[hcl$order])]
     dat_bin[,variable:=factor(variable,levels=hcl_all$labels[hcl_all$order])]
 
@@ -84,10 +85,6 @@ prep_cnv_dat <- function(dat_bin,
     graphics::boxplot(dat_malig$value ~ dat_malig$N_bin)
     graphics::boxplot(dat_malig$value ~ dat_malig$umi_bin)
     grDevices::dev.off()
-    
-    graphics::par(mfrow=c(1,2)) 
-    graphics::boxplot(dat_malig$value ~ dat_malig$N_bin)
-    graphics::boxplot(dat_malig$value ~ dat_malig$umi_bin)
     
     cnv_data <- list("all" = dat_bin, 
                      "malig" = dat_malig, 
@@ -108,6 +105,7 @@ utils::globalVariables(c("cluster_type", "variable", "value", "total_order"))
 #' @param chrom_colors vector of colors labeled by which chromosome they correspond to
 #' @param hc_function character for which hierarchical clustering function to use
 #' @param plot_directory output plot directory path
+#' @return None
 
 #' @export
 cnv_heatmap <- function(cnv_data, 
@@ -182,6 +180,7 @@ cnv_heatmap <- function(cnv_data,
 #' @param legend_height_bar integer of bar height of legend for ggplot
 #' @param plot_directory output plot directory path
 #’ @Import ggplot2
+#' @return None
 
 #' @export
 quantile_plot <- function(cnv_data, 
@@ -245,6 +244,7 @@ utils::globalVariables(c("new_value", "value", "variable", "chr", "pos_x", "pos_
 #' @param legend_height_bar integer of bar height of legend for ggplot
 #' @param plot_directory output plot directory path
 #’ @Import ggplot2
+#' @return None
 
 #' @export
 mean_cnv_plot <- function(cnv_data, 
