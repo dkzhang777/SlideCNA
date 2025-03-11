@@ -20,6 +20,12 @@ library(devtools)
 devtools::install_github("dkzhang777/SlideCNA@main", force=TRUE)
 library(SlideCNA)
 ```
+
+Install SlideCNA through CRAN:
+```
+install.packages("SlideCNA")
+library(SlideCNA)
+```
 ### Preparation
 Preparation of Slide-seq data raw counts matrix and meta data with cell type annotations. Metadata should contain the following columns in the provided format:
 
