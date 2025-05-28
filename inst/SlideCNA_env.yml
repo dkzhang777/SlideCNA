@@ -1,4 +1,4 @@
-name: /ahg/regevdata/users/dzhang/condapkgs/SlideCNA
+name: SlideCNA
 channels:
   - anaconda
   - conda-forge
@@ -651,4 +651,3 @@ dependencies:
   - zlib=1.2.13=hd590300_5
   - zlib-ng=2.0.7=h5eee18b_0
   - zstd=1.5.5=hc292b87_0
-prefix: /ahg/regevdata/users/dzhang/condapkgs/SlideCNA
