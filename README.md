@@ -11,7 +11,7 @@ Example Jupyter notebooks of SlideCNA applied to Slide-seq, snRNA-seq, and Slide
 
 Create a new conda environment using the SlideCNA_env.yml file from the SlideCNA repository:
 ```
-conda env create -f "https://github.com/dkzhang777/SlideCNA/blob/main/inst/SlideCNA_env.yml"
+conda env create -f "https://raw.githubusercontent.com/dkzhang777/SlideCNA/refs/heads/develop/inst/SlideCNA_env.yml"
 ```
 
 Install SlideCNA through R from Github:
@@ -25,6 +25,11 @@ Install SlideCNA through CRAN:
 ```
 install.packages("SlideCNA")
 library(SlideCNA)
+```
+
+Install SlideCNA through Conda:
+```
+conda install conda-forge::r-slidecna
 ```
 ### Preparation
 Preparation of Slide-seq data raw counts matrix and meta data with cell type annotations. Metadata should contain the following columns in the provided format:
