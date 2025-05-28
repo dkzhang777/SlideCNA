@@ -1,4 +1,4 @@
-name: /ahg/regevdata/users/dzhang/condapkgs/bead_split_env
+name: bead_split_env
 channels:
   - conda-forge
   - bioconda
@@ -174,4 +174,3 @@ dependencies:
   - zipp=3.21.0=pyhd8ed1ab_1
   - zstandard=0.23.0=py311hbc35293_1
   - zstd=1.5.6=ha6fb4c9_0
-prefix: /ahg/regevdata/users/dzhang/condapkgs/bead_split_env
